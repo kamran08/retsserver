@@ -180,6 +180,7 @@ class DataController extends Controller
 
     //
     public function getData(Request $request){
+        return "hell";
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
