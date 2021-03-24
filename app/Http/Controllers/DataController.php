@@ -180,6 +180,13 @@ class DataController extends Controller
 
     //
     public function getData(Request $request){
+        try{
+
+        }catch(\Exception $e){
+            
+        }
+
+
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
@@ -227,7 +234,12 @@ class DataController extends Controller
         //   ['Select' => 'L_ListingID,L_Area,L_AskingPrice,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_City,L_State,L_Zip,L_ListAgent1,L_ListOffice1,L_ListAgent2,L_ListOffice2,L_ListAgent3,L_ListOffice3,L_ListingDate,L_OriginalPrice,L_Remarks,L_ClosingDate,L_SoldPrice','Limit'    =>    10]);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Select' => 'L_ListingID,L_Area,L_Status']);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_Zip =|V2S 5K3)", ['Limit'  =>   5]);
-        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)" ,['Limit'  =>   5]);
+        $id = 0;
+        $idd = JsonData::orderBy('id', 'DESC')->first();
+        if($idd){
+            $id = $idd['L_ListingID'];
+        }
+        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_ListingID>$id)" ,['Limit'  =>   5]);
         $alldata  = $results->toArray();
         foreach ($alldata as $key => $val) {
             $ss = json_encode($val);
