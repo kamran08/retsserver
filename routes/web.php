@@ -12,7 +12,7 @@
 */
 
 
-
+Route::get('/getData', 'DataController@getData');
 // Route::get('/getData', 'DataController@getData');
 Route::get('/', function () {
     return view('welcome');
