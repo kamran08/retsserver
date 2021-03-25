@@ -8,6 +8,6 @@ class Picture extends Model
 {
     //
     protected $fillable = [
-        'filename', 'L_ListingID'
+        'filename', 'L_ListingID', 'd_id'
     ];
 }

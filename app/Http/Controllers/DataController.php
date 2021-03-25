@@ -239,12 +239,14 @@ class DataController extends Controller
         if($idd){
             $ofset = $idd['lastId'];
         }
-        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   1000, 'Offset'=>$ofset]);
+        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   10, 'Offset'=>$ofset]);
         $alldata  = $results->toArray();
         foreach ($alldata as $key => $val) {
             
             $ss = json_encode($val);
-            JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
+            $jsonV['L_ListingID']  = -1;
+            if($jsonV['L_ListingID'] != $ss['L_ListingID'])
+            $jsonV = JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
 
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
             $data = [];
@@ -254,8 +256,8 @@ class DataController extends Controller
                 array_push($data, $url);
             }
             foreach ($data as $k => $v) {
-                if(isset($v))
-                Picture::create(['filename'=> $v, 'd_id'=> $val['id'], 'L_ListingID'=> $val['L_ListingID']]);
+                if(isset($v) && $v)
+                Picture::create(['filename'=> $v, 'd_id'=> $jsonV['id'], 'L_ListingID'=> $val['L_ListingID']]);
             }
             $ofset++;
             Checker::where('id', $idd['id'])->update(['lastId'=> $ofset]);
