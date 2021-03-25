@@ -241,6 +241,7 @@ class DataController extends Controller
         }
         $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   10, 'Offset'=>$ofset]);
         $alldata  = $results->toArray();
+            $jsonV =[];
         foreach ($alldata as $key => $val) {
             
             $ss = json_encode($val);
