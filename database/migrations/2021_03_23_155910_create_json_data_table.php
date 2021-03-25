@@ -16,7 +16,7 @@ class CreateJsonDataTable extends Migration
         Schema::create('json_data', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('data');
-            $table->integer('listID');
+            $table->integer('L_ListingID');
             $table->timestamps();
         });
     }

@@ -239,24 +239,26 @@ class DataController extends Controller
         if($idd){
             $id = $idd['L_ListingID'];
         }
-        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_ListingID>$id)" ,['Limit'  =>   5]);
+        // return $id;
+        $ofset = 4;
+        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)" ,['Limit'  =>   5, 'Offset'=>$ofset,'select' => 'L_ListingID']);
         $alldata  = $results->toArray();
-        foreach ($alldata as $key => $val) {
-            $ss = json_encode($val);
-            JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
+        // foreach ($alldata as $key => $val) {
+        //     $ss = json_encode($val);
+        //     JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
 
-            $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
-            $data = [];
-            foreach ($objects as $photo) {
-                $object_id = $photo->getObjectId();
-                $url = $photo->getLocation();
-                array_push($data, $url);
-            }
-            foreach ($data as $k => $v) {
-                Picture::create(['filename'=> $v, 'L_ListingID'=> $val['L_ListingID']]);
-            }
+        //     $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
+        //     $data = [];
+        //     foreach ($objects as $photo) {
+        //         $object_id = $photo->getObjectId();
+        //         $url = $photo->getLocation();
+        //         array_push($data, $url);
+        //     }
+        //     foreach ($data as $k => $v) {
+        //         Picture::create(['filename'=> $v, 'L_ListingID'=> $val['L_ListingID']]);
+        //     }
             
-        }
+        // }
         
         // $results   = $rets->Search('Property',  'RD_1', "(L_ListingID =|2549233)", ['Limit'  =>   1]);
 
