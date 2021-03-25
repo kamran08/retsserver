@@ -6,6 +6,7 @@ date_default_timezone_set('America/New_York');
 use Illuminate\Http\Request;
 use App\Picture;
 use App\JsonData;
+use App\Checker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use File;
@@ -201,16 +202,16 @@ class DataController extends Controller
         $photo_resource_type = 'Property';
 
         // $results = $rets->GetObject('Property', 'Photo', '262287580', '*', 1);
-      
+
         // var_dump($objects);
         // return $data[1];
-    //     $results= $rets->Search('Property', 'RA_2', '*', ['Limit' => 3, 'Select' =>'L_ListingID']);
-    //    dd($results); 
-    //     return $results;
+        //     $results= $rets->Search('Property', 'RA_2', '*', ['Limit' => 3, 'Select' =>'L_ListingID']);
+        //    dd($results); 
+        //     return $results;
         // Rename returned number keys as names
 
         // $s = $results->toJSON();
-        
+
 
 
         // get data by selecting column
@@ -234,31 +235,31 @@ class DataController extends Controller
         //   ['Select' => 'L_ListingID,L_Area,L_AskingPrice,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_City,L_State,L_Zip,L_ListAgent1,L_ListOffice1,L_ListAgent2,L_ListOffice2,L_ListAgent3,L_ListOffice3,L_ListingDate,L_OriginalPrice,L_Remarks,L_ClosingDate,L_SoldPrice','Limit'    =>    10]);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Select' => 'L_ListingID,L_Area,L_Status']);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_Zip =|V2S 5K3)", ['Limit'  =>   5]);
-        $id = 0;
-        $idd = JsonData::orderBy('id', 'DESC')->first();
+        $ofset = 0;
+        $idd = Checker::first();
         if($idd){
-            $id = $idd['L_ListingID'];
+            $ofset = $idd['lastId'];
         }
-        // return $id;
-        $ofset = 4;
-        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)" ,['Limit'  =>   5, 'Offset'=>$ofset,'select' => 'L_ListingID']);
+        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   1000, 'Offset'=>$ofset]);
         $alldata  = $results->toArray();
-        // foreach ($alldata as $key => $val) {
-        //     $ss = json_encode($val);
-        //     JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
+        foreach ($alldata as $key => $val) {
+            $ofset++;
+            $ss = json_encode($val);
+            JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
 
-        //     $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
-        //     $data = [];
-        //     foreach ($objects as $photo) {
-        //         $object_id = $photo->getObjectId();
-        //         $url = $photo->getLocation();
-        //         array_push($data, $url);
-        //     }
-        //     foreach ($data as $k => $v) {
-        //         Picture::create(['filename'=> $v, 'L_ListingID'=> $val['L_ListingID']]);
-        //     }
-            
-        // }
+            $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
+            $data = [];
+            foreach ($objects as $photo) {
+                $object_id = $photo->getObjectId();
+                $url = $photo->getLocation();
+                array_push($data, $url);
+            }
+            foreach ($data as $k => $v) {
+                Picture::create(['filename'=> $v, 'L_ListingID'=> $val['L_ListingID']]);
+            }
+            Checker::where('id', $idd['id'])->update(['lastId'=> $ofset]);
+        }
+
         
         // $results   = $rets->Search('Property',  'RD_1', "(L_ListingID =|2549233)", ['Limit'  =>   1]);
 
