@@ -183,9 +183,7 @@ class DataController extends Controller
     public function getData(Request $request){
         try{
 
-        }catch(\Exception $e){
-            
-        }
+      
 
 
         set_time_limit(2000000);
@@ -237,13 +235,14 @@ class DataController extends Controller
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_Zip =|V2S 5K3)", ['Limit'  =>   5]);
         $ofset = 0;
         $idd = Checker::first();
+        
         if($idd){
             $ofset = $idd['lastId'];
         }
         $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   1000, 'Offset'=>$ofset]);
         $alldata  = $results->toArray();
         foreach ($alldata as $key => $val) {
-            $ofset++;
+            
             $ss = json_encode($val);
             JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
 
@@ -255,40 +254,22 @@ class DataController extends Controller
                 array_push($data, $url);
             }
             foreach ($data as $k => $v) {
-                Picture::create(['filename'=> $v, 'L_ListingID'=> $val['L_ListingID']]);
+                if(isset($v))
+                Picture::create(['filename'=> $v, 'd_id'=> $val['id'], 'L_ListingID'=> $val['L_ListingID']]);
             }
+            $ofset++;
             Checker::where('id', $idd['id'])->update(['lastId'=> $ofset]);
         }
 
-        
-        // $results   = $rets->Search('Property',  'RD_1', "(L_ListingID =|2549233)", ['Limit'  =>   1]);
-
-        // $results   = $rets->Search('Property', 'RA_2', '*', ['Limit' => 2, 'Select' => 'L_ListingID,L_Area,L_Status']);
-        // $objects = $rets->GetObject('Property', 'Photo', '262568608', '1');
-        // $objects->first();
-        // $objects->last();
-        // $objects = $objects->slice(0, 10);
-        // foreach ($results as $record) {
-        //     print "<pre>";
-        //     // print_r($objects->toJSON());
-        //     print_r($record['Address']);
-        //     // print_r($objects->toJSON());
-        //     print_r($record->get('Address'));
-        //     print "</pre>";
-        //     // is the same as:
-        //     echo "hello";
-        // }
-        // foreach ($results as $record) {
-        //     print "<pre>";
-        //     print_r( $record->toJson());
-        //     print "</pre>";
-        // }
-        // return 1;
         print "<pre>";
         print_r($results->toJSON());
         // print_r($objects->toJSON());
         print "</pre>";
         return sizeof($results->toArray());
+        }
+        catch(\Exception $e){
+            return $e;
+        }
         // $all_ids=  $results->lists('L_Area');
 
 
