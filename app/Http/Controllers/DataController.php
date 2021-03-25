@@ -235,21 +235,28 @@ class DataController extends Controller
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_Zip =|V2S 5K3)", ['Limit'  =>   5]);
         $ofset = 0;
         $idd = Checker::first();
-        
+            $objects = $rets->GetObject('Property', 'Photo', '262476044', '*', 1);
+            $data = [];
+            foreach ($objects as $photo) {
+                $object_id = $photo->getObjectId();
+                $url = $photo->getLocation();
+                array_push($data, $url);
+            }
+            return sizeof($data);
         if($idd){
             $ofset = $idd['lastId'];
         }
         $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   10, 'Offset'=>$ofset]);
         $alldata  = $results->toArray();
-            $jsonV =[];
+        
         foreach ($alldata as $key => $val) {
             
             $ss = json_encode($val);
-            $jsonV['L_ListingID']  = -1;
-            if($jsonV['L_ListingID'] != $ss['L_ListingID'])
-            $jsonV = JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
-
+            $jsonV=[];
+            if(!isset($jsonV['L_ListingID']) || ($jsonV['L_ListingID'] != $ss['L_ListingID']))
+                 $jsonV = JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
+           
             $data = [];
             foreach ($objects as $photo) {
                 $object_id = $photo->getObjectId();
