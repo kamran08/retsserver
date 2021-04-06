@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('command:FetchAndStore')
                  ->everyMinute();
-        $schedule->command('command:FetchAndStore2')
+        $schedule->command('command:FeatchAndSrore2')
                  ->everyMinute();
     }
 
