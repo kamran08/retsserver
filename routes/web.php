@@ -13,6 +13,7 @@
 
 
 Route::get('/getData', 'DataController@getData');
+Route::get('/getDatadirectoryCheck', 'DataController@directoryCheck');
 // Route::get('/getData', 'DataController@getData');
 Route::get('/', function () {
     return view('welcome');

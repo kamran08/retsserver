@@ -12,8 +12,12 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
+    // protected $commands = [
+    //     //
+    // ];
     protected $commands = [
-        //
+        Commands\FetchAndStore::class,
+        Commands\FeatchAndSrore2::class
     ];
 
     /**
@@ -24,8 +28,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('command:FetchAndStore')
+                 ->everyMinute();
+        $schedule->command('command:FetchAndStore2')
+                 ->everyMinute();
     }
 
     /**

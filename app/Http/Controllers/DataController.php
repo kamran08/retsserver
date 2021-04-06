@@ -42,6 +42,7 @@ class DataController extends Controller
             if (ends_with($f, ['.png', '.jpg', '.jpeg', '.gif'])) {
                 $counter ++;
                 $image = Image::make($s)->encode('webp', 90)->resize(200, 250);
+                return $image;
                 $myFile = Storage::disk('spaces')->put($f, $image);
                 Storage::disk('spaces')->setVisibility($f, 'public');
                 $ll = Storage::disk('spaces')->url($f);
@@ -176,21 +177,22 @@ class DataController extends Controller
 
     public function show(Image $image)
     {
+        // https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=YOUR_API_KEY
         return $image->url;
     }
 
     //
-    public function getData(Request $request){
-        try{
+    public function getData(){
 
       
-
-
+        // return $u['address_components'];
+        try{
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
             ->setUsername('RETSARVING')
+            ->setPassword('wjq6PJqUA45EGU8')
             ->setPassword('wjq6PJqUA45EGU8')
             ->setRetsVersion('1.7.2');
         \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
@@ -198,6 +200,7 @@ class DataController extends Controller
         $connect = $rets->Login();
         $resource = 'Property';
         $photo_resource_type = 'Property';
+        // return 1;
 
         // $results = $rets->GetObject('Property', 'Photo', '262287580', '*', 1);
 
@@ -233,82 +236,73 @@ class DataController extends Controller
         //   ['Select' => 'L_ListingID,L_Area,L_AskingPrice,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_City,L_State,L_Zip,L_ListAgent1,L_ListOffice1,L_ListAgent2,L_ListOffice2,L_ListAgent3,L_ListOffice3,L_ListingDate,L_OriginalPrice,L_Remarks,L_ClosingDate,L_SoldPrice','Limit'    =>    10]);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Select' => 'L_ListingID,L_Area,L_Status']);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0),(L_Zip =|V2S 5K3)", ['Limit'  =>   5]);
+        //     $objects = $rets->GetObject('Property', 'Photo', '262476044', '*', 1);
+        //     $data = [];
+        //     foreach ($objects as $photo) {
+            //         $object_id = $photo->getObjectId();
+            //         $url = $photo->getLocation();
+            //         array_push($data, $url);
+            //     }
+            //     return sizeof($data);
+        // $idd = Checker::first();
         $ofset = 0;
-        $idd = Checker::first();
-            $objects = $rets->GetObject('Property', 'Photo', '262476044', '*', 1);
-            $data = [];
-            foreach ($objects as $photo) {
-                $object_id = $photo->getObjectId();
-                $url = $photo->getLocation();
-                array_push($data, $url);
-            }
-            return sizeof($data);
-        if($idd){
-            $ofset = $idd['lastId'];
-        }
-        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29),(L_Status=1_0)", ['Limit'  =>   10, 'Offset'=>$ofset]);
+        // if($idd){
+        //     $ofset = $idd['lastId'];
+        // }
+        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29,),(L_Status=1_0)", ['Limit'  =>   1]);
+        // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29,),(L_Status=1_0)", ['Limit'  =>   1, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Address,LV_vow_address,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId']);
+        
         $alldata  = $results->toArray();
+        // return $alldata;
+            \Log::info($alldata);
+            return  1;
+        
         
         foreach ($alldata as $key => $val) {
+
+            //     $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
+            //     return $objects;
+            // return $val;
+                 $client = new \GuzzleHttp\Client();
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $val['L_Address'])->getBody();;
+                $json = json_decode($request);
+                $lat = $json->results[0]->geometry->location->lat;
+                $lng = $json->results[0]->geometry->location->lng;
+                $val['lat'] = $lat;
+                $val['lng'] = $lng;
             
-            $ss = json_encode($val);
             $jsonV=[];
-            if(!isset($jsonV['L_ListingID']) || ($jsonV['L_ListingID'] != $ss['L_ListingID']))
-                 $jsonV = JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
-            $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
-           
-            $data = [];
-            foreach ($objects as $photo) {
-                $object_id = $photo->getObjectId();
-                $url = $photo->getLocation();
-                array_push($data, $url);
+            // $objects=[];
+            if(sizeof($jsonV)>0 && !isset($jsonV['L_ListingID']) && ($jsonV['L_ListingID'] != $val['L_ListingID'])){
+
+                $jsonV = JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
             }
-            foreach ($data as $k => $v) {
-                if(isset($v) && $v)
-                Picture::create(['filename'=> $v, 'd_id'=> $jsonV['id'], 'L_ListingID'=> $val['L_ListingID']]);
-            }
+            $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
+                // return $objects->toJSON();
+                
+                $data = [];
+            foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                   $myFile = Storage::disk('spaces')->put($name, $url);
+                        Storage::disk('spaces')->setVisibility($name, 'public');
+                        $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $url);
+                    Picture::create(['filename'=> $ll, 'L_ListingID'=> $val['L_ListingID']]);
+                    // return 1;
+                }
+            
             $ofset++;
             Checker::where('id', $idd['id'])->update(['lastId'=> $ofset]);
         }
-
         print "<pre>";
-        print_r($results->toJSON());
-        // print_r($objects->toJSON());
+
+        // print_r($results->toJSON());
         print "</pre>";
-        return sizeof($results->toArray());
+        return "successfully insert data";
         }
         catch(\Exception $e){
             return $e;
         }
-        // $all_ids=  $results->lists('L_Area');
-
-
-        // $objects = $rets->GetObject($rets_resource, $object_type, $object_keys);
-
-        // // grab the first object of the set
-        // $objects->first();
-
-        // // grab the last object of the set
-        // $objects->last();
-
-        // // throw out everything but the first 10 objects
-        // $objects = $objects->slice(0, 10);
-
-
-        // $results = $rets->GetObject('Property', 'Photo', '262363537','*',1);
-        return 1;
-        $a = [];
-        $results = $rets->GetObject('Property', 'Photo', '262287580','*',1);
-        foreach ($results as $result){
-            $a[]= $result->getLocation();
-            // dd($result);
-        }
-        // dd($results);
-        $s = $results->toJSON();
-        return $a;
-       
-
-      
-       
     }
 }
