@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Http\Controllers\RetsController;
 use Illuminate\Console\Command;
 
-class FeatchAndSrore2 extends Command
+class latLangFetach extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:FeatchAndSrore2';
+    protected $signature = 'command:latLangFetach';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Featch RD_1 Data and sotre';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -38,8 +38,10 @@ class FeatchAndSrore2 extends Command
      */
     public function handle()
     {
-        \Log::info("one");
+        //
+        \Log::info("four");
         $ob = new RetsController();
-        // return  $ob->featchRdData();
+        // return  $ob->getLocation();
+        
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\DataController;
+use App\Http\Controllers\RetsController;
 
 class FetchAndStore extends Command
 {
@@ -19,7 +19,7 @@ class FetchAndStore extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'fetch RA_2 data and store';
 
     /**
      * Create a new command instance.
@@ -39,12 +39,9 @@ class FetchAndStore extends Command
     public function handle()
     {
         //
-        \Log::info("something");
-        // return 1;
-        // $ob = new DataController();
-        // return 1;
-        // return  $ob->getData();
-        // echo "hello world \n";
+        \Log::info("two");
+        $ob = new RetsController();
+        // return  $ob->featchRAData();
         
     }
 }

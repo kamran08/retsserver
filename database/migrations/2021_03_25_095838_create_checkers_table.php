@@ -16,6 +16,9 @@ class CreateCheckersTable extends Migration
         Schema::create('checkers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('lastId');
+            $table->integer('lastId2');
+            $table->string('status1');
+            $table->string('status2');
             $table->timestamps();
         });
     }

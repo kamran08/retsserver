@@ -6,6 +6,7 @@ date_default_timezone_set('America/New_York');
 use Illuminate\Http\Request;
 use App\Picture;
 use App\JsonData;
+use App\Listing;
 use App\Checker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -175,15 +176,234 @@ class DataController extends Controller
         // return Storage::disk('spaces')->url($path);
   }
 
-    public function show(Image $image)
-    {
-        // https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=YOUR_API_KEY
-        return $image->url;
-    }
+ 
 
     //
-    public function getData(){
+    public function createNewListing($data,$type){
+        $ss = json_encode($data);
+        if($data['LM_Char10_11']==''){
+            
+        }
+        else if($data['LM_Char10_11']==''){
 
+        }
+        else if($data['LM_Char10_11']==''){
+
+        }
+        else if($data['LM_Char10_11']==''){
+
+        }
+
+        $d = [
+            'listingID'=>$data['L_ListingID'],
+            'class'=> $type,
+            'listingType'=>$data['L_Type_'],
+            // 'listingArea'=>$data['L_Area'],
+            'listingArea'=>$data['L_Area'],
+            'listingAddress'=>$data['L_Address'],
+            'listingAddressDirection'=>$data['L_AddressDirection'],
+            'listingAddressStreet'=>$data['L_AddressStreet'],
+            'listingAddressUnit'=>$data['L_AddressUnit'],
+            'amenities'=>$data['LFD_Amenities_25'],
+            'basementArea'=>$data['LFD_BasementArea_6'],
+            'lotSizeLenth'=>$data['LM_char30_28'],
+            'onInternet'=>$data['LV_vow_address'],
+            'features'=>$data['LFD_FeaturesIncluded_24'],
+            'fireplaces'=>$data['LM_Int1_2'],
+            'floorAreaTotal'=>$data['LM_Dec_7'],
+            'lotSizeWidthFeet'=>$data['LM_Dec_8'],
+            'lotSizeMeter'=>$data['LM_Dec_9'],
+            'internetRemarks'=>$data['LR_remarks33'],
+            'listingDate'=>$data['L_ListingDate'],
+            'updateDate'=>$data['L_UpdateDate'],
+            'addressNumber'=>$data['L_AddressNumber'],
+            'city'=>$data['L_City'],
+            'subArea'=>$data['LM_Char10_5'],
+            'state'=>$data['L_State'],
+            'zip'=>$data['L_Zip'],
+            'askingPrice'=>$data['L_AskingPrice'],
+            'grossTaxes'=>$data['LM_Dec_16'],
+            'lotSizeArea'=>$data['LM_Dec_12'],
+            'lotSizeAreaSqMt'=>$data['LM_Dec_13'],
+            'lotSizeAreaSqFt'=>$data['LM_Dec_11'],
+            'displayId'=>$data['L_DisplayId'],
+            'floorLevel'=>$data['LM_Int1_1'],
+            'pictureCount'=>$data['L_PictureCount'],
+            'lastPhotoUpdate'=>$data['L_Last_Photo_updt'],
+            'status'=>$data['L_Status'],
+            'houseType'=>$data['LM_Char10_11'],
+            'lat'=>$data['lat'],
+            'lang'=>$data['lang'],
+            'totalBedrooms'=>$data['LM_Int1_4'],
+            'totalRooms'=>$data['LM_Int1_7'],
+            'halfBaths'=>$data['LM_Int1_17'],
+            'fullBaths'=>$data['LM_Int1_18'],
+            'totalBaths'=>$data['LM_Int1_19'],
+            'age'=>$data['LM_Int2_3'],
+            'yearBuilt'=>$data['LM_Int2_2'],
+            'texPerYear'=>$data['LM_Int2_5'],
+            'unitsInDevelopment'=>$data['LM_Int4_1'],
+            'kitchens'=>$data['LM_Int1_8'],
+            'json_data'=>$ss
+        ];
+        return Listing::create($d);
+    }
+// start  of method getData
+    public function getData(){
+        // return 1;
+        $idd = Checker::first();
+        if($idd && $idd['status1']== 'Running') return 1;
+        try {
+            set_time_limit(2000000);
+            $config = new \PHRETS\Configuration;
+            $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+                ->setUsername('RETSARVING')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setRetsVersion('1.7.2');
+            \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+            $rets = new \PHRETS\Session($config);
+            $connect = $rets->Login();
+            
+            $ofset = 0;
+            if($idd){
+                $ofset = $idd['lastId'];
+            }
+            // $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>   2, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Type_,LM_Char10_11,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId,LM_Int1_1,LM_Int2_2']);
+            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|DUPXH)", ['Limit'  =>   2, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Type_,LM_Char10_11,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId,LM_Int1_1,LM_Int2_2']);
+            // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2)", ['Limit'  =>   100, 'Offset' => 73300, 'select' => 'L_ListingID']);
+            //  return $results->getTotalResultsCount();
+            $alldata  = $results->toArray();
+            // \Log::info("finished");
+            return $alldata;
+            
+            foreach ($alldata as $key => $val) {
+                // $ss = json_encode($val);
+                $client = new \GuzzleHttp\Client();
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $val['L_Address'])->getBody();;
+                $json = json_decode($request);
+                $lat = $json->results[0]->geometry->location->lat;
+                $lang = $json->results[0]->geometry->location->lng;
+                $val['lat'] = $lat;
+                $val['lang'] = $lang;
+                $jsonV = '';
+            
+                if (!$jsonV || ( isset($jsonV['L_ListingID']) && $jsonV['L_ListingID'] != $val['L_ListingID'])) {
+                    
+                    $jsonV  = $this->createNewListing($val, 'RD_1');
+                    // $jsonV = JsonData::create(['data' => $ss, 'L_ListingID' => $val['L_ListingID']]);
+               
+                $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
+                $data = [];
+                foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $url);
+                    Picture::create(['filename' => $ll, 'L_ListingID' => $val['L_ListingID']]);
+                    // return 1;
+                }
+
+                $ofset++;
+            
+                Checker::where('id', $idd['id'])->update(['lastId' => $ofset,'status1'=>'Running']);
+                }
+            }
+            // return $ofset;
+            Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
+            return "successfully insert data";
+        } catch (\Exception $e) {
+            Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Fail']);
+            return "fail";
+        }
+    }
+// end   of method getData
+// start  of method getDataTwo
+    public function getDataTwo(){
+        $idd = Checker::first();
+        if($idd && $idd['status2']== 'Running') return 1;
+        try {
+            set_time_limit(2000000);
+            $config = new \PHRETS\Configuration;
+            $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+                ->setUsername('RETSARVING')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setRetsVersion('1.7.2');
+            \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+            $rets = new \PHRETS\Session($config);
+            $connect = $rets->Login();
+            
+            $ofset = 0;
+            if($idd){
+                $ofset = $idd['lastId'];
+            }
+            // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29,),(L_Status=1_0)", ['Limit'  =>   2, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Type_,LV_vow_address,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId,LM_Int1_1,LM_Int2_2']);
+            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2)", ['Offset' => $ofset]);
+
+            $alldata  = $results->toArray();
+            // \Log::info("finished");
+            // return $alldata;
+            
+            foreach ($alldata as $key => $val) {
+                // $ss = json_encode($val);
+                $client = new \GuzzleHttp\Client();
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $val['L_Address'])->getBody();;
+                $json = json_decode($request);
+                $lat = $json->results[0]->geometry->location->lat;
+                $lang = $json->results[0]->geometry->location->lng;
+                $val['lat'] = $lat;
+                $val['lang'] = $lang;
+                $jsonV = '';
+            
+                if (!$jsonV || ( isset($jsonV['L_ListingID']) && $jsonV['L_ListingID'] != $val['L_ListingID'])) {
+                    
+                    $jsonV  = $this->createNewListing($val, 'RA_2');
+                    // $jsonV = JsonData::create(['data' => $ss, 'L_ListingID' => $val['L_ListingID']]);
+               
+                $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
+                $data = [];
+                foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $url);
+                    Picture::create(['filename' => $ll, 'L_ListingID' => $val['L_ListingID']]);
+                    // return 1;
+                }
+
+                $ofset++;
+            
+                Checker::where('id', $idd['id'])->update(['lastId2' => $ofset,'status2'=>'Running']);
+                }
+            }
+            // return $ofset;
+            return "successfully insert data";
+        } catch (\Exception $e) {
+            Checker::where('id', $idd['id'])->update(['lastId2' => $ofset, 'status2' => 'Fail']);
+            return "fail";
+        }
+    }
+    // end of method getDataTwo
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+   
+    public function resorce (){
+        
       
         // return $u['address_components'];
         try{
@@ -249,11 +469,11 @@ class DataController extends Controller
         // if($idd){
         //     $ofset = $idd['lastId'];
         // }
-        $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29,),(L_Status=1_0)", ['Limit'  =>   1]);
+        $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   20,'select' => 'LM_Char10_11']);
         // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29,),(L_Status=1_0)", ['Limit'  =>   1, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Address,LV_vow_address,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId']);
         
         $alldata  = $results->toArray();
-        // return $alldata;
+        return $alldata;
             \Log::info($alldata);
             return  1;
         
