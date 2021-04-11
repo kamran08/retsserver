@@ -16,6 +16,8 @@ class LocalDatabaseController extends Controller
             if(isset($data['images']))  unset($data['images']);
             unset($data['created_at']);
             unset($data['updated_at']);
+            \Log::info("lat long");
+            \Log::info($data);
 
             $ch = Listing::where('listingID', $data['listingID'])->first();
             if ($ch) {

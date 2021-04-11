@@ -215,16 +215,16 @@ class RetsController extends Controller
                     ->update([
                         'lat' => $lat,
                         'lang' => $lang,
-                        'completed' =>3,
+                        'completed' => DB::raw('completed + 1'),
                     ]);
                 $s = DB::table('listings')
                 ->where('id', $d['id'])->where('lat', '!=', null)->orWhere('lang', '!=', null)->first();
                 if($s){
                     try{
-                    $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
-                    return 1;
+                        \Log::info("now sending data from main server");
+                    // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
+                    // return 1;
 
-                    \Log::info("now sending data from main server");
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $s])->getBody();
                     $json2 = json_decode($request2);
@@ -256,9 +256,8 @@ class RetsController extends Controller
                 $rets = new \PHRETS\Session($config);
                 $connect = $rets->Login();
             
-
-
-            $alldata = Listing::select('id', 'listingID')->limit(100)->get();
+  
+            $alldata = Listing::where('completed','!=', 3)->select('id', 'listingID')->limit(100)->get();
             foreach($alldata as $key => $val){
                 $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
                 $data = [];
@@ -281,11 +280,13 @@ class RetsController extends Controller
                     array_push($data, $ll);
                 }
                 $data = json_encode($data);
+
                 $s = DB::table('listings')
                 ->where('id', $val['id'])
                 ->update([
                     'thumbnail' => $img,
-                    'images' => $data
+                    'images' => $data,
+                    'completed' => DB::raw('completed + 1')
                 ]);
                 $ob = [
                     'listingID' =>  $val['listingID'],
@@ -293,6 +294,8 @@ class RetsController extends Controller
                     'images' => $data
                 ];
                     try{
+                        // $request2 = Http::post('https://youhome.cc/storeImageDataFromDataServer', $s);
+                        // return 1;
                         $client2 = new \GuzzleHttp\Client();
                         $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
                         $json2 = json_decode($request2);
