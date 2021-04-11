@@ -33,55 +33,55 @@ class RetsController extends Controller
         }
 
         $d = [
-            'listingID' => $data['L_ListingID'],
+            'listingID' => isset($data['L_ListingID'])?$data['L_ListingID']:null,
             'class' => $type,
-            'listingType' => $data['L_Type_'],
+            'listingType' => isset($data['L_Type_'])? $data['L_Type_']:null,
             'completed'=>1,
-            'listingArea' => $data['L_Area'],
-            'listingAddress' => $data['L_Address'],
-            'listingAddressDirection' => $data['L_AddressDirection'],
-            'listingAddressStreet' => $data['L_AddressStreet'],
-            'listingAddressUnit' => $data['L_AddressUnit'],
-            'amenities' => $data['LFD_Amenities_25'],
-            'basementArea' => $data['LFD_BasementArea_6'],
-            'lotSizeLenth' => $data['LM_char30_28'],
-            'onInternet' => $data['LV_vow_address'],
-            'features' => $data['LFD_FeaturesIncluded_24'],
-            'fireplaces' => $data['LM_Int1_2'],
-            'floorAreaTotal' => $data['LM_Dec_7'],
-            'lotSizeWidthFeet' => $data['LM_Dec_8'],
-            'lotSizeMeter' => $data['LM_Dec_9'],
-            'internetRemarks' => $data['LR_remarks33'],
-            'listingDate' => $data['L_ListingDate'],
-            'updateDate' => $data['L_UpdateDate'],
-            'addressNumber' => $data['L_AddressNumber'],
-            'city' => $data['L_City'],
-            'subArea' => $data['LM_Char10_5'],
-            'state' => $data['L_State'],
-            'zip' => $data['L_Zip'],
-            'askingPrice' => $data['L_AskingPrice'],
-            'grossTaxes' => $data['LM_Dec_16'],
-            'lotSizeArea' => $data['LM_Dec_12'],
-            'lotSizeAreaSqMt' => $data['LM_Dec_13'],
-            'lotSizeAreaSqFt' => $data['LM_Dec_11'],
-            'displayId' => $data['L_DisplayId'],
-            'floorLevel' => $data['LM_Int1_1'],
-            'pictureCount' => $data['L_PictureCount'],
-            'lastPhotoUpdate' => $data['L_Last_Photo_updt'],
-            'status' => $data['L_Status'],
-            'houseType' => $data['LM_Char10_11'],
+            'listingArea' => isset($data['L_Area'])?$data['L_Area']:null,
+            'listingAddress' => isset($data['L_Address'])?$data['L_Address']:null,
+            'listingAddressDirection' => isset($data['L_AddressDirection'])? $data['L_AddressDirection']:null,
+            'listingAddressStreet' => isset($data['L_AddressStreet'])?$data['L_AddressStreet']:null,
+            'listingAddressUnit' => isset($data['L_AddressUnit'])?$data['L_AddressUnit']:null,
+            'amenities' => isset($data['LFD_Amenities_25'])?$data['LFD_Amenities_25']:'null',
+            'basementArea' => isset($data['LFD_BasementArea_6'])?$data['LFD_BasementArea_6']:null,
+            'lotSizeLenth' => isset($data['LM_char30_28'])?$data['LM_char30_28']:null,
+            'onInternet' => isset($data['LV_vow_address'])? $data['LV_vow_address']:null,
+            'features' => isset($data['LFD_FeaturesIncluded_24'])?$data['LFD_FeaturesIncluded_24']:null,
+            'fireplaces' => isset($data['LM_Int1_2'])?$data['LM_Int1_2']:null,
+            'floorAreaTotal' => isset($data['LM_Dec_7'])?$data['LM_Dec_7']:null,
+            'lotSizeWidthFeet' => isset($data['LM_Dec_8'])?$data['LM_Dec_8']:null,
+            'lotSizeMeter' => isset($data['LM_Dec_9'])?$data['LM_Dec_9']:null,
+            'internetRemarks' => isset($data['LR_remarks33'])?$data['LR_remarks33']:null,
+            'listingDate' => isset($data['L_ListingDate'])? $data['L_ListingDate']:null,
+            'updateDate' => isset($data['L_UpdateDate'])?$data['L_UpdateDate']:null,
+            'addressNumber' => isset($data['L_AddressNumber'])?$data['L_AddressNumber']:null,
+            'city' => isset($data['L_City'])? $data['L_City']:null,
+            'subArea' => isset($data['LM_Char10_5'])? $data['LM_Char10_5']:null,
+            'state' => isset($data['L_State'])? $data['L_State']:null,
+            'zip' => isset($data['L_Zip'])?$data['L_Zip']:null,
+            'askingPrice' => isset($data['L_AskingPrice'])? $data['L_AskingPrice']:null,
+            'grossTaxes' => isset($data['LM_Dec_16'])?$data['LM_Dec_16']:null,
+            'lotSizeArea' => isset($data['LM_Dec_12'])? $data['LM_Dec_12']:null,
+            'lotSizeAreaSqMt' => isset($data['LM_Dec_13'])? $data['LM_Dec_13']:null,
+            'lotSizeAreaSqFt' => isset($data['LM_Dec_11'])? $data['LM_Dec_11']:null,
+            'displayId' => isset($data['L_DisplayId'])? $data['L_DisplayId']:null,
+            'floorLevel' => isset($data['LM_Int1_1'])?$data['LM_Int1_1']:null,
+            'pictureCount' => isset($data['L_PictureCount'])?$data['L_PictureCount']:null,
+            'lastPhotoUpdate' => isset($data['L_Last_Photo_updt'])? $data['L_Last_Photo_updt']:null,
+            'status' => isset($data['L_Status'])?$data['L_Status']:null,
+            'houseType' => isset($data['LM_Char10_11'])?$data['LM_Char10_11']:null,
             // 'lat' => null,
             // 'lang' => null,
-            'totalBedrooms' => $data['LM_Int1_4'],
-            'totalRooms' => $data['LM_Int1_7'],
-            'halfBaths' => $data['LM_Int1_17'],
-            'fullBaths' => $data['LM_Int1_18'],
-            'totalBaths' => $data['LM_Int1_19'],
-            'age' => $data['LM_Int2_3'],
-            'yearBuilt' => $data['LM_Int2_2'],
-            'texPerYear' => $data['LM_Int2_5'],
-            'unitsInDevelopment' => $data['LM_Int4_1'],
-            'kitchens' => $data['LM_Int1_8'],
+            'totalBedrooms' => isset($data['LM_Int1_4'])? $data['LM_Int1_4']:null,
+            'totalRooms' => isset($data['LM_Int1_7'])? $data['LM_Int1_7']:null,
+            'halfBaths' => isset($data['LM_Int1_17'])? $data['LM_Int1_17']:null,
+            'fullBaths' =>isset( $data['LM_Int1_18'])? $data['LM_Int1_18']:null,
+            'totalBaths' => isset($data['LM_Int1_19'])?$data['LM_Int1_19']:null,
+            'age' => isset($data['LM_Int2_3'])? $data['LM_Int2_3']:null,
+            'yearBuilt' => isset($data['LM_Int2_2'])? $data['LM_Int2_2']:null,
+            'texPerYear' => isset($data['LM_Int2_5'])? $data['LM_Int2_5']:null,
+            'unitsInDevelopment' =>isset( $data['LM_Int4_1'])? $data['LM_Int4_1']:null,
+            'kitchens' => isset($data['LM_Int1_8'])?$data['LM_Int1_8']:null,
             'json_data' => $ss
         ];
         return $d;
@@ -92,8 +92,8 @@ class RetsController extends Controller
     // Featch RD_1 Data
 
     public function featchRdData(){
+        $idd = Checker::first();
         try {
-            $idd = Checker::first();
             if ($idd && $idd['status1'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status1' => 'Running']);
             // connection start
@@ -135,6 +135,7 @@ class RetsController extends Controller
             return "successfully inserted data";
         } catch (\Exception $e) {
             Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Fail']);
+           \Log::info($e);
             return "fail";
         }
     }
@@ -142,8 +143,8 @@ class RetsController extends Controller
     // Featch RA_2 Data
 
     public function featchRAData(){
+        $idd = Checker::first();
         try {
-            $idd = Checker::first();
             if ($idd && $idd['status2'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status2' => 'Running']);
             // connection start
@@ -185,6 +186,7 @@ class RetsController extends Controller
             return "successfully inserted data";
         } catch (\Exception $e) {
             Checker::where('id', $idd['id'])->update(['lastId2' => $ofset, 'status2' => 'Fail']);
+            \Log::info($e);
             return "fail";
         }
     }
@@ -193,25 +195,41 @@ class RetsController extends Controller
         public function getLocation(){
             $alldata = Listing::where('lat',null)->orWhere('lang',null)->select('id', 'lat','lang', 'listingAddress')->limit(100)->get();
             // return $alldata;
+            // \Log::info($alldata);
+            // return 1;
+            
             foreach($alldata as $key => $d){
+           
                 $client = new \GuzzleHttp\Client();
                 $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'])->getBody();
                 $json = json_decode($request);
-                $lat = $json->results[0]->geometry->location->lat;
-                $lang = $json->results[0]->geometry->location->lng;
+                 $lat = null;
+                 $lang = null;
+                if(sizeof($json->results)>0){
+                    $lat = $json->results[0]->geometry->location->lat;
+                    $lang = $json->results[0]->geometry->location->lng;
+                }
+           
                 $s = DB::table('listings')
                     ->where('id', $d['id'])
                     ->update([
                         'lat' => $lat,
                         'lang' => $lang,
-                        'completed' => DB::raw('completed + 1'),
+                        'completed' =>3,
                     ]);
                 $s = DB::table('listings')
-                ->where('id', $d['id'])->where('completed',3)->first();
+                ->where('id', $d['id'])->where('lat', '!=', null)->orWhere('lang', '!=', null)->first();
                 if($s){
+                    try{
+                    \Log::info("now sending data from main server");
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer',$s)->getBody();
                     $json2 = json_decode($request2);
+                     } catch (\Exception $e) {
+                         \Log::info($e);
+                         return "error";
+
+                    }
 
                 }
 
@@ -263,20 +281,24 @@ class RetsController extends Controller
                 $s = DB::table('listings')
                 ->where('id', $val['id'])
                 ->update([
-                    'completed' => DB::raw('completed + 1'),
                     'thumbnail' => $img,
                     'images' => $data
                 ]);
-                // $s = DB::table('listings')
-                // ->where('id', $val['id'])->select('id','completed')->first();
-                $s = DB::table('listings')
-                ->where('id', $val['id'])->where('completed', 3)->first();
-                if($s){
-                    $client2 = new \GuzzleHttp\Client();
-                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', $s)->getBody();
-                    $json2 = json_decode($request2);
+                $ob = [
+                    'listingID' =>  $val['listingID'],
+                    'thumbnail' => $img,
+                    'images' => $data
+                ];
+                    try{
+                        $client2 = new \GuzzleHttp\Client();
+                        $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer', $ob)->getBody();
+                        $json2 = json_decode($request2);
+                    } catch (\Exception $e) {
+                        \Log::info($e);
+                        return false;
+                    }
 
-                }
+                
             
 
             }
