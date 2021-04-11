@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use File;
 use DB;
 use Image;
+use Illuminate\Support\Facades\Http;
 
 class RetsController extends Controller
 {
@@ -220,6 +221,9 @@ class RetsController extends Controller
                 ->where('id', $d['id'])->where('lat', '!=', null)->orWhere('lang', '!=', null)->first();
                 if($s){
                     try{
+                    $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
+                    return 1;
+
                     \Log::info("now sending data from main server");
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $s])->getBody();

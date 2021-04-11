@@ -12,10 +12,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use File;
 use Image;
+use Illuminate\Support\Facades\Http;
+
 class DataController extends Controller
 {
     public function storeDataFromDataServer(Request $request)
     {
+        return "ok";
         try {
             $data = $request->all();
             if (isset($data['id']))  unset($data['id']);
@@ -37,7 +40,7 @@ class DataController extends Controller
     }
     public function storeImageDataFromDataServer(Request $request)
     {
-        
+        return "ok";
         try {
             $data = $request->all();
             $ch = Listing::where('listingID', $data['listingID'])->first();
