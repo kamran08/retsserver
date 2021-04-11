@@ -20,8 +20,6 @@ class RetsController extends Controller
     // data formate method
     public function createNewListing($data, $type)
     {
-        \Log::info($data);
-        return 1;
         $ss = json_encode($data);
         
         if ($data['LM_Char10_11'] == 'House/Single Family') {
@@ -96,10 +94,8 @@ class RetsController extends Controller
     public function featchRdData(){
         try {
             $idd = Checker::first();
-
             if ($idd && $idd['status1'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status1' => 'Running']);
-            return 0;
             // connection start
            
             set_time_limit(2000000);
@@ -123,8 +119,6 @@ class RetsController extends Controller
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
-                \Log::info($val);
-                return  "hello";
                 $jsonV = '';
 
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
@@ -153,7 +147,6 @@ class RetsController extends Controller
             if ($idd && $idd['status2'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status2' => 'Running']);
             // connection start
-            return 0;
            
             set_time_limit(2000000);
             $config = new \PHRETS\Configuration;
@@ -176,8 +169,6 @@ class RetsController extends Controller
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
-                \Log::info($val);
-                return  "hello";
                 $jsonV = '';
 
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
