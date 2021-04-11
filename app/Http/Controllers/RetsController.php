@@ -121,6 +121,8 @@ class RetsController extends Controller
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
+                \Log::info($val);
+                return  "hello";
                 $jsonV = '';
 
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
@@ -171,6 +173,8 @@ class RetsController extends Controller
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
+                \Log::info($val);
+                return  "hello";
                 $jsonV = '';
 
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
