@@ -222,7 +222,7 @@ class RetsController extends Controller
                     try{
                     \Log::info("now sending data from main server");
                     $client2 = new \GuzzleHttp\Client();
-                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer',$s)->getBody();
+                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $s])->getBody();
                     $json2 = json_decode($request2);
                      } catch (\Exception $e) {
                          \Log::info($e);
@@ -290,7 +290,7 @@ class RetsController extends Controller
                 ];
                     try{
                         $client2 = new \GuzzleHttp\Client();
-                        $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer',['body'=>$ob])->getBody();
+                        $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
                         $json2 = json_decode($request2);
                     } catch (\Exception $e) {
                         \Log::info($e);
