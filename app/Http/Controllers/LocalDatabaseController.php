@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Listing;
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\TryCatch;
 
 class LocalDatabaseController extends Controller
 {
