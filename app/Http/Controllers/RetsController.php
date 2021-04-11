@@ -96,8 +96,10 @@ class RetsController extends Controller
     public function featchRdData(){
         try {
             $idd = Checker::first();
+
             if ($idd && $idd['status1'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status1' => 'Running']);
+            return 0;
             // connection start
            
             set_time_limit(2000000);
@@ -151,6 +153,7 @@ class RetsController extends Controller
             if ($idd && $idd['status2'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status2' => 'Running']);
             // connection start
+            return 0;
            
             set_time_limit(2000000);
             $config = new \PHRETS\Configuration;
