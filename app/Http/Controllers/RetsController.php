@@ -203,13 +203,12 @@ class RetsController extends Controller
                 $client = new \GuzzleHttp\Client();
                 $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'])->getBody();
                 $json = json_decode($request);
-                 $lat = null;
-                 $lang = null;
+                $lat = null;
+                $lang = null;
                 if(sizeof($json->results)>0){
                     $lat = $json->results[0]->geometry->location->lat;
                     $lang = $json->results[0]->geometry->location->lng;
-                }
-           
+                }         
                 $s = DB::table('listings')
                     ->where('id', $d['id'])
                     ->update([
@@ -291,7 +290,7 @@ class RetsController extends Controller
                 ];
                     try{
                         $client2 = new \GuzzleHttp\Client();
-                        $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer', $ob)->getBody();
+                        $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer',['body'=>$ob])->getBody();
                         $json2 = json_decode($request2);
                     } catch (\Exception $e) {
                         \Log::info($e);

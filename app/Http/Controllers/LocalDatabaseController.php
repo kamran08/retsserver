@@ -30,6 +30,7 @@ class LocalDatabaseController extends Controller
             }
     }
     public function storeImageDataFromDataServer(Request $request){
+        return 'hello';
         try {
         $data = $request->all();
         $ch = Listing::where('listingID', $data['listingID'])->first();
