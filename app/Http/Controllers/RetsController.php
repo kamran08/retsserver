@@ -20,6 +20,8 @@ class RetsController extends Controller
     // data formate method
     public function createNewListing($data, $type)
     {
+        \Log::info($data);
+        return 1;
         $ss = json_encode($data);
         
         if ($data['LM_Char10_11'] == 'House/Single Family') {
