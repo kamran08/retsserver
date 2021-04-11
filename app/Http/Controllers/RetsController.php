@@ -195,14 +195,12 @@ class RetsController extends Controller
     // start location data 
         public function getLocation(){
             $alldata = Listing::where('lat',null)->orWhere('lang',null)->select('id', 'lat','lang', 'listingAddress')->limit(100)->get();
-            // return $alldata;
-            // \Log::info($alldata);
-            // return 1;
+          
             
             foreach($alldata as $key => $d){
            
                 $client = new \GuzzleHttp\Client();
-                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'])->getBody();
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'].',canada')->getBody();
                 $json = json_decode($request);
                 $lat = null;
                 $lang = null;
@@ -227,7 +225,7 @@ class RetsController extends Controller
 
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $s])->getBody();
-                    $json2 = json_decode($request2);
+                    // $json2 = json_decode($request2);
                      } catch (\Exception $e) {
                          \Log::info($e);
                          return "error";
