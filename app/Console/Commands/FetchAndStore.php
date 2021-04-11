@@ -41,7 +41,7 @@ class FetchAndStore extends Command
         //
         \Log::info("two");
         $ob = new RetsController();
-        // return  $ob->featchRAData();
+        return  $ob->featchRAData();
         
     }
 }

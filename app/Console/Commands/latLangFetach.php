@@ -41,7 +41,7 @@ class latLangFetach extends Command
         //
         \Log::info("four");
         $ob = new RetsController();
-        // return  $ob->getLocation();
+        return  $ob->getLocation();
         
     }
 }

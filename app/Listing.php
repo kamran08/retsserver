@@ -11,6 +11,8 @@ class Listing extends Model
             'listingID',
             'class',
             'completed',
+             'thumbnail',
+              'images',
             'listingType',
             'listingArea',
             'listingArea',

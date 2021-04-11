@@ -40,6 +40,6 @@ class FeatchAndSrore2 extends Command
     {
         \Log::info("one");
         $ob = new RetsController();
-        // return  $ob->featchRdData();
+        return  $ob->featchRdData();
     }
 }

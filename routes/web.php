@@ -12,6 +12,7 @@
 */
 
 
+Route::post('/storeDataFromDataServer', ' LocalDatabaseController@storeDataFromDataServer');
 Route::get('/getData', 'DataController@getData');
 Route::get('/getLocation', 'RetsController@getLocation');
 Route::get('/storeImages', 'RetsController@storeImages');

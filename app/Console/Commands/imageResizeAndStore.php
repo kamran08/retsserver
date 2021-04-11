@@ -40,7 +40,7 @@ class imageResizeAndStore extends Command
     {
         \Log::info("three");
         $ob = new RetsController();
-        // return  $ob->storeImages();
+        return  $ob->storeImages();
         //
     }
 }

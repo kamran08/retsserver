@@ -195,7 +195,7 @@ class RetsController extends Controller
             // return $alldata;
             foreach($alldata as $key => $d){
                 $client = new \GuzzleHttp\Client();
-                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'])->getBody();;
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'])->getBody();
                 $json = json_decode($request);
                 $lat = $json->results[0]->geometry->location->lat;
                 $lang = $json->results[0]->geometry->location->lng;
@@ -207,8 +207,11 @@ class RetsController extends Controller
                         'completed' => DB::raw('completed + 1'),
                     ]);
                 $s = DB::table('listings')
-                ->where('id', $d['id'])->select('id','completed')->first();
-                if($s['completed']==3){
+                ->where('id', $d['id'])->where('completed',3)->first();
+                if($s){
+                    $client2 = new \GuzzleHttp\Client();
+                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer',$s)->getBody();
+                    $json2 = json_decode($request2);
 
                 }
 
@@ -264,9 +267,14 @@ class RetsController extends Controller
                     'thumbnail' => $img,
                     'images' => $data
                 ]);
+                // $s = DB::table('listings')
+                // ->where('id', $val['id'])->select('id','completed')->first();
                 $s = DB::table('listings')
-                ->where('id', $val['id'])->select('id','completed')->first();
-                if($s['completed']==3){
+                ->where('id', $val['id'])->where('completed', 3)->first();
+                if($s){
+                    $client2 = new \GuzzleHttp\Client();
+                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', $s)->getBody();
+                    $json2 = json_decode($request2);
 
                 }
             
