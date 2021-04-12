@@ -135,7 +135,7 @@ class RetsController extends Controller
             Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
             return "successfully inserted data";
         } catch (\Exception $e) {
-            Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Fail']);
+            Checker::where('id', $idd['id'])->update(['status1' => 'Fail']);
            \Log::info($e);
             return "fail";
         }
@@ -186,7 +186,7 @@ class RetsController extends Controller
             Checker::where('id', $idd['id'])->update(['lastId2' => $ofset, 'status2' => 'Stop']);
             return "successfully inserted data";
         } catch (\Exception $e) {
-            Checker::where('id', $idd['id'])->update(['lastId2' => $ofset, 'status2' => 'Fail']);
+            Checker::where('id', $idd['id'])->update(['status2' => 'Fail']);
             \Log::info($e);
             return "fail";
         }
