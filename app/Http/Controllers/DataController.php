@@ -26,8 +26,7 @@ class DataController extends Controller
             if (isset($data['images']))  unset($data['images']);
             unset($data['created_at']);
             unset($data['updated_at']);
-            \Log::info("lat lang");
-            \Log::info($data);
+           \Log::info($data['listingID']);
 
             $ch = Listing::where('listingID', $data['listingID'])->first();
             if ($ch) {
@@ -45,6 +44,7 @@ class DataController extends Controller
         // return "ok";
         try {
             $data = $request->all();
+            \Log::info($data['listingID']);
             $ch = Listing::where('listingID', $data['listingID'])->first();
             if ($ch) {
                 return Listing::where('listingID', $data['listingID'])->update($data);
