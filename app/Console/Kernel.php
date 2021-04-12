@@ -17,7 +17,9 @@ class Kernel extends ConsoleKernel
     // ];
     protected $commands = [
         Commands\FetchAndStore::class,
-        Commands\FeatchAndSrore2::class
+        Commands\FeatchAndSrore2::class,
+        Commands\latLangFetach::class,
+        Commands\imageResizeAndStore::class
     ];
 
     /**
