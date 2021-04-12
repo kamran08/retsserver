@@ -28,14 +28,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('command:FetchAndStore')
-        //          ->everyFifteenMinutes();
-        // $schedule->command('command:FeatchAndSrore2')
-        //          ->everyFifteenMinutes();
-        // $schedule->command('command:latLangFetach')
-        //          ->everyFifteenMinutes();
-        // $schedule->command('command:imageResizeAndStore')
-        //          ->everyFifteenMinutes();
+        $schedule->command('command:FetchAndStore')
+                 ->everyFifteenMinutes();
+        $schedule->command('command:FeatchAndSrore2')
+                 ->everyFifteenMinutes();
+        $schedule->command('command:latLangFetach')
+                 ->everyFifteenMinutes();
+        $schedule->command('command:imageResizeAndStore')
+                 ->everyFifteenMinutes();
     }
 
     /**
