@@ -116,7 +116,7 @@ class RetsController extends Controller
             if ($idd) {
                 $ofset = $idd['lastId'];
             }
-            $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|HOUSE)", ['Limit'  =>   1, 'Offset' => $ofset]);
+            $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|HOUSE)", ['Limit'  =>   100, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
@@ -167,7 +167,7 @@ class RetsController extends Controller
             if ($idd) {
                 $ofset = $idd['lastId2'];
             }
-            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   1, 'Offset' => $ofset]);
+            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   100, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
@@ -215,17 +215,17 @@ class RetsController extends Controller
                         'lang' => $lang,
                         'completed' => DB::raw('completed + 1'),
                     ]);
-                $s = DB::table('listings')
-                ->where('id', $d['id'])->where('lat', '!=', null)->orWhere('lang', '!=', null)->first();
+                $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
                 if($s){
                     try{
-                        \Log::info("now sending data from main server");
+                        $l = json_decode(json_encode($s), true);
                     // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
                     // return 1;
 
                     $client2 = new \GuzzleHttp\Client();
-                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $s])->getBody();
+                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
                     // $json2 = json_decode($request2);
+
                      } catch (\Exception $e) {
                          \Log::info($e);
                          return "error";
