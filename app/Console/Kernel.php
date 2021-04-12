@@ -32,8 +32,8 @@ class Kernel extends ConsoleKernel
         //          ->everyMinute();
         // $schedule->command('command:FeatchAndSrore2')
         //          ->everyMinute();
-        $schedule->command('command:latLangFetach')
-                 ->everyMinute();
+        // $schedule->command('command:latLangFetach')
+        //          ->everyMinute();
         // $schedule->command('command:imageResizeAndStore')
         //          ->everyMinute();
     }
