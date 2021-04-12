@@ -1,8 +1,8 @@
 <?php
+
+namespace App\Http\Controllers;
 ini_set('max_execution_time', 360000000000); //3 minutes
 ini_set('memory_limit', '-1');
-namespace App\Http\Controllers;
-
 date_default_timezone_set('America/New_York');
 
 

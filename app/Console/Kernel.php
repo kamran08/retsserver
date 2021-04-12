@@ -31,13 +31,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:FetchAndStore')
-                 ->everyFiveMinutes();
+                 ->everyMinute();
         $schedule->command('command:FeatchAndSrore2')
-                 ->everyFiveMinutes();
+                 ->everyMinute();
         $schedule->command('command:latLangFetach')
-                 ->everyFiveMinutes();
+                 ->everyMinute();
         $schedule->command('command:imageResizeAndStore')
-                 ->everyFiveMinutes();
+                 ->everyMinute();
     }
 
     /**
