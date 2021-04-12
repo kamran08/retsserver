@@ -1,8 +1,10 @@
 <?php
-
+ini_set('max_execution_time', 360000000000); //3 minutes
+ini_set('memory_limit', '-1');
 namespace App\Http\Controllers;
 
 date_default_timezone_set('America/New_York');
+
 
 use Illuminate\Http\Request;
 use App\Picture;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Http;
 
 class RetsController extends Controller
 {
+       
     // data formate method
     public function createNewListing($data, $type)
     {
@@ -98,8 +101,7 @@ class RetsController extends Controller
             if ($idd && $idd['status1'] == 'Running') return 1;
             Checker::where('id', $idd['id'])->update(['status1' => 'Running']);
             // connection start
-           
-            set_time_limit(2000000);
+            
             $config = new \PHRETS\Configuration;
             $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
             ->setUsername('RETSARVING')
@@ -150,7 +152,7 @@ class RetsController extends Controller
             Checker::where('id', $idd['id'])->update(['status2' => 'Running']);
             // connection start
            
-            set_time_limit(2000000);
+         
             $config = new \PHRETS\Configuration;
             $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
             ->setUsername('RETSARVING')
