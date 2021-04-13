@@ -201,6 +201,7 @@ class RetsController extends Controller
             
             foreach($alldata as $key => $d){
                 if($d['listingAddress']){
+                    $d['listingAddress'] = trim($d['listingAddress'],"#");
                
                     $client = new \GuzzleHttp\Client();
                         $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'].',canada')->getBody();
