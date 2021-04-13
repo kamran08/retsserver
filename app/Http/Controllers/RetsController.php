@@ -200,33 +200,34 @@ class RetsController extends Controller
           
             
             foreach($alldata as $key => $d){
-           
-                $client = new \GuzzleHttp\Client();
-                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'].',canada')->getBody();
-                $json = json_decode($request);
-                $lat = null;
-                $lang = null;
-                if(sizeof($json->results)>0){
-                    $lat = $json->results[0]->geometry->location->lat;
-                    $lang = $json->results[0]->geometry->location->lng;
-                }         
-                $s = DB::table('listings')
-                    ->where('id', $d['id'])
-                    ->update([
-                        'lat' => $lat,
-                        'lang' => $lang,
-                        'completed' => DB::raw('completed + 1'),
-                    ]);
-                $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
-                if($s){
-                    try{
-                        $l = json_decode(json_encode($s), true);
-                    // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
-                    // return 1;
+                if($d['listingAddress']){
+               
+                    $client = new \GuzzleHttp\Client();
+                        $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'].',canada')->getBody();
+                        $json = json_decode($request);
+                        $lat = null;
+                        $lang = null;
+                        if(sizeof($json->results)>0){
+                            $lat = $json->results[0]->geometry->location->lat;
+                            $lang = $json->results[0]->geometry->location->lng;
+                        }         
+                        $s = DB::table('listings')
+                            ->where('id', $d['id'])
+                            ->update([
+                                'lat' => $lat,
+                                'lang' => $lang,
+                                'completed' => DB::raw('completed + 1'),
+                            ]);
+                        $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
+                        if($s){
+                            try{
+                                $l = json_decode(json_encode($s), true);
+                            // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
+                            // return 1;
 
-                    $client2 = new \GuzzleHttp\Client();
-                    $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
-                    // $json2 = json_decode($request2);
+                            $client2 = new \GuzzleHttp\Client();
+                            $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+                            // $json2 = json_decode($request2);
 
                      } catch (\Exception $e) {
                          \Log::info($e);
@@ -235,6 +236,7 @@ class RetsController extends Controller
                     }
 
                 }
+            }
 
             }
             return "success";

@@ -1,99 +1,161 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
 
-        <title>Laravel</title>
+<head>
+    <title>Local Context Events</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- jsFiddle will insert css and js -->
+</head>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+<body>
+    <div id="map"></div>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&callback=initMap&libraries=localContext&v=beta" async></script>
+</body>
 
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
-        </div>
-    </body>
 </html>
+<script type="text/javascript">
+    let map;
+    let infoWindow;
+    let infoStorage;
+    const districts = {
+        a: {
+            label: "1",
+            location: {
+                lat: -1.283975,
+                lng: 36.818797,
+            },
+            name: "Central",
+            description: "The Central Business District is a hub of economic activity during the day and a destination for great food at night.",
+        },
+        b: {
+            label: "2",
+            location: {
+                lat: -1.270955,
+                lng: 36.810857,
+            },
+            name: "Westlands",
+            description: "With many high-end restaurants and a vibrant nightlife, Westlands attracts young professionals and their families. ",
+            
+        },
+        c: {
+            label: "3",
+            location: {
+                lat: -1.311868,
+                lng: 36.838624,
+            },
+            name: "South",
+            description: "Known for high-rise apartment buildings, South B and South C are in high demand.",
+        },
+    };
+
+    function initMap() {
+        const localContextMapView = new google.maps.localContext.LocalContextMapView({
+            element: document.getElementById("map"),
+            placeTypePreferences: [{
+                    type: "restaurant"
+                },
+                {
+                    type: "tourist_attraction"
+                },
+            ],
+            maxPlaceCount: 12,
+        });
+        map = localContextMapView.map;
+        map.setOptions({
+            center: districts["a"].location,
+            zoom: 13,
+        });
+
+        // Add 3 custom markers that open InfoWindows on click
+        for (const key in districts) {
+            const district = districts[key];
+            const marker = new google.maps.Marker({
+                label: district.label,
+                position: district.location,
+                map: map,
+                zIndex: 30,
+            });
+            marker.addListener("click", () => {
+                // Close any open details or existing InfoWindows
+                localContextMapView.hidePlaceDetailsView();
+
+                if (infoWindow) {
+                    infoWindow.close();
+                }
+                // Create and open a new InfoWindow
+                createInfoWindow(district, marker);
+                // Define origin as the selected marker position
+                localContextMapView.directionsOptions = {
+                    origin: district.location,
+                };
+            });
+        }
+        // Set the LocalContextMapView event handlers.
+        localContextMapView.addListener("placedetailsviewshowstart", () => {
+            if (infoWindow) {
+                infoWindow.close();
+            }
+        });
+        localContextMapView.addListener("placedetailsviewhidestart", () => {
+            if (infoStorage) {
+                createInfoWindow(infoStorage.district, infoStorage.marker);
+            }
+        });
+    }
+
+    // Creates an infoWindow and also stores information associated with the
+    // InfoWindow so the InfoWindow can be restored after it has been closed
+    // by non-user-initiated events.
+    function createInfoWindow(district, marker) {
+        // Build the content of the InfoWindow
+        const contentDiv = document.createElement("div");
+        const nameDiv = document.createElement("div");
+        const descriptionDiv = document.createTextNode(district.description);
+        contentDiv.classList.add("infowindow-content");
+        nameDiv.classList.add("title");
+        nameDiv.textContent = district.name;
+        descriptionDiv.textContent = district.description;
+        contentDiv.appendChild(nameDiv);
+        contentDiv.appendChild(descriptionDiv);
+        // Create and open a new InfoWindow
+        infoWindow = new google.maps.InfoWindow();
+        infoWindow.setContent(contentDiv);
+        infoWindow.open(map, marker);
+        // Store key properties of the InfoWindow for future restoration
+        infoStorage = {
+            district: district,
+            marker: marker,
+        };
+        // Clear content storage if infoWindow is closed by the user
+        infoWindow.addListener("closeclick", () => {
+            if (infoStorage) {
+                infoStorage = null;
+            }
+        });
+    }
+</script>
+<style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+    #map {
+        height: 100%;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .infowindow-content {
+        width: 300px;
+    }
+
+    .title {
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
