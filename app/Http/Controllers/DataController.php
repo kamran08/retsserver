@@ -35,6 +35,7 @@ class DataController extends Controller
                 \Log::info($e);
                 return "error";
             }
+        }
             return "pl";
         $d = $date =   date("Y-m-d");
         $dd = MapRequest::where('date', $d)->first();
