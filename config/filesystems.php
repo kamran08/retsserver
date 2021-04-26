@@ -65,7 +65,7 @@ return [
             'url' => env('AWS_URL'),
         ],
         'spaces' => [
-            'root' => '/bcres',
+            'root' => '/bcres_new',
             'driver' => 's3',
             'key' => env('DO_SPACES_KEY'),
             'secret' => env('DO_SPACES_SECRET'),
