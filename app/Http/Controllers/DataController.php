@@ -19,8 +19,8 @@ class DataController extends Controller
 {
     public function getOpenHouseData(Request $request)
     {
-
-        $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
+        $id=$request->id;
+        $s = Listing::where('id', $id)->where('lat', '!=', null)->first();
         if ($s) {
             try {
                 $l = json_decode(json_encode($s), true);
