@@ -21,6 +21,7 @@ class DataController extends Controller
     {
         $id=$request->id;
         $s = Listing::where('id', $id)->where('lat', '!=', null)->first();
+        \Log::info($s);
         if ($s) {
             try {
                 $l = json_decode(json_encode($s), true);
