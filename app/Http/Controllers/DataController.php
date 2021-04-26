@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Picture;
 use App\JsonData;
 use App\Listing;
+use App\MapRequest;
 use App\Checker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +17,46 @@ use Illuminate\Support\Facades\Http;
 
 class DataController extends Controller
 {
+    public function getOpenHouseData(Request $request)
+    {
+
+        $d = $date =   date("Y-m-d");
+        $dd = MapRequest::where('date', $d)->first();
+        if($dd) {
+            return $dd['counter'];
+        }
+        MapRequest::create([
+            "counter" =>0,
+            "date"=> $d
+        ]);
+        return $d;
+        // $data = Listing::select('id', 'listingID')->where('class','RD_1')->limit(1)->get();
+        set_time_limit(2000000);
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+        ->setUsername('RETSARVING')
+        ->setPassword('wjq6PJqUA45EGU8')
+        ->setRetsVersion('1.7.2');
+        \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
+        $data1 = [];
+        $result = $rets->Search("openhouse", "OpenHouse", '*', ['Limit'    =>    1]);
+        // foreach ($data as $key => $val) {
+        //     //    $url=  $rets->GetObject('OpenHouse', 'RD_1', '*',1);
+        //     //   $url=  $rets->Search("OpenHouse", "RD_1",'*', ['Limit'    =>    1]);
+
+        //     // $url =  $rets->Search('OpenHouse', 'RD_1','*',['Limit'    =>    20]);
+        //     // $url = $rets->GetObject('OpenHouse', 'RD_1', , '*',1);
+        //     $url = $rets->Search('OpenHouse', 'RD_1', ['Limit'    =>    20]);
+        //     array_push($data1, $url);
+
+        // }
+        // $url = $rets->Search('OpenHouse', 'RD_1','*', ['Limit'=>20]);
+        dd($result);
+        return $data1;
+
+    }
     public function storeDataFromDataServer(Request $request)
     {
         // return "ok";

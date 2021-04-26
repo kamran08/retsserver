@@ -60,6 +60,16 @@ class Listing extends Model
             'texPerYear',
             'unitsInDevelopment',
             'kitchens',
-            'json_data'
+            'json_data',
+            'perSqrtPrice',
+            'organizationName1',
+            'organizationName2',
+            'startaFee',
+            'originalListPrice',
+            'soldPrice',
+            'soldPrice',
+            'previousPrice',
+            'isSent',
+            'soldPricePerSqrt'
     ];
 }

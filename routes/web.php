@@ -18,11 +18,9 @@ Route::get('/getData', 'DataController@getData');
 Route::get('/getLocation', 'RetsController@getLocation');
 Route::get('/storeImages', 'RetsController@storeImages');
 Route::get('/getDatadirectoryCheck', 'DataController@directoryCheck');
+Route::get('/getOpenHouseData', 'DataController@getOpenHouseData');
 Route::get('/resorce', 'DataController@resorce');
 // Route::get('/getData', 'DataController@getData');
 Route::get('/', function () {
     return view('welcome');
 });
-
-// source normal
-// svg normal

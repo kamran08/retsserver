@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class LocalDatabaseController extends Controller
 {
+    
+
     //
     public function storeDataFromDataServer(Request $request){
         try {

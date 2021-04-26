@@ -11,6 +11,7 @@ use App\Picture;
 use App\JsonData;
 use App\Listing;
 use App\Checker;
+use App\MapRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use File;
@@ -86,7 +87,15 @@ class RetsController extends Controller
             'texPerYear' => isset($data['LM_Int2_5'])? $data['LM_Int2_5']:null,
             'unitsInDevelopment' =>isset( $data['LM_Int4_1'])? $data['LM_Int4_1']:null,
             'kitchens' => isset($data['LM_Int1_8'])?$data['LM_Int1_8']:null,
-            'json_data' => $ss
+            'json_data' => $ss,
+            'perSqrtPrice' => isset($data['L_PricePerSQFT'])?$data['L_PricePerSQFT']:null,
+            'organizationName1' => isset($data['LO1_OrganizationName'])?$data['LO1_OrganizationName']:null,
+            'organizationName2' => isset($data['LO2_OrganizationName'])?$data['LO2_OrganizationName']:null,
+            'startaFee' => isset($data['LM_Dec_22'])?$data['LM_Dec_22']:null,
+            'originalListPrice' => isset($data['L_OriginalPrice'])?$data['L_OriginalPrice']:null,
+            'soldPrice' => isset($data['L_SoldPrice'])?$data['L_SoldPrice']:null,
+            'previousPrice' => isset($data['LM_int4_40'])?$data['LM_int4_40']:null,
+            'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
         ];
         return $d;
         // return Listing::create($d);
@@ -118,7 +127,8 @@ class RetsController extends Controller
             if ($idd) {
                 $ofset = $idd['lastId'];
             }
-            $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|HOUSE)", ['Limit'  =>  50, 'Offset' => $ofset]);
+            // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|HOUSE)", ['Limit'  =>  50, 'Offset' => $ofset]);
+            $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
@@ -169,7 +179,8 @@ class RetsController extends Controller
             if ($idd) {
                 $ofset = $idd['lastId2'];
             }
-            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   50, 'Offset' => $ofset]);
+            $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   100, 'Offset' => $ofset]);
+            // $results   = $rets->Search('Property',  'RA_2', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   50, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
             $temp = [];
             foreach ($alldata as $key => $val) {
@@ -197,9 +208,19 @@ class RetsController extends Controller
     // start location data 
         public function getLocation(){
             $alldata = Listing::where('lat',null)->orWhere('lang',null)->select('id', 'lat','lang', 'listingAddress')->limit(100)->get();
-          
-            
+            $date =   date("Y-m-d");
+            $mapreq = MapRequest::where('date', $date)->first();
+            if($mapreq) {
+               
+            }
+            else{
+                $mapreq = MapRequest::create([
+                    "counter" => 0,
+                    "date" => $date
+                ]);
+            }
             foreach($alldata as $key => $d){
+                if($mapreq['counter'] >=2000) return 1;
                 if($d['listingAddress']){
                     $d['listingAddress'] = trim($d['listingAddress'],"#");
                
@@ -211,14 +232,21 @@ class RetsController extends Controller
                         if(sizeof($json->results)>0){
                             $lat = $json->results[0]->geometry->location->lat;
                             $lang = $json->results[0]->geometry->location->lng;
-                        }         
+                        }
+
+
+                          DB::table('map_requests')->where('id', $mapreq['id'])->update([
+                                'counter' => DB::raw('counter + 1')
+                            ]);
+                         $mapreq['counter']+=1;
                         $s = DB::table('listings')
                             ->where('id', $d['id'])
                             ->update([
                                 'lat' => $lat,
                                 'lang' => $lang,
-                                'completed' => DB::raw('completed + 1'),
+                                'isSent' => 'sent',
                             ]);
+                        
                         $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
                         if($s){
                             try{
@@ -227,7 +255,7 @@ class RetsController extends Controller
                             // return 1;
 
                             $client2 = new \GuzzleHttp\Client();
-                            $request2 = (string) $client2->post('https://youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+                            $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
                             // $json2 = json_decode($request2);
 
                      } catch (\Exception $e) {
@@ -260,7 +288,7 @@ class RetsController extends Controller
                 $connect = $rets->Login();
             
   
-            $alldata = Listing::where('completed','!=', 3)->select('id', 'listingID')->limit(100)->get();
+            $alldata = Listing::where('completed','!=', 3)->where('isSent', 'sent')->select('id', 'listingID')->limit(100)->get();
             foreach($alldata as $key => $val){
                 $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
                 $data = [];
@@ -289,7 +317,7 @@ class RetsController extends Controller
                 ->update([
                     'thumbnail' => $img,
                     'images' => $data,
-                    'completed' => DB::raw('completed + 1')
+                    'completed' => 3
                 ]);
                 $ob = [
                     'listingID' =>  $val['listingID'],
@@ -300,7 +328,7 @@ class RetsController extends Controller
                         // $request2 = Http::post('https://youhome.cc/storeImageDataFromDataServer', $s);
                         // return 1;
                         $client2 = new \GuzzleHttp\Client();
-                        $request2 = (string) $client2->post('https://youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
+                        $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
                         $json2 = json_decode($request2);
                     } catch (\Exception $e) {
                         \Log::info($e);
