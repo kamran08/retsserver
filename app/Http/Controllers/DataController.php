@@ -20,6 +20,22 @@ class DataController extends Controller
     public function getOpenHouseData(Request $request)
     {
 
+        $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
+        if ($s) {
+            try {
+                $l = json_decode(json_encode($s), true);
+                // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
+                // return 1;
+
+                $client2 = new \GuzzleHttp\Client();
+                $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+                // $json2 = json_decode($request2);
+
+            } catch (\Exception $e) {
+                \Log::info($e);
+                return "error";
+            }
+            return "pl";
         $d = $date =   date("Y-m-d");
         $dd = MapRequest::where('date', $d)->first();
         if($dd) {
