@@ -9,6 +9,7 @@ use App\JsonData;
 use App\Listing;
 use App\MapRequest;
 use App\Checker;
+use App\UpdateChecker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use File;
@@ -17,8 +18,7 @@ use Illuminate\Support\Facades\Http;
 
 class DataController extends Controller
 {
-    public function getOpenHouseData(Request $request)
-    {
+    public function getOpenHouseData(Request $request){
         $id=$request->id;
         $s = Listing::where('id', $id)->where('lat', '!=', null)->first();
         \Log::info($s);
@@ -75,8 +75,7 @@ class DataController extends Controller
         return $data1;
 
     }
-    public function storeDataFromDataServer(Request $request)
-    {
+    public function storeDataFromDataServer(Request $request){
         // return "ok";
         try {
             $data = $request->all();
@@ -98,8 +97,7 @@ class DataController extends Controller
             return false;
         }
     }
-    public function storeImageDataFromDataServer(Request $request)
-    {
+    public function storeImageDataFromDataServer(Request $request){
         // return "ok";
         try {
             $data = $request->all();
@@ -115,8 +113,7 @@ class DataController extends Controller
             return false;
         }
     }
-    public function uploadThumb(Request $request)
-    {
+    public function uploadThumb(Request $request){
         $this->validate($request, [
             'file' => 'required|mimes:jpeg,jpg,png,fig,gif,svg'
         ]);
@@ -130,9 +127,9 @@ class DataController extends Controller
         $files = Storage::disk('spaces')->url($path1);
         return $files;
 
-  }
+    }
 
-  public function directoryCheck(){
+    public function directoryCheck(){
       $counter = 0;
         $result1=[];
         $result2=[];
@@ -168,14 +165,9 @@ class DataController extends Controller
             'two'=> $result2,
             'count'=>$counter
         ];
-  }
+    }
 
-
-
-
-
-    public function uploadThumb1(Request $request)
-    {
+    public function uploadThumb1(Request $request){
         $this->validate($request, [
             'file' => 'required|mimes:jpeg,jpg,png'
         ]);
@@ -198,7 +190,7 @@ class DataController extends Controller
         }
     }
 
-  public function getData1(Request $request){
+    public function getData1(Request $request){
 
 
 
@@ -238,44 +230,44 @@ class DataController extends Controller
         }
         return $result; //will be in this case ['img/text1_logo.png']
     
-  }
-  public function storeToBucket(Request $request){
+    }
+    public function storeToBucket(Request $request){
 
 
 
 
-        $path1 = $request->file->getClientOriginalName();
-        $myFile = Storage::disk('spaces')->put($path1, file_get_contents($request->file('file')));
-        Storage::disk('spaces')->setVisibility($path1, 'public');
-        $files = Storage::disk('spaces')->url($path1);
-        return $files;
+            $path1 = $request->file->getClientOriginalName();
+            $myFile = Storage::disk('spaces')->put($path1, file_get_contents($request->file('file')));
+            Storage::disk('spaces')->setVisibility($path1, 'public');
+            $files = Storage::disk('spaces')->url($path1);
+            return $files;
 
 
-        // $picName = time() . '.' . $request->file->getClientOriginalExtension();
+            // $picName = time() . '.' . $request->file->getClientOriginalExtension();
 
 
-        $picName = $request->file->getClientOriginalName();
-        // $path = $request->file('file')->store('','spaces');
-        // $path = $request->filemove(public_path('spaces'),$picName);
-        $myFile = Storage::disk('spaces')->put('kk.png', $request->file('file'));
+            $picName = $request->file->getClientOriginalName();
+            // $path = $request->file('file')->store('','spaces');
+            // $path = $request->filemove(public_path('spaces'),$picName);
+            $myFile = Storage::disk('spaces')->put('kk.png', $request->file('file'));
+            
+            // return $path;
         
-        // return $path;
-       
 
 
 
 
 
-        // $path = $request->file('file')->store('uploads', 'spaces');
-        Storage::disk('spaces')->setVisibility($myFile, 'public');
-        // $image = Picture::create([
-        //     'filename' => basename($path),
-        //     'url' => Storage::disk('spaces')->url($path)
-        // ]);
-        // return $image;
-        return  Storage::disk('spaces')->url($myFile);
-        // return Storage::disk('spaces')->url($path);
-  }
+            // $path = $request->file('file')->store('uploads', 'spaces');
+            Storage::disk('spaces')->setVisibility($myFile, 'public');
+            // $image = Picture::create([
+            //     'filename' => basename($path),
+            //     'url' => Storage::disk('spaces')->url($path)
+            // ]);
+            // return $image;
+            return  Storage::disk('spaces')->url($myFile);
+            // return Storage::disk('spaces')->url($path);
+    }
 
  
 
@@ -349,7 +341,7 @@ class DataController extends Controller
         ];
         return Listing::create($d);
     }
-// start  of method getData
+    // start  of method getData
     public function getData(){
         // return 1;
         $idd = Checker::first();
@@ -371,7 +363,7 @@ class DataController extends Controller
                 $ofset = $idd['lastId'];
             }
             // $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>   2, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Type_,LM_Char10_11,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId,LM_Int1_1,LM_Int2_2']);
-            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|DUPXH)", ['Limit'  =>   2, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Type_,LM_Char10_11,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId,LM_Int1_1,LM_Int2_2']);
+            $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|DUPXH)", ['Limit'  =>   2, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Type_,LM_Char10_11,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId,LM_Int1_1,LM_Int2_2','L_Address']);
             // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2)", ['Limit'  =>   100, 'Offset' => 73300, 'select' => 'L_ListingID']);
             //  return $results->getTotalResultsCount();
             $alldata  = $results->toArray();
@@ -417,11 +409,12 @@ class DataController extends Controller
             return "successfully insert data";
         } catch (\Exception $e) {
             Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Fail']);
-            return "fail";
+            // return "fail";
+            return $e;
         }
     }
-// end   of method getData
-// start  of method getDataTwo
+    // end   of method getData
+    // start  of method getDataTwo
     public function getDataTwo(){
         $idd = Checker::first();
         if($idd && $idd['status2']== 'Running') return 1;
@@ -491,18 +484,6 @@ class DataController extends Controller
     }
     // end of method getDataTwo
    
-   
-   
-   
-   
-   
-   
-   
-
-
-
-
-   
     public function resorce (){
         
       
@@ -570,13 +551,22 @@ class DataController extends Controller
         // if($idd){
         //     $ofset = $idd['lastId'];
         // }
-        $results   = $rets->Search('Property',  'RA_2', "(L_Area=|29,),(L_Status=1_0),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   20,'select' => 'LM_Char10_11']);
-        // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|29,),(L_Status=1_0)", ['Limit'  =>   1, 'Offset'=>$ofset,'select'=> 'L_ListingID,L_Address,LV_vow_address,L_AddressNumber,L_AddressDirection,L_AddressStreet,L_AddressNumberLow,L_StreetDesignationId']);
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  2, 'Offset' => $ofset]);
         
         $alldata  = $results->toArray();
-        return $alldata;
-            \Log::info($alldata);
-            return  1;
+        $listingIds = [];
+        foreach ($alldata as $value ) {
+            array_push($listingIds,$value['L_ListingID']);
+
+        }
+        $listingData  = Listing::whereIn('listingID',$listingIds)->get(); ;
+        return response()->json([
+            'success' => false,
+            'alldata' => $alldata,
+            'listingData' => $listingData
+        ], 422);
+        \Log::info($alldata);
+        return  1;
         
         
         foreach ($alldata as $key => $val) {
@@ -605,13 +595,13 @@ class DataController extends Controller
             foreach ($objects as $ke => $photo) {
                     $url = $photo->getContent();
                     $name = time() . uniqid(rand()) . '.png';
-                   $myFile = Storage::disk('spaces')->put($name, $url);
-                        Storage::disk('spaces')->setVisibility($name, 'public');
-                        $ll = Storage::disk('spaces')->url($name);
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
                     array_push($data, $url);
                     Picture::create(['filename'=> $ll, 'L_ListingID'=> $val['L_ListingID']]);
                     // return 1;
-                }
+            }
             
             $ofset++;
             Checker::where('id', $idd['id'])->update(['lastId'=> $ofset]);
@@ -625,5 +615,205 @@ class DataController extends Controller
         catch(\Exception $e){
             return $e;
         }
+    }
+    public function resorce2 (){
+        $idd = UpdateChecker::first();
+        if ($idd && $idd['status1'] == 'Running') return 1;
+        UpdateChecker::where('id', $idd['id'])->update(['status1' => 'Running']);
+        // try{
+            set_time_limit(2000000);
+            $config = new \PHRETS\Configuration;
+            // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+            $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+                ->setUsername('RETSARVING')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setRetsVersion('1.7.2');
+            \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+            $rets = new \PHRETS\Session($config);
+            $connect = $rets->Login();
+            $resource = 'Property';
+            $photo_resource_type = 'Property';
+            $ofset = 0;
+            if($idd){
+                $ofset = $idd['lastId'];
+            }
+
+            $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
+            
+            $alldata  = $results->toArray();
+            $listingIds = [];
+
+            foreach ($alldata as $value ) {
+                array_push($listingIds,$value['L_ListingID']);
+                $ofset++;
+
+            }
+            $listingData  = Listing::whereIn('listingID',$listingIds)->select('id','listingID','updateDate','lastPhotoUpdate')->get(); ;
+            $check = UpdateChecker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
+            $updateArray=[];
+            foreach ($listingData as $value ) {
+                $index = -1;
+                // array_push($listingIds,$value['L_ListingID']);
+                $serverValueLength = sizeof($alldata);
+                if($serverValueLength > 0){
+
+                    for($i=0;$i<$serverValueLength;$i++){
+                        
+                        if($value->listingID == $alldata[$i]['L_ListingID']){
+                            
+    
+                            $db_date = strtotime($value->updateDate);
+                            $rets_date = strtotime($alldata[$i]['L_UpdateDate']);
+    
+                            if($db_date < $rets_date){
+                                $index = $i;
+                                $ob = [
+                                    'L_ListingID'=>$value->listingID,
+                                    'db_value'=>$value->updateDate,
+                                    // 'db_value'=>$value,
+                                    'rets_value'=>$alldata[$i]['L_UpdateDate'],
+                                    // 'rets_value'=>$alldata[$i],
+                                ];
+                                $this->updateListingChanges($alldata[$i],$value);
+                                array_push($updateArray,$ob);
+        
+                            }
+                        }
+    
+                    }
+                }
+                if($index != -1){
+                    unset($alldata[$index]);
+                }
+                $ofset++;
+
+            }
+            return response()->json([
+                'success' => $check,
+                'listingData' => $listingData,
+                'updateArray' => $updateArray,
+            ], 200);
+        
+        
+        
+        foreach ($alldata as $key => $val) {
+
+            //     $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 1);
+            //     return $objects;
+            // return $val;
+                 $client = new \GuzzleHttp\Client();
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $val['L_Address'])->getBody();;
+                $json = json_decode($request);
+                $lat = $json->results[0]->geometry->location->lat;
+                $lng = $json->results[0]->geometry->location->lng;
+                $val['lat'] = $lat;
+                $val['lng'] = $lng;
+            
+            $jsonV=[];
+            // $objects=[];
+            if(sizeof($jsonV)>0 && !isset($jsonV['L_ListingID']) && ($jsonV['L_ListingID'] != $val['L_ListingID'])){
+
+                $jsonV = JsonData::create(['data'=>$ss, 'L_ListingID'=>$val['L_ListingID']]);
+            }
+            $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
+                // return $objects->toJSON();
+                
+                $data = [];
+            foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $url);
+                    Picture::create(['filename'=> $ll, 'L_ListingID'=> $val['L_ListingID']]);
+                    // return 1;
+            }
+            
+            $ofset++;
+            Checker::where('id', $idd['id'])->update(['lastId'=> $ofset]);
+        }
+        print "<pre>";
+
+        // print_r($results->toJSON());
+        print "</pre>";
+        return "successfully insert data";
+        // }
+        // catch(\Exception $e){
+        //     return $e;
+        // }
+    }
+
+    public function updateListingChanges($retsData,$serverData){
+        $status = 3;
+        $db_date = strtotime($serverData->lastPhotoUpdate);
+        $rets_date = strtotime($retsData['L_Last_Photo_updt']);
+        if($db_date < $rets_date){
+            $status = 2;
+        }
+        $ss = json_encode($retsData);
+        $dd = [
+            'isSent'=>'not sent',
+            'completed'=>$status,
+            'json_data' => $ss,
+        ];
+        if($retsData['L_Type_']) $dd['listingType'] = $retsData['L_Type_'];
+        if($retsData['L_Area']) $dd['listingArea'] = $retsData['L_Area'];
+        if($retsData['L_Address']) $dd['listingAddress'] = $retsData['L_Address'];
+        if($retsData['L_AddressDirection']) $dd['listingAddressDirection'] = $retsData['L_AddressDirection'];
+        if($retsData['L_AddressStreet']) $dd['listingAddressStreet'] = $retsData['L_AddressStreet'];
+        if($retsData['L_AddressUnit']) $dd['listingAddressUnit'] = $retsData['L_AddressUnit'];
+        if($retsData['LFD_Amenities_25']) $dd['amenities'] = $retsData['LFD_Amenities_25'];
+        if($retsData['LFD_BasementArea_6']) $dd['basementArea'] = $retsData['LFD_BasementArea_6'];
+        if($retsData['LM_char30_28']) $dd['lotSizeLenth'] = $retsData['LM_char30_28'];
+        if($retsData['LV_vow_address']) $dd['onInternet'] = $retsData['LV_vow_address'];
+        if($retsData['LFD_FeaturesIncluded_24']) $dd['features'] = $retsData['LFD_FeaturesIncluded_24'];
+        if($retsData['LM_Int1_2']) $dd['fireplaces'] = $retsData['LM_Int1_2'];
+        if($retsData['LM_Dec_7']) $dd['floorAreaTotal'] = $retsData['LM_Dec_7'];
+        if($retsData['LM_Dec_8']) $dd['lotSizeWidthFeet'] = $retsData['LM_Dec_8'];
+        if($retsData['LM_Dec_9']) $dd['lotSizeMeter'] = $retsData['LM_Dec_9'];
+        if($retsData['LR_remarks33']) $dd['internetRemarks'] = $retsData['LR_remarks33'];
+        if($retsData['L_ListingDate']) $dd['listingDate'] = $retsData['L_ListingDate'];
+        if($retsData['L_UpdateDate']) $dd['updateDate'] = $retsData['L_UpdateDate'];
+        if($retsData['L_AddressNumber']) $dd['addressNumber'] = $retsData['L_AddressNumber'];
+        if($retsData['L_City']) $dd['city'] = $retsData['L_City'];
+        if($retsData['LM_Char10_5']) $dd['subArea'] = $retsData['LM_Char10_5'];
+        if($retsData['L_State']) $dd['state'] = $retsData['L_State'];
+        if($retsData['L_Zip']) $dd['zip'] = $retsData['L_Zip'];
+        if($retsData['L_AskingPrice']) $dd['askingPrice'] = $retsData['L_AskingPrice'];
+        if($retsData['LM_Dec_16']) $dd['grossTaxes'] = $retsData['LM_Dec_16'];
+        if($retsData['LM_Dec_12']) $dd['lotSizeArea'] = $retsData['LM_Dec_12'];
+        if($retsData['LM_Dec_13']) $dd['lotSizeAreaSqMt'] = $retsData['LM_Dec_13'];
+        if($retsData['LM_Dec_11']) $dd['lotSizeAreaSqFt'] = $retsData['LM_Dec_11'];
+        if($retsData['L_DisplayId']) $dd['displayId'] = $retsData['L_DisplayId'];
+        if($retsData['LM_Int1_1']) $dd['floorLevel'] = $retsData['LM_Int1_1'];
+        if($retsData['L_PictureCount']) $dd['pictureCount'] = $retsData['L_PictureCount'];
+        if($retsData['L_Last_Photo_updt']) $dd['lastPhotoUpdate'] = $retsData['L_Last_Photo_updt'];
+        if($retsData['LM_Char10_11']) $dd['houseType'] = $retsData['LM_Char10_11'];
+        if($retsData['L_Status']) $dd['status'] = $retsData['L_Status'];
+        if($retsData['LM_Int1_4']) $dd['totalBedrooms'] = $retsData['LM_Int1_4'];
+        if($retsData['LM_Int1_7']) $dd['totalRooms'] = $retsData['LM_Int1_7'];
+        if($retsData['LM_Int1_17']) $dd['halfBaths'] = $retsData['LM_Int1_17'];
+        if($retsData['LM_Int1_18']) $dd['fullBaths'] = $retsData['LM_Int1_18'];
+        if($retsData['LM_Int1_19']) $dd['totalBaths'] = $retsData['LM_Int1_19'];
+        if($retsData['LM_Int2_3']) $dd['age'] = $retsData['LM_Int2_3'];
+        if($retsData['LM_Int2_2']) $dd['yearBuilt'] = $retsData['LM_Int2_2'];
+        if($retsData['LM_Int2_5']) $dd['texPerYear'] = $retsData['LM_Int2_5'];
+        if($retsData['LM_Int4_1']) $dd['unitsInDevelopment'] = $retsData['LM_Int4_1'];
+        if($retsData['LM_Int1_8']) $dd['kitchens'] = $retsData['LM_Int1_8'];
+        if($retsData['L_PricePerSQFT']) $dd['perSqrtPrice'] = $retsData['L_PricePerSQFT'];
+        if($retsData['LO1_OrganizationName']) $dd['organizationName1'] = $retsData['LO1_OrganizationName'];
+        if($retsData['LO2_OrganizationName']) $dd['organizationName2'] = $retsData['LO2_OrganizationName'];
+        if($retsData['LM_Dec_22']) $dd['startaFee'] = $retsData['LM_Dec_22'];
+        if($retsData['L_OriginalPrice']) $dd['originalListPrice'] = $retsData['L_OriginalPrice'];
+        if($retsData['L_SoldPrice']) $dd['soldPrice'] = $retsData['L_SoldPrice'];
+        if($retsData['LM_int4_40']) $dd['previousPrice'] = $retsData['LM_int4_40'];
+        if($retsData['LM_Dec_24']) $dd['soldPricePerSqrt'] = $retsData['LM_Dec_24'];
+            
+        
+            
+        Listing::where('listingID',$serverData['listingID'])->update($dd);
+
     }
 }

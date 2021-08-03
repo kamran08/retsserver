@@ -19,7 +19,8 @@ class Kernel extends ConsoleKernel
         Commands\FetchAndStore::class,
         Commands\FeatchAndSrore2::class,
         Commands\latLangFetach::class,
-        Commands\imageResizeAndStore::class
+        Commands\imageResizeAndStore::class,
+        Commands\CheckUpdatedData::class
     ];
 
     /**
@@ -37,6 +38,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:latLangFetach')
                  ->everyFiveMinutes();
         $schedule->command('command:imageResizeAndStore')
+                 ->everyFiveMinutes();
+        $schedule->command('command:CheckUpdatedData')
                  ->everyFiveMinutes();
     }
 
