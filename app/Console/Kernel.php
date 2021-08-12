@@ -41,6 +41,8 @@ class Kernel extends ConsoleKernel
                  ->everyFiveMinutes();
         $schedule->command('command:CheckUpdatedData')
                  ->everyFiveMinutes();
+        $schedule->command('command:CheckUpdatedData2')
+                 ->everyFiveMinutes();
     }
 
     /**
