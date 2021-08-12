@@ -7,6 +7,7 @@ date_default_timezone_set('America/New_York');
 
 
 use Illuminate\Http\Request;
+use App\ErrorStore;
 use App\Picture;
 use App\JsonData;
 use App\Listing;
@@ -19,6 +20,7 @@ use File;
 use DB;
 use Image;
 use Illuminate\Support\Facades\Http;
+use PhpParser\Node\Stmt\TryCatch;
 
 class RetsController extends Controller
 {
@@ -295,6 +297,8 @@ class RetsController extends Controller
             $data = [];
             $l =0;
                 $img='';
+            
+            try{
             foreach ($objects as $ke => $photo) {
                 $url = $photo->getContent();
                 $name = time() . uniqid(rand()) . '.png';
@@ -311,6 +315,10 @@ class RetsController extends Controller
                 $ll = Storage::disk('spaces')->url($name);
                 array_push($data, $ll);
             }
+            } catch (\Exception $e) {
+                
+                ErrorStore::create(['data'=>json_encode($val)]);
+                }
             $data = json_encode($data);
 
             $s = DB::table('listings')
