@@ -317,7 +317,7 @@ class RetsController extends Controller
             }
             } catch (\Exception $e) {
                 
-                ErrorStore::create(['data'=>json_encode($val)]);
+                 ErrorStore::create(['data'=>json_encode($val)]);
                 }
             $data = json_encode($data);
 
