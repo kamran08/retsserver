@@ -345,6 +345,11 @@ class RetsController extends Controller
     //End storeImages data
     public function checkForUpdatedData(){
         $idd = UpdateChecker::first();
+        $checklisting = Listing::where('class', 'RD_1')->count();
+        if($checklisting >= $idd['lastId']) {
+            UpdateChecker::where('id', $idd['id'])->update(['lastId'=>0]);
+            return 1;
+        }
         if ($idd && $idd['status1'] == 'Running') return 1;
         UpdateChecker::where('id', $idd['id'])->update(['status1' => 'Running']);
         try{
@@ -413,6 +418,12 @@ class RetsController extends Controller
     
     public function checkForUpdatedData2(){
         $idd = UpdateChecker::first();
+        $checklisting = Listing::where('class', 'RA_2')->count();
+        // if ($checklisting >= $idd['lastId2']) return 1;
+        if ($checklisting >= $idd['lastId2']) {
+            UpdateChecker::where('id', $idd['id'])->update(['lastId2' => 0]);
+            return 1;
+        }
         if ($idd && $idd['status2'] == 'Running') return 1;
         UpdateChecker::where('id', $idd['id'])->update(['status2' => 'Running']);
         try{
