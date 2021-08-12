@@ -15,6 +15,7 @@
 Route::post('/storeDataFromDataServer', 'DataController@storeDataFromDataServer');
 Route::post('/storeImageDataFromDataServer', 'DataController@storeImageDataFromDataServer');
 Route::get('/getData', 'DataController@getData');
+Route::get('/checkForUpdatedData2', 'RetsController@checkForUpdatedData2');
 Route::get('/getLocation', 'RetsController@getLocation');
 Route::get('/storeImages', 'RetsController@storeImages');
 Route::get('/getDatadirectoryCheck', 'DataController@directoryCheck');

@@ -346,7 +346,7 @@ class RetsController extends Controller
     public function checkForUpdatedData(){
         $idd = UpdateChecker::first();
         $checklisting = Listing::where('class', 'RD_1')->count();
-        if($checklisting >= $idd['lastId']) {
+        if ($idd['lastId2'] >= $checklisting) {
             UpdateChecker::where('id', $idd['id'])->update(['lastId'=>0]);
             return 1;
         }
@@ -419,8 +419,7 @@ class RetsController extends Controller
     public function checkForUpdatedData2(){
         $idd = UpdateChecker::first();
         $checklisting = Listing::where('class', 'RA_2')->count();
-        // if ($checklisting >= $idd['lastId2']) return 1;
-        if ($checklisting >= $idd['lastId2']) {
+        if ($idd['lastId2']>=$checklisting) {
             UpdateChecker::where('id', $idd['id'])->update(['lastId2' => 0]);
             return 1;
         }
