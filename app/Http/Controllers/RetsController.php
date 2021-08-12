@@ -410,6 +410,75 @@ class RetsController extends Controller
             return $e;
         }
     }
+    
+    public function checkForUpdatedData2(){
+        $idd = UpdateChecker::first();
+        if ($idd && $idd['status2'] == 'Running') return 1;
+        UpdateChecker::where('id', $idd['id'])->update(['status2' => 'Running']);
+        try{
+            set_time_limit(2000000);
+            $config = new \PHRETS\Configuration;
+            // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+            $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+                ->setUsername('RETSARVING')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setPassword('wjq6PJqUA45EGU8')
+                ->setRetsVersion('1.7.2');
+            \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+            $rets = new \PHRETS\Session($config);
+            $connect = $rets->Login();
+            $resource = 'Property';
+            $photo_resource_type = 'Property';
+            $ofset = 0;
+            if($idd){
+                $ofset = $idd['lastId2'];
+            }
+            $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
+            $alldata  = $results->toArray();
+            $listingIds = [];
+            foreach ($alldata as $value ) {
+                array_push($listingIds,$value['L_ListingID']);
+                $ofset++;
+            }
+            $listingData  = Listing::whereIn('listingID',$listingIds)->select('id','listingID','updateDate','lastPhotoUpdate')->get(); ;
+            
+            $updateArray=[];
+            foreach ($listingData as $value ) {
+                $index = -1;
+                $serverValueLength = sizeof($alldata);
+                if($serverValueLength > 0){
+                    for($i=0;$i<$serverValueLength;$i++){
+                        if($value->listingID == $alldata[$i]['L_ListingID']){
+                            $db_date = strtotime($value->updateDate);
+                            $rets_date = strtotime($alldata[$i]['L_UpdateDate']);
+                            if($db_date < $rets_date){
+                                $index = $i;
+                                $ob = [
+                                    'L_ListingID'=>$value->listingID,
+                                    'db_value'=>$value->updateDate,
+                                    'rets_value'=>$alldata[$i]['L_UpdateDate'],
+                                ];
+                                $this->updateListingChanges($alldata[$i],$value);
+                                array_push($updateArray,$ob);
+                            }
+                        }
+                    }
+                }
+                $ofset++;
+
+            }
+            $check = UpdateChecker::where('id', $idd['id'])->update(['lastId2' => $ofset, 'status2' => 'Stop']);
+            return response()->json([
+                'success' => $check,
+                'listingData' => $listingData,
+                'updateArray' => $updateArray,
+            ], 200);
+        }
+        catch(\Exception $e){
+            return $e;
+        }
+    }
+
     public function updateListingChanges($retsData,$serverData){
         $status = 3;
         $db_date = strtotime($serverData->lastPhotoUpdate);
