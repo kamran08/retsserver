@@ -475,7 +475,20 @@ class RetsController extends Controller
         if($retsData['L_SoldPrice']) $dd['soldPrice'] = $retsData['L_SoldPrice'];
         if($retsData['LM_int4_40']) $dd['previousPrice'] = $retsData['LM_int4_40'];
         if($retsData['LM_Dec_24']) $dd['soldPricePerSqrt'] = $retsData['LM_Dec_24'];
+        
+
         Listing::where('listingID',$serverData['listingID'])->update($dd);
+        try {
+            $l = json_decode(json_encode($dd), true);
+
+            $client2 = new \GuzzleHttp\Client();
+            $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+
+        } catch (\Exception $e) {
+            \Log::info($e);
+            return "error";
+        }
+
 
     }
 
