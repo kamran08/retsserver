@@ -211,6 +211,7 @@ class RetsController extends Controller
     //End Featch RA_2 Data
     // start location data 
     public function getLocation(){
+        \Log::info("method is calling...");
         $alldata = Listing::where('lat',null)->orWhere('lang',null)->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
@@ -224,6 +225,7 @@ class RetsController extends Controller
             ]);
         }
         foreach($alldata as $key => $d){
+            \Log::info("alldata");
             if($mapreq['counter'] >=2000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
@@ -234,10 +236,12 @@ class RetsController extends Controller
                     $lat = null;
                     $lang = null;
                     if(sizeof($json->results)>0){
+                    \Log::info("exicuted");
                         $lat = $json->results[0]->geometry->location->lat;
                         $lang = $json->results[0]->geometry->location->lng;
                     } 
                     else {
+                    \Log::info("not exicuted");
                             $ob = [
                                 'list_id' => $d['id'],
                                 'listingID' => $d['listingID'],
