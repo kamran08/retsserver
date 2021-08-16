@@ -9,6 +9,7 @@ use App\JsonData;
 use App\Listing;
 use App\MapRequest;
 use App\Checker;
+use App\MapMissingRequest;
 use App\UpdateChecker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -18,8 +19,51 @@ use Illuminate\Support\Facades\Http;
 
 class DataController extends Controller
 {
+      public function getLocationTest()
+    {
+        // $alldata = Listing::where('lat', null)->orWhere('lang', null)->select('id', 'lat', 'lang', 'listingAddress')->limit(100)->get();
+        // $date =   date("Y-m-d");
+        // $mapreq = MapRequest::where('date', $date)->first();
+        // if ($mapreq) {
+        // } else {
+        //     $mapreq = MapRequest::create([
+        //         "counter" => 0,
+        //         "date" => $date
+        //     ]);
+        // }
+        $d =[];
+        $d['listingAddress'] = '898 E 11TH STREET';
+            // if ($mapreq['counter'] >= 2000) return 1;
+
+            if ($d['listingAddress']) {
+                $d['listingAddress'] = trim($d['listingAddress'], "#");
+
+                $client = new \GuzzleHttp\Client();
+                $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCPa98f4tcPyqDSgNEXilpho7LLcNjIJcs&address=' . $d['listingAddress'] . ',canada')->getBody();
+                $json = json_decode($request);
+                $lat = null;
+                $lang = null;
+                if (sizeof($json->results) > 0) {
+                    $lat = $json->results[0]->geometry->location->lat;
+                    $lang = $json->results[0]->geometry->location->lng;
+                } 
+                else {
+                    $ob=[
+                     'list_id'=>'1',
+                    'listingID'=>'123',
+                    'listingAddress'=> $d['listingAddress']
+                    ];
+                MapMissingRequest::create($ob);
+                }
+  
+            }
+            
+        return response()->json(['lat'=>$lat,'lang'=>$lang]);
+        
+        // return "success";
+    } 
     public function getOpenHouseData(Request $request){
-        $id=$request->id;
+       /* $id=$request->id;
         $s = Listing::where('id', $id)->where('lat', '!=', null)->first();
         \Log::info($s);
         if ($s) {
@@ -47,7 +91,7 @@ class DataController extends Controller
             "counter" =>0,
             "date"=> $d
         ]);
-        return $d;
+        return $d;*/
         // $data = Listing::select('id', 'listingID')->where('class','RD_1')->limit(1)->get();
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -59,7 +103,8 @@ class DataController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $data1 = [];
-        $result = $rets->Search("openhouse", "OpenHouse", '*', ['Limit'    =>    1]);
+        $result   = $rets->Search('Property',  'RA_2', "(L_ListingID=262455387)", ['Limit'  =>  1]);
+        // $result = $rets->Search("Property", "RD_1", '*', ['Limit'    =>    1]);
         // foreach ($data as $key => $val) {
         //     //    $url=  $rets->GetObject('OpenHouse', 'RD_1', '*',1);
         //     //   $url=  $rets->Search("OpenHouse", "RD_1",'*', ['Limit'    =>    1]);
@@ -71,7 +116,9 @@ class DataController extends Controller
 
         // }
         // $url = $rets->Search('OpenHouse', 'RD_1','*', ['Limit'=>20]);
-        dd($result);
+        $alldata  = $result->toArray();
+        return $alldata;
+        dd($alldata);
         return $data1;
 
     }

@@ -13,6 +13,7 @@ use App\JsonData;
 use App\Listing;
 use App\Checker;
 use App\UpdateChecker;
+use App\MapMissingRequest;
 use App\MapRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -235,7 +236,15 @@ class RetsController extends Controller
                     if(sizeof($json->results)>0){
                         $lat = $json->results[0]->geometry->location->lat;
                         $lang = $json->results[0]->geometry->location->lng;
-                    }
+                    } 
+                    else {
+                            $ob = [
+                                'list_id' => '1',
+                                'listingID' => '123',
+                                'listingAddress' => $d['listingAddress']
+                            ];
+                            MapMissingRequest::create($ob);
+                        }
 
 
                         DB::table('map_requests')->where('id', $mapreq['id'])->update([
