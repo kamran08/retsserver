@@ -72,4 +72,8 @@ class Listing extends Model
             'isSent',
             'soldPricePerSqrt'
     ];
+  public function missed()
+  {
+    return $this->hasMany('App\MapMissingRequest', 'list_id');
+  }
 }
