@@ -229,7 +229,7 @@ class RetsController extends Controller
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
             
                 $client = new \GuzzleHttp\Client();
-                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',canada')->getBody();
+                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',ca')->getBody();
                     $json = json_decode($request);
                     $lat = null;
                     $lang = null;
