@@ -211,7 +211,7 @@ class RetsController extends Controller
     //End Featch RA_2 Data
     // start location data 
     public function getLocation(){
-        $alldata = Listing::where('lat',null)->orWhere('lang',null)->select('id', 'lat','lang', 'listingAddress')->limit(100)->get();
+        $alldata = Listing::where('lat',null)->orWhere('lang',null)->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
@@ -239,8 +239,8 @@ class RetsController extends Controller
                     } 
                     else {
                             $ob = [
-                                'list_id' => '1',
-                                'listingID' => '123',
+                                'list_id' => $d['id'],
+                                'listingID' => $d['listingID'],
                                 'listingAddress' => $d['listingAddress']
                             ];
                             MapMissingRequest::create($ob);
