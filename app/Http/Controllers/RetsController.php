@@ -217,11 +217,11 @@ class RetsController extends Controller
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
-            \Log::info("Ase", $mapreq['counter']);
+            \Log::info("Ase", $mapreq->counter);
             
         }
         else{
-            \Log::info("Nai", $mapreq['counter']);
+            \Log::info("Nai");
             $mapreq = MapRequest::create([
                 "counter" => 0,
                 "date" => $date
