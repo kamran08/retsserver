@@ -217,11 +217,7 @@ class RetsController extends Controller
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
-           $s = json_encode($mapreq);
-           if(isset($mapreq['counter'])){
-                \Log::info($mapreq['counter']);
-
-            }
+            if($mapreq['counter'] >= 2000) return 1;
             
         }
         else{
