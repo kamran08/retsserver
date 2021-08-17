@@ -216,6 +216,7 @@ class RetsController extends Controller
         ->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
+        \Log::info($mapreq, "neet");
         if($mapreq) {
             
         }
