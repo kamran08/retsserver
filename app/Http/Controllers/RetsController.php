@@ -217,7 +217,8 @@ class RetsController extends Controller
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
-            \Log::info("Ase", $mapreq->counter);
+           $s = json_encode($mapreq);
+            \Log::info("Ase", $s);
             
         }
         else{
