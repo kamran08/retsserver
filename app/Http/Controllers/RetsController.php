@@ -227,12 +227,12 @@ class RetsController extends Controller
         }
         foreach($alldata as $key => $d){
             \Log::info("alldata");
-            if($mapreq['counter'] >=25000) return 1;
+            if($mapreq['counter'] >=2000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
             
                 $client = new \GuzzleHttp\Client();
-                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody();
+                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCZ1Qzl88y2a9m4sP9zLk8s4LRS78yFFdg&address=' . $d['listingAddress'].',ca')->getBody();
                     $json = json_decode($request);
                     $lat = null;
                     $lang = null;
