@@ -15,10 +15,40 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use File;
 use Image;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class DataController extends Controller
 {
+
+    public function deletedublicateData(Request $request){
+          try {
+        $data = DB::select(DB::raw("SELECT listingID FROM listings GROUP BY listingID HAVING COUNT(listingID) > 1"));
+
+            foreach( $data as $key => $item1) {
+                $item= json_encode($item1);
+                
+                     $istrue = false;
+                     $id= '';
+                $lists =  Listing::select('id','listingID', 'images')->where('listingID', $item1->listingID)->get();
+                foreach($lists as $list) {
+                        if($list->images){
+                            $id = $list->id;
+                            $istrue = true;
+                            break;
+                        }
+                    }
+                    if(!$istrue) $id = $lists[0]['id'];
+                    Listing::whereNotIn('id',[$id])->where('listingID', $item1->listingID)->delete();
+
+                }
+                 return "success";
+                } catch (\Exception $e) {
+                    \Log::info($e);
+                    return false;
+                }
+            }
+    
       public function getLocationTest()
     {
         // $alldata = Listing::where('lat', null)->orWhere('lang', null)->select('id', 'lat', 'lang', 'listingAddress')->limit(100)->get();

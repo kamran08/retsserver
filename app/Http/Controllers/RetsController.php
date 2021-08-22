@@ -332,7 +332,7 @@ class RetsController extends Controller
                 array_push($data, $ll);
             }
             } catch (\Exception $e) {
-                        $do = json_encode($val);
+                    $do = json_encode($val);
                 
                      ErrorStore::create(["data" => $do]);
                 }
