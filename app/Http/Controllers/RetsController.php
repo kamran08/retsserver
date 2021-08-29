@@ -328,6 +328,7 @@ class RetsController extends Controller
                         Storage::disk('spaces')->setVisibility($name1, 'public');
                         $img = Storage::disk('spaces')->url($name1);
                 }
+                $l=2;
                 $myFile = Storage::disk('spaces')->put($name, $url);
                 Storage::disk('spaces')->setVisibility($name, 'public');
                 $ll = Storage::disk('spaces')->url($name);
