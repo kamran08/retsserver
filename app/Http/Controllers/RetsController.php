@@ -243,7 +243,7 @@ class RetsController extends Controller
                         $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',ca')->getBody();
                 }
                 if($mapreq['counter'] >4000 && $mapreq['counter'] <=6000){
-                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=-AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody(); //sadek api
+                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody(); //sadek api
                 }
                    
                     $json = json_decode($request);
