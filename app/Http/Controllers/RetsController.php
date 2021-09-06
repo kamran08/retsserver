@@ -431,7 +431,7 @@ class RetsController extends Controller
             if($idd){
                 $ofset = $idd['lastId'];
             }
-            $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
+            $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  500, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
             $listingIds = [];
             foreach ($alldata as $value ) {
