@@ -470,7 +470,7 @@ class RetsController extends Controller
             \Log::info("end");
             $datetime2 = new DateTime();
             $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            \Log::info($interval,"this the diffrance");
+            \Log::info($interval);
             return response()->json([
                 'success' => $check,
                 'listingData' => $listingData,
@@ -482,7 +482,7 @@ class RetsController extends Controller
             $datetime2 = new DateTime();
             // $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
             $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            \Log::info($interval,"this the diffrance cach");
+            \Log::info($interval);
             return $e;
         }
     }
