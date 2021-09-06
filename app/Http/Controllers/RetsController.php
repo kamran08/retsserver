@@ -229,7 +229,7 @@ class RetsController extends Controller
         }
         foreach($alldata as $key => $d){
             \Log::info("alldata");
-            if($mapreq['counter'] >=16000) return 1;
+            if($mapreq['counter'] >=6000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
             
