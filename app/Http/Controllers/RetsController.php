@@ -480,7 +480,8 @@ class RetsController extends Controller
         catch(\Exception $e){
             \Log::info("end in catch");
             $datetime2 = new DateTime();
-            $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+            // $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+            $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
             \Log::info($interval,"this the diffrance cach");
             return $e;
         }
@@ -647,7 +648,9 @@ class RetsController extends Controller
        
         // $interval = $datetime1->diff($datetime2);
         // return $interval;
-       return   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+        $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+        \Log::info($interval);
+  
     }
 
 
