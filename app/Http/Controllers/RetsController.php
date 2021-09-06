@@ -214,7 +214,7 @@ class RetsController extends Controller
         \Log::info("method is calling...");
         $alldata = Listing::where('lat',null)->where('lang',null)->doesnthave('missed')
         ->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
-        return $alldata;
+        // return $alldata;
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
@@ -230,7 +230,7 @@ class RetsController extends Controller
         }
         foreach($alldata as $key => $d){
             \Log::info("alldata");
-            if($mapreq['counter'] >=6000) return 1;
+            if($mapreq['counter'] >=16000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
             
