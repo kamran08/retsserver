@@ -217,7 +217,7 @@ class RetsController extends Controller
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
-            if($mapreq['counter'] >= 6000) return 1;
+            if($mapreq['counter'] >= 16000) return 1;
             
         }
         else{
@@ -229,7 +229,7 @@ class RetsController extends Controller
         }
         foreach($alldata as $key => $d){
             \Log::info("alldata");
-            if($mapreq['counter'] >=6000) return 1;
+            if($mapreq['counter'] >=16000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
             
@@ -242,7 +242,7 @@ class RetsController extends Controller
                 if($mapreq['counter'] >2000 && $mapreq['counter'] <=4000){
                         $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',ca')->getBody();
                 }
-                if($mapreq['counter'] >4000 && $mapreq['counter'] <=6000){
+                if($mapreq['counter'] >4000 && $mapreq['counter'] <=16000){
                     $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody(); //sadek api
                 }
                    
@@ -269,6 +269,7 @@ class RetsController extends Controller
                             'counter' => DB::raw('counter + 1')
                         ]);
                         $mapreq['counter']+=1;
+
                     $s = DB::table('listings')
                         ->where('id', $d['id'])
                         ->update([
@@ -277,7 +278,8 @@ class RetsController extends Controller
                             'isSent' => 'sent',
                         ]);
                     
-                    $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
+                    // $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
+                    $s = Listing::where('id', $d['id'])->whereNotNull('lat')->first();
                     if($s){
                         try{
                             $l = json_decode(json_encode($s), true);
@@ -290,10 +292,21 @@ class RetsController extends Controller
 
                     } catch (\Exception $e) {
                         \Log::info($e);
+                        DB::table('listings')
+                        ->where('id', $d['id'])
+                        ->update([
+                            'isSent' => 'not sent',
+                        ]);
                         return "error";
-
                 }
 
+            }
+            else{
+                DB::table('listings')
+                ->where('id', $d['id'])
+                ->update([
+                    'isSent' => 'not sent',
+                ]);
             }
         }
 
