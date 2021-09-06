@@ -25,7 +25,7 @@ Route::get('/getOpenHouseData', 'DataController@getOpenHouseData');
 // Route::get('/getLocationTest', 'DataController@getLocationTest');
 Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 // Route::get('/storeImages', 'RetsController@storeImages');
-// Route::get('/getData', 'DataController@getData');
+Route::get('/checkDifferent', 'RetsController@checkDifferent');
 Route::get('/', function () {
     return view('welcome');
 });

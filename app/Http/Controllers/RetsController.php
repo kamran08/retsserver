@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use File;
 use DB;
 use Image;
+use DateTime;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -398,6 +399,8 @@ class RetsController extends Controller
     } 
     //End storeImages data
     public function checkForUpdatedData(){
+        $datetime1 = new DateTime();
+
         $idd = UpdateChecker::first();
         $checklisting = Listing::where('class', 'RD_1')->count();
         if ($idd['lastId2'] >= $checklisting) {
@@ -459,6 +462,10 @@ class RetsController extends Controller
 
             }
             $check = UpdateChecker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
+            
+            $datetime2 = new DateTime();
+            $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+            \Log::info($interval,"this the diffrance");
             return response()->json([
                 'success' => $check,
                 'listingData' => $listingData,
@@ -466,6 +473,9 @@ class RetsController extends Controller
             ], 200);
         }
         catch(\Exception $e){
+            $datetime2 = new DateTime();
+            $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+            \Log::info($interval,"this the diffrance cach");
             return $e;
         }
     }
@@ -623,6 +633,15 @@ class RetsController extends Controller
         }
 
 
+    }
+
+    public function checkDifferent(){
+        $datetime1 = new DateTime();
+        $datetime2 = new DateTime();
+       
+        // $interval = $datetime1->diff($datetime2);
+        // return $interval;
+       return   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
     }
 
 
