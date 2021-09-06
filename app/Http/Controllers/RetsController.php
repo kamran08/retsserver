@@ -399,7 +399,7 @@ class RetsController extends Controller
     } 
     //End storeImages data
     public function checkForUpdatedData(){
-        $datetime1 = new DateTime();
+        $start = microtime(true);
 
         $idd = UpdateChecker::first();
         $checklisting = Listing::where('class', 'RD_1')->count();
@@ -468,9 +468,9 @@ class RetsController extends Controller
             $check = UpdateChecker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
             
             \Log::info("end");
-            $datetime2 = new DateTime();
-            $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            \Log::info($interval);
+            $time_elapsed_secs = microtime(true) - $start;
+            \Log::info($time_elapsed_secs);
+
             return response()->json([
                 'success' => $check,
                 'listingData' => $listingData,
@@ -479,10 +479,10 @@ class RetsController extends Controller
         }
         catch(\Exception $e){
             \Log::info("end in catch");
-            $datetime2 = new DateTime();
+            $time_elapsed_secs = microtime(true) - $start;
             // $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            \Log::info($interval);
+            // $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
+            \Log::info($time_elapsed_secs);
             return $e;
         }
     }
@@ -643,13 +643,12 @@ class RetsController extends Controller
     }
 
     public function checkDifferent(){
-        $datetime1 = new DateTime();
-        $datetime2 = new DateTime();
+         $start = microtime(true);
+        sleep(2);
+        
        
-        // $interval = $datetime1->diff($datetime2);
+        return $time_elapsed_secs = microtime(true) - $start;
         // return $interval;
-        $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-        \Log::info($interval);
   
     }
 
