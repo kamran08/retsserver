@@ -403,7 +403,7 @@ class RetsController extends Controller
 
         $idd = UpdateChecker::first();
         $checklisting = Listing::where('class', 'RD_1')->count();
-        if ($idd['lastId2'] >= $checklisting) {
+        if ($idd['lastId'] >= $checklisting) {
             UpdateChecker::where('id', $idd['id'])->update(['lastId'=>0]);
            \Log::info("stop lstid 0");
             return 1;
