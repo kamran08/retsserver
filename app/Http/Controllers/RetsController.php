@@ -405,9 +405,13 @@ class RetsController extends Controller
         $checklisting = Listing::where('class', 'RD_1')->count();
         if ($idd['lastId2'] >= $checklisting) {
             UpdateChecker::where('id', $idd['id'])->update(['lastId'=>0]);
+           \Log::info("stop lstid 0");
             return 1;
         }
-        if ($idd && $idd['status1'] == 'Running') return 1;
+        if ($idd && $idd['status1'] == 'Running') {
+            \Log::info("stop running 0");
+            return 1;
+        }
         UpdateChecker::where('id', $idd['id'])->update(['status1' => 'Running']);
         try{
             set_time_limit(2000000);
