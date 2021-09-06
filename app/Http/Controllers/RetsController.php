@@ -467,6 +467,7 @@ class RetsController extends Controller
             }
             $check = UpdateChecker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
             
+            \Log::info("end");
             $datetime2 = new DateTime();
             $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
             \Log::info($interval,"this the diffrance");
@@ -477,6 +478,7 @@ class RetsController extends Controller
             ], 200);
         }
         catch(\Exception $e){
+            \Log::info("end in catch");
             $datetime2 = new DateTime();
             $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
             \Log::info($interval,"this the diffrance cach");
