@@ -219,7 +219,7 @@ class RetsController extends Controller
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
-            if($mapreq['counter'] >= 16000) return 1;
+            if($mapreq['counter'] >= 24000) return 1;
             
         }
         else{
@@ -231,7 +231,7 @@ class RetsController extends Controller
         }
         foreach($alldata as $key => $d){
             \Log::info("alldata");
-            if($mapreq['counter'] >=16000) return 1;
+            if($mapreq['counter'] >=24000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
             
@@ -244,7 +244,7 @@ class RetsController extends Controller
                 if($mapreq['counter'] >2000 && $mapreq['counter'] <=4000){
                         $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',ca')->getBody();
                 }
-                if($mapreq['counter'] >4000 && $mapreq['counter'] <=16000){
+                if($mapreq['counter'] >4000 && $mapreq['counter'] <=24000){
                     $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody(); //sadek api
                 }
                    
