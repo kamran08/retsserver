@@ -291,6 +291,9 @@ class RetsController extends Controller
                         // $json2 = json_decode($request2);
 
                     } catch (\Exception $e) {
+                        $do = json_encode(["error"=>$e, "type"=>'not sent']);
+                
+                     ErrorStore::create(["data" => $do]);
                         \Log::info($e);
                         DB::table('listings')
                         ->where('id', $d['id'])
