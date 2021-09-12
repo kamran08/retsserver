@@ -291,6 +291,8 @@ class UpdateController extends Controller
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
                     $json2 = json_decode($request2);
+                    NewUpdate::create(['listingId'=>$val['L_ListingID']]);
+
                 } catch (\Exception $e) {
                     \Log::info($e);
                     return false;
