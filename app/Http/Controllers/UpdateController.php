@@ -206,7 +206,7 @@ class UpdateController extends Controller
                 
             ErrorStore::create(["data" => $do,"type"=>'RA_2 not updated']);
             // \Log::info($e);
-            return "error";
+            return $e;
         }
     
     }
