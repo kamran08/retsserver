@@ -128,80 +128,84 @@ class UpdateController extends Controller
 
 
     // method for formating listing data
-    public function formate_data($retsData,$id){
-        $json_data = json_encode($retsData);
-        return $retsData;
-        // $dd=[];
-      
-        $dd['json_data']= $json_data;
-        if($retsData['L_ListingID']) $dd['listingType'] = $retsData['L_ListingID'];
-        if($retsData['L_Type_']) $dd['listingType'] = $retsData['L_Type_'];
-        if($retsData['L_Area']) $dd['listingArea'] = $retsData['L_Area'];
-        if($retsData['L_Address']) $dd['listingAddress'] = $retsData['L_Address'];
-        if($retsData['L_AddressDirection']) $dd['listingAddressDirection'] = $retsData['L_AddressDirection'];
-        if($retsData['L_AddressStreet']) $dd['listingAddressStreet'] = $retsData['L_AddressStreet'];
-        if($retsData['L_AddressUnit']) $dd['listingAddressUnit'] = $retsData['L_AddressUnit'];
-        if($retsData['LFD_Amenities_25']) $dd['amenities'] = $retsData['LFD_Amenities_25'];
-        if($retsData['LFD_BasementArea_6']) $dd['basementArea'] = $retsData['LFD_BasementArea_6'];
-        if($retsData['LM_char30_28']) $dd['lotSizeLenth'] = $retsData['LM_char30_28'];
-        if($retsData['LV_vow_address']) $dd['onInternet'] = $retsData['LV_vow_address'];
-        if($retsData['LFD_FeaturesIncluded_24']) $dd['features'] = $retsData['LFD_FeaturesIncluded_24'];
-        if($retsData['LM_Int1_2']) $dd['fireplaces'] = $retsData['LM_Int1_2'];
-        if($retsData['LM_Dec_7']) $dd['floorAreaTotal'] = $retsData['LM_Dec_7'];
-        if($retsData['LM_Dec_8']) $dd['lotSizeWidthFeet'] = $retsData['LM_Dec_8'];
-        if($retsData['LM_Dec_9']) $dd['lotSizeMeter'] = $retsData['LM_Dec_9'];
-        if($retsData['LR_remarks33']) $dd['internetRemarks'] = $retsData['LR_remarks33'];
-        if($retsData['L_ListingDate']) $dd['listingDate'] = $retsData['L_ListingDate'];
-        if($retsData['L_UpdateDate']) $dd['updateDate'] = $retsData['L_UpdateDate'];
-        if($retsData['L_AddressNumber']) $dd['addressNumber'] = $retsData['L_AddressNumber'];
-        if($retsData['L_City']) $dd['city'] = $retsData['L_City'];
-        if($retsData['LM_Char10_5']) $dd['subArea'] = $retsData['LM_Char10_5'];
-        if($retsData['L_State']) $dd['state'] = $retsData['L_State'];
-        if($retsData['L_Zip']) $dd['zip'] = $retsData['L_Zip'];
-        if($retsData['L_AskingPrice']) $dd['askingPrice'] = $retsData['L_AskingPrice'];
-        if($retsData['LM_Dec_16']) $dd['grossTaxes'] = $retsData['LM_Dec_16'];
-        if($retsData['LM_Dec_12']) $dd['lotSizeArea'] = $retsData['LM_Dec_12'];
-        if($retsData['LM_Dec_13']) $dd['lotSizeAreaSqMt'] = $retsData['LM_Dec_13'];
-        if($retsData['LM_Dec_11']) $dd['lotSizeAreaSqFt'] = $retsData['LM_Dec_11'];
-        if($retsData['L_DisplayId']) $dd['displayId'] = $retsData['L_DisplayId'];
-        if($retsData['LM_Int1_1']) $dd['floorLevel'] = $retsData['LM_Int1_1'];
-        if($retsData['L_PictureCount']) $dd['pictureCount'] = $retsData['L_PictureCount'];
-        if($retsData['L_Last_Photo_updt']) $dd['lastPhotoUpdate'] = $retsData['L_Last_Photo_updt'];
-        if($retsData['LM_Char10_11']) $dd['houseType'] = $retsData['LM_Char10_11'];
-        if($retsData['L_Status']) $dd['status'] = $retsData['L_Status'];
-        if($retsData['LM_Int1_4']) $dd['totalBedrooms'] = $retsData['LM_Int1_4'];
-        if($retsData['LM_Int1_7']) $dd['totalRooms'] = $retsData['LM_Int1_7'];
-        if($retsData['LM_Int1_17']) $dd['halfBaths'] = $retsData['LM_Int1_17'];
-        if($retsData['LM_Int1_18']) $dd['fullBaths'] = $retsData['LM_Int1_18'];
-        if($retsData['LM_Int1_19']) $dd['totalBaths'] = $retsData['LM_Int1_19'];
-        if($retsData['LM_Int2_3']) $dd['age'] = $retsData['LM_Int2_3'];
-        if($retsData['LM_Int2_2']) $dd['yearBuilt'] = $retsData['LM_Int2_2'];
-        if($retsData['LM_Int2_5']) $dd['texPerYear'] = $retsData['LM_Int2_5'];
-        if($retsData['LM_Int4_1']) $dd['unitsInDevelopment'] = $retsData['LM_Int4_1'];
-        if($retsData['LM_Int1_8']) $dd['kitchens'] = $retsData['LM_Int1_8'];
-        if($retsData['L_PricePerSQFT']) $dd['perSqrtPrice'] = $retsData['L_PricePerSQFT'];
-        if($retsData['LO1_OrganizationName']) $dd['organizationName1'] = $retsData['LO1_OrganizationName'];
-        if($retsData['LO2_OrganizationName']) $dd['organizationName2'] = $retsData['LO2_OrganizationName'];
-        if($retsData['LM_Dec_22']) $dd['startaFee'] = $retsData['LM_Dec_22'];
-        if($retsData['L_OriginalPrice']) $dd['originalListPrice'] = $retsData['L_OriginalPrice'];
-        if($retsData['L_SoldPrice']) $dd['soldPrice'] = $retsData['L_SoldPrice'];
-        if($retsData['LM_int4_40']) $dd['previousPrice'] = $retsData['LM_int4_40'];
-        if($retsData['LM_Dec_24']) $dd['soldPricePerSqrt'] = $retsData['LM_Dec_24'];
-        Listing::where('listingID',$serverData['L_ListingID'])->update($dd);
+    public function formate_data($data,$id){
+          $ss = json_encode($data);
+       
+        $d = [
+            'listingID' => isset($data['L_ListingID'])?$data['L_ListingID']:null,
+            'class' => $type,
+            'listingType' => isset($data['L_Type_'])? $data['L_Type_']:null,
+            'completed'=>1,
+            'listingArea' => isset($data['L_Area'])?$data['L_Area']:null,
+            'listingAddress' => isset($data['L_Address'])?$data['L_Address']:null,
+            'listingAddressDirection' => isset($data['L_AddressDirection'])? $data['L_AddressDirection']:null,
+            'listingAddressStreet' => isset($data['L_AddressStreet'])?$data['L_AddressStreet']:null,
+            'listingAddressUnit' => isset($data['L_AddressUnit'])?$data['L_AddressUnit']:null,
+            'amenities' => isset($data['LFD_Amenities_25'])?$data['LFD_Amenities_25']:'null',
+            'basementArea' => isset($data['LFD_BasementArea_6'])?$data['LFD_BasementArea_6']:null,
+            'lotSizeLenth' => isset($data['LM_char30_28'])?$data['LM_char30_28']:null,
+            'onInternet' => isset($data['LV_vow_address'])? $data['LV_vow_address']:null,
+            'features' => isset($data['LFD_FeaturesIncluded_24'])?$data['LFD_FeaturesIncluded_24']:null,
+            'fireplaces' => isset($data['LM_Int1_2'])?$data['LM_Int1_2']:null,
+            'floorAreaTotal' => isset($data['LM_Dec_7'])?$data['LM_Dec_7']:null,
+            'lotSizeWidthFeet' => isset($data['LM_Dec_8'])?$data['LM_Dec_8']:null,
+            'lotSizeMeter' => isset($data['LM_Dec_9'])?$data['LM_Dec_9']:null,
+            'internetRemarks' => isset($data['LR_remarks33'])?$data['LR_remarks33']:null,
+            'listingDate' => isset($data['L_ListingDate'])? $data['L_ListingDate']:null,
+            'updateDate' => isset($data['L_UpdateDate'])?$data['L_UpdateDate']:null,
+            'addressNumber' => isset($data['L_AddressNumber'])?$data['L_AddressNumber']:null,
+            'city' => isset($data['L_City'])? $data['L_City']:null,
+            'subArea' => isset($data['LM_Char10_5'])? $data['LM_Char10_5']:null,
+            'state' => isset($data['L_State'])? $data['L_State']:null,
+            'zip' => isset($data['L_Zip'])?$data['L_Zip']:null,
+            'askingPrice' => isset($data['L_AskingPrice'])? $data['L_AskingPrice']:null,
+            'grossTaxes' => isset($data['LM_Dec_16'])?$data['LM_Dec_16']:null,
+            'lotSizeArea' => isset($data['LM_Dec_12'])? $data['LM_Dec_12']:null,
+            'lotSizeAreaSqMt' => isset($data['LM_Dec_13'])? $data['LM_Dec_13']:null,
+            'lotSizeAreaSqFt' => isset($data['LM_Dec_11'])? $data['LM_Dec_11']:null,
+            'displayId' => isset($data['L_DisplayId'])? $data['L_DisplayId']:null,
+            'floorLevel' => isset($data['LM_Int1_1'])?$data['LM_Int1_1']:null,
+            'pictureCount' => isset($data['L_PictureCount'])?$data['L_PictureCount']:null,
+            'lastPhotoUpdate' => isset($data['L_Last_Photo_updt'])? $data['L_Last_Photo_updt']:null,
+            'status' => isset($data['L_Status'])?$data['L_Status']:null,
+            'houseType' => isset($data['LM_Char10_11'])?$data['LM_Char10_11']:null,
+            // 'lat' => null,
+            // 'lang' => null,
+            'totalBedrooms' => isset($data['LM_Int1_4'])? $data['LM_Int1_4']:null,
+            'totalRooms' => isset($data['LM_Int1_7'])? $data['LM_Int1_7']:null,
+            'halfBaths' => isset($data['LM_Int1_17'])? $data['LM_Int1_17']:null,
+            'fullBaths' =>isset( $data['LM_Int1_18'])? $data['LM_Int1_18']:null,
+            'totalBaths' => isset($data['LM_Int1_19'])?$data['LM_Int1_19']:null,
+            'age' => isset($data['LM_Int2_3'])? $data['LM_Int2_3']:null,
+            'yearBuilt' => isset($data['LM_Int2_2'])? $data['LM_Int2_2']:null,
+            'texPerYear' => isset($data['LM_Int2_5'])? $data['LM_Int2_5']:null,
+            'unitsInDevelopment' =>isset( $data['LM_Int4_1'])? $data['LM_Int4_1']:null,
+            'kitchens' => isset($data['LM_Int1_8'])?$data['LM_Int1_8']:null,
+            'json_data' => $ss,
+            'perSqrtPrice' => isset($data['L_PricePerSQFT'])?$data['L_PricePerSQFT']:null,
+            'organizationName1' => isset($data['LO1_OrganizationName'])?$data['LO1_OrganizationName']:null,
+            'organizationName2' => isset($data['LO2_OrganizationName'])?$data['LO2_OrganizationName']:null,
+            'startaFee' => isset($data['LM_Dec_22'])?$data['LM_Dec_22']:null,
+            'originalListPrice' => isset($data['L_OriginalPrice'])?$data['L_OriginalPrice']:null,
+            'soldPrice' => isset($data['L_SoldPrice'])?$data['L_SoldPrice']:null,
+            'previousPrice' => isset($data['LM_int4_40'])?$data['LM_int4_40']:null,
+            'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
+        ];
+        Listing::where('listingID',$data['L_ListingID'])->update($d);
         try {
-            $l = json_decode(json_encode($dd), true);
+            $l = json_decode(json_encode($d), true);
 
             $client2 = new \GuzzleHttp\Client();
             $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
             
-            NewUpdate.create(['listingId'=>$serverData['L_ListingID']]);
+            NewUpdate.create(['listingId'=>$data['L_ListingID']]);
             // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
 
         } catch (\Exception $e) {
             // $d =['listingId'=>$retsData['listingID']];
-            $do = json_encode(['listingId'=>$retsData['L_ListingID']]);
+            $do = json_encode(['listingId'=>$data['L_ListingID']]);
                 
-            ErrorStore::create(["data" => $do,"type"=>'RA_2_formate']);
+            ErrorStore::create(["data" => $do,"type"=>'RA_2 not updated']);
             // \Log::info($e);
             return "error";
         }
