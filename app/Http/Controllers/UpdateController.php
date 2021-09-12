@@ -129,6 +129,7 @@ class UpdateController extends Controller
         $json_data = json_encode($retsData);
       
         $dd=['json_data' => $json_data];
+        if($retsData['L_ListingID']) $dd['listingType'] = $retsData['L_ListingID'];
         if($retsData['L_Type_']) $dd['listingType'] = $retsData['L_Type_'];
         if($retsData['L_Area']) $dd['listingArea'] = $retsData['L_Area'];
         if($retsData['L_Address']) $dd['listingAddress'] = $retsData['L_Address'];
@@ -181,17 +182,17 @@ class UpdateController extends Controller
         if($retsData['L_SoldPrice']) $dd['soldPrice'] = $retsData['L_SoldPrice'];
         if($retsData['LM_int4_40']) $dd['previousPrice'] = $retsData['LM_int4_40'];
         if($retsData['LM_Dec_24']) $dd['soldPricePerSqrt'] = $retsData['LM_Dec_24'];
-        Listing::where('listingID',$serverData['listingID'])->update($dd);
+        Listing::where('listingID',$serverData['L_ListingID'])->update($dd);
         try {
             $l = json_decode(json_encode($dd), true);
 
             $client2 = new \GuzzleHttp\Client();
-            $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+            $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
             // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
 
         } catch (\Exception $e) {
             // $d =['listingId'=>$retsData['listingID']];
-            $do = json_encode(['listingId'=>$retsData['listingID']]);
+            $do = json_encode(['listingId'=>$retsData['L_ListingID']]);
                 
             ErrorStore::create(["data" => $do,"type"=>'RA_2_formate']);
             // \Log::info($e);
