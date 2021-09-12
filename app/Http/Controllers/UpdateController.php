@@ -88,11 +88,11 @@ class UpdateController extends Controller
         $nowDate =$now->format('Y-m-d\TH:i:s');
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
-         $checklisting = Listing::where('class', 'RD_1')->count();
-         if($check['rd_1count']>=$checklisting){
-            NewUpdateCheker::where('id', $check['id'])->update(['rd_1count'=>0]);
-             return 1;
-         }
+        //  $checklisting = Listing::where('class', 'RD_1')->count();
+        //  if($check['rd_1count']>=$checklisting){
+        //     NewUpdateCheker::where('id', $check['id'])->update(['rd_1count'=>0]);
+        //      return 1;
+        //  }
          if ($check && $check['rd_status'] == 'Running') {
             // \Log::info("stop running ra2");
             return 1;
@@ -108,22 +108,24 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
       
-        try {   
-        $ofset=$check['rd_1count'];
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
+        // try {   
+        // $ofset=$check['rd_1count'];
+        
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=2021-04-12T00:00:00-2021-09-12T00:00:00)");//,(L_UpdateDate=".$nowDate."-".$preDate.")
+        // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
 
         $alldata= $results->toArray();
         foreach($alldata as $item){
-            $this->formate_data($item,$ofset,$check['id']);
-            $ofset++;
+            $this->formate_data($item,$check['id']);
+            // $ofset++;
         }
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
         return 'success';
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
 
-            NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
-             return 'fail';
-        }
+        //     NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+        //      return 'fail';
+        // }
     }
 
 
