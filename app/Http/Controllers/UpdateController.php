@@ -12,7 +12,7 @@ use App\ErrorStore;
 use App\Picture;
 use App\JsonData;
 use App\Listing;
-use App\Checker;
+use App\NewUpdate;
 use App\NewUpdateCheker;
 use App\MapMissingRequest;
 use App\MapRequest;
@@ -65,8 +65,8 @@ class UpdateController extends Controller
         // return $results->getTotalResultsCount();
         // $alldata= $results->toArray();
         foreach($alldata as $item){
-            return $item;
-            $this->formate_data($item,$check['id']);
+            // return $item;
+           return  $this->formate_data($item,$check['id']);
         }
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return 'success';
@@ -119,6 +119,7 @@ class UpdateController extends Controller
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
         return 'success';
         } catch (\Exception $e) {
+
             NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
              return 'fail';
         }
@@ -128,8 +129,10 @@ class UpdateController extends Controller
     // method for formating listing data
     public function formate_data($retsData,$id){
         $json_data = json_encode($retsData);
+        return $retsData;
+        // $dd=[];
       
-        $dd=['json_data' => $json_data];
+        $dd['json_data']= $json_data;
         if($retsData['L_ListingID']) $dd['listingType'] = $retsData['L_ListingID'];
         if($retsData['L_Type_']) $dd['listingType'] = $retsData['L_Type_'];
         if($retsData['L_Area']) $dd['listingArea'] = $retsData['L_Area'];
@@ -189,6 +192,8 @@ class UpdateController extends Controller
 
             $client2 = new \GuzzleHttp\Client();
             $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
+            
+            NewUpdate.create(['listingId'=>$serverData['L_ListingID']]);
             // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
 
         } catch (\Exception $e) {
