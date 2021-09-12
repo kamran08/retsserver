@@ -67,7 +67,7 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         foreach($alldata as $item){
             // return $item;
-           return  $this->formate_data($item,$check['id']);
+             $this->formate_data($item,$check['id']);
         }
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return 'success';
