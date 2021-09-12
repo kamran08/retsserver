@@ -133,7 +133,6 @@ class UpdateController extends Controller
        
         $d = [
             'listingID' => isset($data['L_ListingID'])?$data['L_ListingID']:null,
-            'class' => $type,
             'listingType' => isset($data['L_Type_'])? $data['L_Type_']:null,
             'completed'=>1,
             'listingArea' => isset($data['L_Area'])?$data['L_Area']:null,
