@@ -58,7 +58,8 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
       
-        try {   
+        // try {   
+
         // $ofset=$check['ra_2count'];
         $results  = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=2021-04-12T00:00:00-2021-09-12T00:00:00)");//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
@@ -70,13 +71,13 @@ class UpdateController extends Controller
         }
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return 'success';
-        } catch (\Exception $e) {
-            $do = json_encode($e);
-            ErrorStore::create(["data" => $do,"type"=>'RA_2_alldata']);
+        // } catch (\Exception $e) {
+        //     $do = json_encode($e);
+        //     ErrorStore::create(["data" => $do,"type"=>'RA_2_alldata']);
 
-            NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
-            return 'fail';
-        }
+        //     NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
+        //     return 'fail';
+        // }
     }
     
     public function updateRD_1Data(){
