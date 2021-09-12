@@ -197,7 +197,7 @@ class UpdateController extends Controller
             $client2 = new \GuzzleHttp\Client();
             $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
             
-            NewUpdate.create(['listingId'=>$data['L_ListingID']]);
+            NewUpdate::create(['listingId'=>$data['L_ListingID']]);
             // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
 
         } catch (\Exception $e) {
