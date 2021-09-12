@@ -81,11 +81,12 @@ class UpdateController extends Controller
     }
     
     public function updateRD_1Data(){
-        $d = Listing::select('updateDate')->where('class', 'RD_1')->orderBy('updateDate','desc')->first();
-        $now = new \DateTime();
-        $date = new DateTime($d['updateDate']);
-        $preDate= $date->format('Y-m-d\TH:i:s');
-        $nowDate =$now->format('Y-m-d\TH:i:s');
+        // $d = Listing::select('updateDate')->where('class', 'RD_1')->orderBy('updateDate','desc')->first();
+        // $now = new \DateTime();
+        // $date = new DateTime($d['updateDate']);
+        // $preDate= $date->format('Y-m-d\TH:i:s');
+        // $nowDate =$now->format('Y-m-d\TH:i:s');
+        
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
         //  $checklisting = Listing::where('class', 'RD_1')->count();
