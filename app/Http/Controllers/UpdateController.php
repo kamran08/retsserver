@@ -215,12 +215,16 @@ class UpdateController extends Controller
     }
 
     public function updateImageRA_2(){
-        $d = Listing::select('lastPhotoUpdate')->orderBy('lastPhotoUpdate','desc')->first();
-        $now = new \DateTime();
-        $date = new DateTime($d['lastPhotoUpdate']);
-        $preDate= $date->format('Y-m-d\TH:i:s');
-        $nowDate =$now->format('Y-m-d\TH:i:s');
-       
+        // $d = Listing::select('lastPhotoUpdate')->orderBy('lastPhotoUpdate','desc')->first();
+        // $now = new \DateTime();
+        // $date = new DateTime($d['lastPhotoUpdate']);
+        // $preDate= $date->format('Y-m-d\TH:i:s');
+        // $nowDate =$now->format('Y-m-d\TH:i:s');
+        $check = NewUpdateCheker::first();
+         if ($check && $check['rd_status'] == 'Running') {
+            return 1;
+        }
+        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
@@ -235,7 +239,13 @@ class UpdateController extends Controller
         
         $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-12T00:00:00)",['select'=>'L_ListingID']);
         $alldata  = $results->toArray();
+        // return $results->getTotalResultsCount();
         foreach($alldata as $key => $val){
+            $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
+           if(!$isExist){
+
+           }
+           else{
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
@@ -261,7 +271,7 @@ class UpdateController extends Controller
             } catch (\Exception $e) {
                     $do = json_encode($val);
                 
-                     ErrorStore::create(["data" => $do]);
+                     ErrorStore::create(["data" => $do,'type'=>'rd_image']);
                 }
             $data = json_encode($data);
 
@@ -285,10 +295,10 @@ class UpdateController extends Controller
                     \Log::info($e);
                     return false;
                 }
+            }
         }
+        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
         return "success";
-      
-
     }
 
     
@@ -312,6 +322,7 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$nowDate."-".$preDate.")",['limit'=>1]);
         $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-12T00:00:00)",['select'=>'L_ListingID'],['limit'=>1]);
         $alldata  = $results->toArray();
+        return $results->getTotalResultsCount();
         foreach($alldata as $key => $val){
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
