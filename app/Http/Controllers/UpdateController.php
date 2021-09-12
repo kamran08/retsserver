@@ -70,7 +70,7 @@ class UpdateController extends Controller
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return 'success';
         } catch (\Exception $e) {
-            $do = json_encode(['listingId'=>'allids']);
+            $do = json_encode($e);
             ErrorStore::create(["data" => $do,"type"=>'RA_2_alldata']);
 
             NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
