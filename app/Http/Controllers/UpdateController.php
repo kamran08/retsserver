@@ -59,12 +59,13 @@ class UpdateController extends Controller
         $connect = $rets->Login();
       
         try {   
-        $ofset=$check['ra_2count'];
+        // $ofset=$check['ra_2count'];
         $results  = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=2021-04-12T00:00:00-2021-09-12T00:00:00)");//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
-        return $results->getTotalResultsCount();
-        $alldata= $results->toArray();
+        // return $results->getTotalResultsCount();
+        // $alldata= $results->toArray();
         foreach($alldata as $item){
+            return $item;
             $this->formate_data($item,$check['id']);
         }
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
