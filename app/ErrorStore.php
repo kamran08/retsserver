@@ -8,6 +8,6 @@ class ErrorStore extends Model
 {
     //
     protected $fillable = [
-        'data'
+        'data','type'
     ];
 }
