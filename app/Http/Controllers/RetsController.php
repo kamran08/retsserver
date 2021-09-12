@@ -118,8 +118,7 @@ class RetsController extends Controller
             
             $config = new \PHRETS\Configuration;
             $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
-            ->setUsername('RETSARVING')
-                ->setPassword('wjq6PJqUA45EGU8')
+                ->setUsername('RETSARVING')
                 ->setPassword('wjq6PJqUA45EGU8')
                 ->setRetsVersion('1.7.2');
             \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
@@ -652,5 +651,40 @@ class RetsController extends Controller
   
     }
 
+    public function testUpdateCheck(){
+        // return 200;
+        // $d = Listing::select('updateDate')->orderBy('updateDate','desc')->first();
+        // $now = new \DateTime();
+        // $date = new DateTime($d['updateDate']);
+        // $preDate= $date->format('Y-m-d\TH:i:s');
+        // $nowDate =$now->format('Y-m-d\TH:i:s');
+
+            // return "hello";"(L_UpdateDate='".$nowDate."-".$preDate.")"
+               set_time_limit(2000000);
+                $config = new \PHRETS\Configuration;
+                $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+                    ->setUsername('RETSARVING')
+                    ->setPassword('wjq6PJqUA45EGU8')
+                    ->setRetsVersion('1.7.2');
+                \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+                $rets = new \PHRETS\Session($config);
+                $connect = $rets->Login();
+                $resource = 'Property';
+                // $ddd =$rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  => 1]);
+                // $alldata= $ddd->toArray();
+                // $results   = $rets->Search('Property',  'RD_1', "(L_UpdateDate=2021-09-06T00:00:00-2021-09-07T00:00:00)",['limit'=>5]);
+                // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>5]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
+                // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>5]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
+                // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)",['limit'=>5]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
+                $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=2021-04-06T00:00:00-2021-09-12T00:00:00)",['limit'=>5]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
+                
+                $alldata1  = $results->toArray();
+                // $siz = sizeof($alldata);
+                $alldata=  $results->getTotalResultsCount();
+                \Log::info("Test check1");
+                \Log::info($alldata);
+                return $alldata1;
+        }
+        
 
 }
