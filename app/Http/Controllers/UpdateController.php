@@ -325,6 +325,11 @@ class UpdateController extends Controller
         // $date = new DateTime($d['lastPhotoUpdate']);
         // $preDate= $date->format('Y-m-d\TH:i:s');
         // $nowDate =$now->format('Y-m-d\TH:i:s');
+
+        $check = NewUpdateCheker::first();
+         if ($check && $check['rd_status'] == 'Running') {
+            return 1;
+        }
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
