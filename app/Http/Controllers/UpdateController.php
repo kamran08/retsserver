@@ -265,23 +265,23 @@ class UpdateController extends Controller
             $l =0;
             $img='';
             try{
-            foreach ($objects as $ke => $photo) {
-                $url = $photo->getContent();
-                $name = time() . uniqid(rand()) . '.png';
-                if($l==0){
-                    $name1 = time() . uniqid(rand()) . '.webp';
-                // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
-                        $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
-                        $myFile = Storage::disk('spaces')->put($name1, $image);
-                        Storage::disk('spaces')->setVisibility($name1, 'public');
-                        $img = Storage::disk('spaces')->url($name1);
+                foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                    if($l==0){
+                        $name1 = time() . uniqid(rand()) . '.webp';
+                    // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
+                            $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
+                            $myFile = Storage::disk('spaces')->put($name1, $image);
+                            Storage::disk('spaces')->setVisibility($name1, 'public');
+                            $img = Storage::disk('spaces')->url($name1);
+                    }
+                    $l=2;
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $ll);
                 }
-                $l=2;
-                $myFile = Storage::disk('spaces')->put($name, $url);
-                Storage::disk('spaces')->setVisibility($name, 'public');
-                $ll = Storage::disk('spaces')->url($name);
-                array_push($data, $ll);
-            }
             } catch (\Exception $e) {
                     $do = json_encode($val);
                 
@@ -313,7 +313,7 @@ class UpdateController extends Controller
                 }
             }
         }
-        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return "success";
     }
 
@@ -327,9 +327,10 @@ class UpdateController extends Controller
         // $nowDate =$now->format('Y-m-d\TH:i:s');
 
         $check = NewUpdateCheker::first();
-         if ($check && $check['rd_status'] == 'Running') {
+         if ($check && $check['ra_status'] == 'Running') {
             return 1;
         }
+        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
@@ -341,40 +342,40 @@ class UpdateController extends Controller
         $connect = $rets->Login();
         $resource = 'Property';
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$nowDate."-".$preDate.")",['limit'=>1]);
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-12T00:00:00)",['select'=>'L_ListingID']);
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-12T00:00:00)",['select'=>'L_ListingID','limit'=>1]);
         $alldata  = $results->toArray();
         foreach($alldata as $key => $val){
             $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
-            if(!$isExist){
- 
-            }
-            else{
+           if(!$isExist){
 
+           }
+           else{
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
             $img='';
             try{
-            foreach ($objects as $ke => $photo) {
-                $url = $photo->getContent();
-                $name = time() . uniqid(rand()) . '.png';
-                if($l==0){
-                    $name1 = time() . uniqid(rand()) . '.webp';
-                // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
-                        $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
-                        $myFile = Storage::disk('spaces')->put($name1, $image);
-                        Storage::disk('spaces')->setVisibility($name1, 'public');
-                        $img = Storage::disk('spaces')->url($name1);
+                foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                    if($l==0){
+                        $name1 = time() . uniqid(rand()) . '.webp';
+                    // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
+                            $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
+                            $myFile = Storage::disk('spaces')->put($name1, $image);
+                            Storage::disk('spaces')->setVisibility($name1, 'public');
+                            $img = Storage::disk('spaces')->url($name1);
+                    }
+                    $l=2;
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $ll);
                 }
-                $l=2;
-                $myFile = Storage::disk('spaces')->put($name, $url);
-                Storage::disk('spaces')->setVisibility($name, 'public');
-                $ll = Storage::disk('spaces')->url($name);
-                array_push($data, $ll);
-            }
             } catch (\Exception $e) {
                     $do = json_encode($val);
-                     ErrorStore::create(["data" => $do]);
+                
+                     ErrorStore::create(["data" => $do,'type'=>'rd_image']);
                 }
             $data = json_encode($data);
 
@@ -394,12 +395,15 @@ class UpdateController extends Controller
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
                     $json2 = json_decode($request2);
+                    NewUpdate::create(['listingId'=>$val['L_ListingID']]);
+
                 } catch (\Exception $e) {
                     \Log::info($e);
                     return false;
                 }
             }
         }
+        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return "success";
       
 
