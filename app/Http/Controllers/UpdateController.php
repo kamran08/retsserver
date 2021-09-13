@@ -343,27 +343,13 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$nowDate."-".$preDate.")",['limit'=>1]);
         $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-12T00:00:00)",['select'=>'L_ListingID']);
         $alldata  = $results->toArray();
-
-         $counter = 0;
         foreach($alldata as $key => $val){
             $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
-           if($isExist){
-             $counter++;
-           }
-        }
-        $s= $results->getTotalResultsCount();
-        NewUpdateCheker::where('id', $check['id'])->update(['rd_1count' => $counter,'rd_status'=>'stop']);
+            if(!$isExist){
+ 
+            }
+            else{
 
-        return [$counter,$s];
-
-
-
-
-
-
-
-        return $results->getTotalResultsCount();
-        foreach($alldata as $key => $val){
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
@@ -388,7 +374,6 @@ class UpdateController extends Controller
             }
             } catch (\Exception $e) {
                     $do = json_encode($val);
-                
                      ErrorStore::create(["data" => $do]);
                 }
             $data = json_encode($data);
@@ -405,7 +390,6 @@ class UpdateController extends Controller
                 'thumbnail' => $img,
                 'images' => $data
             ];
-            return $ob;
                 try{
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
@@ -414,6 +398,7 @@ class UpdateController extends Controller
                     \Log::info($e);
                     return false;
                 }
+            }
         }
         return "success";
       
