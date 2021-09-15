@@ -11,7 +11,7 @@ class updateRaImageData extends Command
      *
      * @var string
      */
-    protected $signature = 'command:CheckUpdatedRa2ImageData';
+    protected $signature = 'command:updateRaImageData';
 
     /**
      * The console command description.

@@ -11,7 +11,7 @@ class updateRaData extends Command
      *
      * @var string
      */
-    protected $signature = 'command:CheckUpdatedRa2Data';
+    protected $signature = 'command:updateRaData';
 
     /**
      * The console command description.

@@ -11,7 +11,7 @@ class updateRdImageData extends Command
      *
      * @var string
      */
-    protected $signature = 'command:CheckUpdatedRd1ImageData';
+    protected $signature = 'command:updateRdImageData';
 
     /**
      * The console command description.

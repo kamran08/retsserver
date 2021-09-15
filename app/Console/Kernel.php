@@ -21,10 +21,10 @@ class Kernel extends ConsoleKernel
         Commands\latLangFetach::class,
         Commands\imageResizeAndStore::class,
         // Commands\CheckUpdatedData::class,
-        Commands\CheckUpdatedRa2Data::class,
-        Commands\CheckUpdatedRa2ImageData::class,
-        Commands\CheckUpdatedRd1Data::class,
-        Commands\CheckUpdatedRd1ImageData::class
+        Commands\updateRaData::class,
+        Commands\updateRaImageData::class,
+        Commands\updateRdData::class,
+        Commands\updateRdImageData::class
     ];
 
     /**
@@ -44,10 +44,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:imageResizeAndStore')
                  ->everyFiveMinutes();
                 //  update 
-        $schedule->command('command:CheckUpdatedRa2Data')->everyFiveMinutes();
-        $schedule->command('command:CheckUpdatedRa2ImageData')->everyFiveMinutes();
-        $schedule->command('command:CheckUpdatedRd1Data')->everyFiveMinutes();
-        $schedule->command('command:CheckUpdatedRd1ImageData')->everyFiveMinutes();
+        $schedule->command('command:updateRaData')->everyFiveMinutes();
+        $schedule->command('command:updateRaImageData')->everyFiveMinutes();
+        $schedule->command('command:updateRdData')->everyFiveMinutes();
+        $schedule->command('command:updateRdImageData')->everyFiveMinutes();
                  
     }
 
