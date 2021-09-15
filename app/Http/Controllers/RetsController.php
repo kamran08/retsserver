@@ -229,91 +229,98 @@ class RetsController extends Controller
                 "date" => $date
             ]);
         }
-        return $alldata;
+        // return $alldata;
         foreach($alldata as $key => $d){
+            $ob = [
+                'list_id' => $d['id'],
+                'listingID' => $d['listingID'],
+                'listingAddress' => $d['listingAddress']
+            ];
             \Log::info("alldata");
             if($mapreq['counter'] >=6000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
-            
-                $client = new \GuzzleHttp\Client();
-                $request ='';
-                
-                if($mapreq['counter'] >=0 && $mapreq['counter'] <=2000){
-                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCZ1Qzl88y2a9m4sP9zLk8s4LRS78yFFdg&address=' . $d['listingAddress'].',ca')->getBody();
+                $d['listingAddress'] = trim($d['listingAddress'],"");
+                if(!$d['listingAddress'] || $d['listingAddress']==''){
+                    MapMissingRequest::create($ob);
                 }
-                if($mapreq['counter'] >2000 && $mapreq['counter'] <=4000){
-                        $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',ca')->getBody();
-                }
-                if($mapreq['counter'] >4000 && $mapreq['counter'] <=6000){
-                    $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody(); //sadek api
-                }
-                   
-                    $json = json_decode($request);
-                    $lat = null;
-                    $lang = null;
-                    if(sizeof($json->results)>0){
-                    \Log::info("exicuted");
-                        $lat = $json->results[0]->geometry->location->lat;
-                        $lang = $json->results[0]->geometry->location->lng;
-                    } 
-                    else {
-                    \Log::info("not exicuted");
-                            $ob = [
-                                'list_id' => $d['id'],
-                                'listingID' => $d['listingID'],
-                                'listingAddress' => $d['listingAddress']
-                            ];
-                            MapMissingRequest::create($ob);
-                        }
-
-
-                        DB::table('map_requests')->where('id', $mapreq['id'])->update([
-                            'counter' => DB::raw('counter + 1')
-                        ]);
-                        $mapreq['counter']+=1;
-
-                    $s = DB::table('listings')
-                        ->where('id', $d['id'])
-                        ->update([
-                            'lat' => $lat,
-                            'lang' => $lang,
-                            'isSent' => 'sent',
-                        ]);
+                else{
+     
+                    $client = new \GuzzleHttp\Client();
+                    $request ='';
                     
-                    // $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
-                    $s = Listing::where('id', $d['id'])->whereNotNull('lat')->first();
-                    if($s){
-                        try{
-                            $l = json_decode(json_encode($s), true);
-                        // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
-                        // return 1;
+                    if($mapreq['counter'] >=0 && $mapreq['counter'] <=2000){
+                        $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCZ1Qzl88y2a9m4sP9zLk8s4LRS78yFFdg&address=' . $d['listingAddress'].',ca')->getBody();
+                    }
+                    if($mapreq['counter'] >2000 && $mapreq['counter'] <=4000){
+                            $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyChBdKomhhVm_TH4H4i-qjyvFpON9g3b48&address=' . $d['listingAddress'].',ca')->getBody();
+                    }
+                    if($mapreq['counter'] >4000 && $mapreq['counter'] <=6000){
+                        $request = (string) $client->get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAzhVjq0RixepWJyxO1CPnR-exUYpxRrTo&address=' . $d['listingAddress'].',ca')->getBody(); //sadek api
+                    }
+                    
+                        $json = json_decode($request);
+                        $lat = null;
+                        $lang = null;
+                        if(sizeof($json->results)>0){
+                        \Log::info("exicuted");
+                            $lat = $json->results[0]->geometry->location->lat;
+                            $lang = $json->results[0]->geometry->location->lng;
+                        } 
+                        else {
+                        \Log::info("not exicuted");
+                            
+                                MapMissingRequest::create($ob);
+                            }
 
-                        $client2 = new \GuzzleHttp\Client();
-                        $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
-                        // $json2 = json_decode($request2);
 
-                    } catch (\Exception $e) {
-                        $do = json_encode(["error"=>$e, "type"=>'not sent']);
-                
-                     ErrorStore::create(["data" => $do]);
-                        \Log::info($e);
-                        DB::table('listings')
-                        ->where('id', $d['id'])
-                        ->update([
-                            'isSent' => 'not sent',
-                        ]);
-                        return "error";
+                            DB::table('map_requests')->where('id', $mapreq['id'])->update([
+                                'counter' => DB::raw('counter + 1')
+                            ]);
+                            $mapreq['counter']+=1;
+
+                        $s = DB::table('listings')
+                            ->where('id', $d['id'])
+                            ->update([
+                                'lat' => $lat,
+                                'lang' => $lang,
+                                'isSent' => 'sent',
+                            ]);
+                        
+                        // $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
+                        $s = Listing::where('id', $d['id'])->whereNotNull('lat')->first();
+                        if($s){
+                            try{
+                                $l = json_decode(json_encode($s), true);
+                            // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
+                            // return 1;
+
+                            $client2 = new \GuzzleHttp\Client();
+                            $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+                            // $json2 = json_decode($request2);
+
+                        } catch (\Exception $e) {
+                            $do = json_encode(["error"=>$e, "type"=>'not sent']);
+                    
+                        ErrorStore::create(["data" => $do]);
+                            \Log::info($e);
+                            DB::table('listings')
+                            ->where('id', $d['id'])
+                            ->update([
+                                'isSent' => 'not sent',
+                            ]);
+                            return "error";
+                    }
+
                 }
-
-            }
-            else{
-                DB::table('listings')
-                ->where('id', $d['id'])
-                ->update([
-                    'isSent' => 'not sent',
-                ]);
-            }
+                else{
+                    DB::table('listings')
+                    ->where('id', $d['id'])
+                    ->update([
+                        'isSent' => 'not sent',
+                    ]);
+                }
+          }
         }
 
         }
