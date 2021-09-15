@@ -211,6 +211,7 @@ class RetsController extends Controller
     //End Featch RA_2 Data
     // start location data 
     public function getLocation(){
+        // return "check";
         \Log::info("method is calling...");
         $alldata = Listing::where('lat',null)->where('lang',null)->doesnthave('missed')
         ->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
@@ -228,6 +229,7 @@ class RetsController extends Controller
                 "date" => $date
             ]);
         }
+        return $alldata;
         foreach($alldata as $key => $d){
             \Log::info("alldata");
             if($mapreq['counter'] >=6000) return 1;
