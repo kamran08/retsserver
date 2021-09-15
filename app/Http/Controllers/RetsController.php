@@ -229,7 +229,7 @@ class RetsController extends Controller
                 "date" => $date
             ]);
         }
-        return $alldata;
+        // return $alldata;
         foreach($alldata as $key => $d){
             \Log::info("alldata");
             if($mapreq['counter'] >=6000) return 1;
