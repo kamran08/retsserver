@@ -31,7 +31,7 @@ class UpdateController extends Controller
     public function updateRa2Data(){
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_add($now, new \DateInterval("PT5M"));
+        $finale =  date_sub($now, new \DateInterval("PT5M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
     
          $check = NewUpdateCheker::first();
@@ -53,7 +53,7 @@ class UpdateController extends Controller
         // try {   
 
         // $ofset=$check['ra_2count'];  
-        $results  = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$start."-".$end.")",['select'=>'L_ListingID']);//,(L_UpdateDate=".$nowDate."-".$preDate.")
+        $results  = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_ListingID']);//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // return $results->getTotalResultsCount();
         $alldata= $results->toArray();
@@ -76,7 +76,7 @@ class UpdateController extends Controller
     
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_add($now, new \DateInterval("PT5M"));
+        $finale =  date_sub($now, new \DateInterval("PT5M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
@@ -98,7 +98,7 @@ class UpdateController extends Controller
       
         // try {   
         // $ofset=$check['rd_1count'];
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$start."-".$end.")");//
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=2021-04-12T00:00:00-2021-09-12T00:00:00)");//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
 
@@ -204,7 +204,7 @@ class UpdateController extends Controller
     public function updateImageRA_2(){
         $now = new \DateTime();
        $start =  $now->format('Y-m-d\TH:i:s');
-       $finale =  date_add($now, new \DateInterval("PT5M"));
+       $finale =  date_sub($now, new \DateInterval("PT5M"));
        $end =  $finale->format('Y-m-d\TH:i:s');
         $check = NewUpdateCheker::first();
          if ($check && $check['rd_status'] == 'Running') {
@@ -224,7 +224,7 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$nowDate."-".$preDate.")",['limit'=>1]);
         
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-13T00:00:00)",['select'=>'L_ListingID']);
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),  (L_Last_Photo_updt=".$start."-".$end.")",['select'=>'L_ListingID']);
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),  (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID']);
         
        
         $alldata  = $results->toArray();
@@ -299,8 +299,9 @@ class UpdateController extends Controller
 
        $now = new \DateTime();
        $start =  $now->format('Y-m-d\TH:i:s');
-       $finale =  date_add($now, new \DateInterval("PT5M"));
+       $finale =  date_sub($now, new \DateInterval("PT5M"));
        $end =  $finale->format('Y-m-d\TH:i:s');
+    //    return [$start,$end];
 
         $check = NewUpdateCheker::first();
          if ($check && $check['ra_status'] == 'Running') {
@@ -317,7 +318,7 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $resource = 'Property';
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$start."-".$end.")",['select'=>'L_ListingID']);
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID']);
         $alldata  = $results->toArray();
         foreach($alldata as $key => $val){
             $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
@@ -382,6 +383,27 @@ class UpdateController extends Controller
         return "success";
       
 
+    }
+
+    public function testMethod(){
+        $now = new \DateTime();
+       $start =  $now->format('Y-m-d\TH:i:s');
+       $finale =  date_sub($now, new \DateInterval("PT5M"));
+       $end =  $finale->format('Y-m-d\TH:i:s');
+    //    return [$start,$end];
+       set_time_limit(2000000);
+       $config = new \PHRETS\Configuration;
+       $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+           ->setUsername('RETSARVING')
+           ->setPassword('wjq6PJqUA45EGU8')
+           ->setRetsVersion('1.7.2');
+       \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+       $rets = new \PHRETS\Session($config);
+       $connect = $rets->Login();
+       $resource = 'Property';
+       $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID']);
+       $alldata  = $results->toArray();
+       return $alldata ;
     }
 
 }
