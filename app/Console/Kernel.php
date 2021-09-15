@@ -20,7 +20,11 @@ class Kernel extends ConsoleKernel
         Commands\FeatchAndSrore2::class,
         Commands\latLangFetach::class,
         Commands\imageResizeAndStore::class,
-        Commands\CheckUpdatedData::class
+        // Commands\CheckUpdatedData::class,
+        Commands\CheckUpdatedRa2Data::class,
+        Commands\CheckUpdatedRa2ImageData::class,
+        Commands\CheckUpdatedRd1Data::class,
+        Commands\CheckUpdatedRd1ImageData::class
     ];
 
     /**
@@ -31,18 +35,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('command:FetchAndStore')
-        //          ->everyFiveMinutes();
-        // $schedule->command('command:FeatchAndSrore2')
-        //          ->everyFiveMinutes();
-        // $schedule->command('command:latLangFetach')
-        //          ->everyMinute();
-        // $schedule->command('command:imageResizeAndStore')
-        //          ->everyFiveMinutes();
-        // $schedule->command('command:CheckUpdatedData')
-        //          ->everyFiveMinutes();
-        // $schedule->command('command:CheckUpdatedData2')
-        //          ->everyFiveMinutes();
+        $schedule->command('command:FetchAndStore')
+                 ->everyFiveMinutes();
+        $schedule->command('command:FeatchAndSrore2')
+                 ->everyFiveMinutes();
+        $schedule->command('command:latLangFetach')
+                 ->everyMinute();
+        $schedule->command('command:imageResizeAndStore')
+                 ->everyFiveMinutes();
+                //  update 
+        $schedule->command('command:CheckUpdatedRa2Data')->everyFiveMinutes();
+        $schedule->command('command:CheckUpdatedRa2ImageData')->everyFiveMinutes();
+        $schedule->command('command:CheckUpdatedRd1Data')->everyFiveMinutes();
+        $schedule->command('command:CheckUpdatedRd1ImageData')->everyFiveMinutes();
+                 
     }
 
     /**

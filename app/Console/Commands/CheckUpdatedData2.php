@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\RetsController;
+use App\Http\Controllers\UpdateController;
 use Illuminate\Console\Command;
 
 class CheckUpdatedData2 extends Command
@@ -39,7 +39,7 @@ class CheckUpdatedData2 extends Command
     public function handle()
     {
         \Log::info("Calling CheckUpdatedData");
-        $ob = new RetsController();
-        return  $ob->checkForUpdatedData2();
+        $ob = new UpdateController();
+        return  $ob->updateRD_1Data();
     }
 }

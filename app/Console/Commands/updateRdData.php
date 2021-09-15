@@ -1,26 +1,24 @@
 <?php
 
 namespace App\Console\Commands;
-
-
 use App\Http\Controllers\UpdateController;
 use Illuminate\Console\Command;
 
-class CheckUpdatedData extends Command
+class updateRdData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:CheckUpdatedData';
+    protected $signature = 'command:CheckUpdatedRd1Data';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Check updated data from rets server and update them.';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -37,9 +35,11 @@ class CheckUpdatedData extends Command
      *
      * @return mixed
      */
-    public function handle(){
-        \Log::info("Calling CheckUpdatedData");
-        $ob = new UpdateController();
-        return  $ob->updateRa2Data();
+    public function handle()
+    {
+          
+          \Log::info("Calling update Rd1 data");
+          $ob = new UpdateController();
+          return  $ob->updateRD_1Data();
     }
 }
