@@ -229,7 +229,7 @@ class RetsController extends Controller
                 "date" => $date
             ]);
         }
-        // return $alldata;
+        return $alldata;
         foreach($alldata as $key => $d){
             $ob = [
                 'list_id' => $d['id'],

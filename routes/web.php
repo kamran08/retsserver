@@ -25,8 +25,8 @@ Route::get('/getOpenHouseData', 'DataController@getOpenHouseData');
 // Route::get('/getLocationTest', 'DataController@getLocationTest');
 Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 // Route::get('/storeImages', 'RetsController@storeImages');//updateRa2Data
-Route::get('/testUpdateCheck', 'UpdateController@testMethod');
-// Route::get('/testUpdateCheck', 'RetsController@testUpdateCheck');
+// Route::get('/testUpdateCheck', 'UpdateController@testMethod');
+Route::get('/testUpdateCheck', 'RetsController@getLocation');
 
 Route::get('/', function () {
     return view('welcome');
