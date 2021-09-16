@@ -244,6 +244,7 @@ class RetsController extends Controller
             }
             else{
                 \Log::info("ami else theke calling...");
+                \Log::info($d['listingAddress'].'hello');
             }
         }
         return $alldata;
