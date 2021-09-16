@@ -229,6 +229,20 @@ class RetsController extends Controller
                 "date" => $date
             ]);
         }
+        foreach($alldata as $key => $d){
+            $ob = [
+                'list_id' => $d['id'],
+                'listingID' => $d['listingID'],
+                'listingAddress' => $d['listingAddress']
+            ];
+            if($d['listingAddress']){
+                $d['listingAddress'] = trim($d['listingAddress'],"#");
+                $d['listingAddress'] = trim($d['listingAddress'],"");
+                if(!$d['listingAddress'] || $d['listingAddress']==""){
+                    MapMissingRequest::create($ob);
+                }
+            }
+        }
         return $alldata;
         foreach($alldata as $key => $d){
             $ob = [
