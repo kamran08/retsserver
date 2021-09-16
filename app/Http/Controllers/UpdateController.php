@@ -388,7 +388,7 @@ class UpdateController extends Controller
     public function testMethod(){
         $now = new \DateTime();
        $start =  $now->format('Y-m-d\TH:i:s');
-       $finale =  date_sub($now, new \DateInterval("PT5M"));
+       $finale =  date_sub($now, new \DateInterval("PT1440M"));
        $end =  $finale->format('Y-m-d\TH:i:s');
     //    return [$start,$end];
        set_time_limit(2000000);
@@ -401,9 +401,18 @@ class UpdateController extends Controller
        $rets = new \PHRETS\Session($config);
        $connect = $rets->Login();
        $resource = 'Property';
-       $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID']);
+    //    $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_ListingID=262639579)");
+       $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_UpdateDate=".$end."-".$start.")",['select'=>'L_ListingID,L_UpdateDate']);
        $alldata  = $results->toArray();
-       return $alldata ;
+    //    return $alldata;
+        $dd =[];
+       foreach($alldata as $key => $val){
+        $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
+       if($isExist){
+        array_push($dd, $val);
+       }
+    }
+       return $dd ;
     }
 
 }
