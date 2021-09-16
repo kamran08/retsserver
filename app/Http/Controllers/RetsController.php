@@ -242,6 +242,9 @@ class RetsController extends Controller
                     MapMissingRequest::create($ob);
                 }
             }
+            else{
+                \Log::info("ami else theke calling...");
+            }
         }
         return $alldata;
         foreach($alldata as $key => $d){
