@@ -141,7 +141,9 @@ class RetsController extends Controller
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
 
                     $jsonV  = $this->createNewListing($val, 'RD_1');
-                    array_push($temp, $jsonV);
+                     $hascurrentlisting = Listing::where('listingID',$jsonV['listingID'])->first();
+                    if(!$hascurrentlisting)
+                     array_push($temp, $jsonV);
                 }
                 $ofset++;
                
@@ -193,6 +195,8 @@ class RetsController extends Controller
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
 
                     $jsonV  = $this->createNewListing($val, 'RA_2');
+                    $hascurrentlisting = Listing::where('listingID',$jsonV['listingID'])->first();
+                    if(!$hascurrentlisting)
                     array_push($temp, $jsonV);
                 }
                 $ofset++;
@@ -220,10 +224,8 @@ class RetsController extends Controller
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
             if($mapreq['counter'] >= 6000) return 1;
-            
         }
         else{
-            \Log::info("Nai");
             $mapreq = MapRequest::create([
                 "counter" => 0,
                 "date" => $date
@@ -267,7 +269,7 @@ class RetsController extends Controller
                             $lang = $json->results[0]->geometry->location->lng;
                         } 
                         else {
-                        \Log::info("not exicuted");
+                                 \Log::info("not exicuted");
                             
                                 MapMissingRequest::create($ob);
                             }
@@ -301,7 +303,7 @@ class RetsController extends Controller
                         } catch (\Exception $e) {
                             $do = json_encode(["error"=>$e, "type"=>'not sent']);
                     
-                        ErrorStore::create(["data" => $do]);
+                            ErrorStore::create(["data" => $do]);
                             \Log::info($e);
                             DB::table('listings')
                             ->where('id', $d['id'])
