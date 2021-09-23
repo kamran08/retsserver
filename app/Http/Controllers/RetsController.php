@@ -237,7 +237,7 @@ class RetsController extends Controller
                 'listingID' => $d['listingID'],
                 'listingAddress' => isset($d['listingAddress'])?$d['listingAddress']:'something wrong'
             ];
-            \Log::info("location all data");
+            \Log::info("location all data ".$d['listingAddress']);
             if($mapreq['counter'] >=6000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
