@@ -185,7 +185,7 @@ class UpdateController extends Controller
             'soldPrice' => isset($data['L_SoldPrice'])?$data['L_SoldPrice']:null,
             'previousPrice' => isset($data['LM_int4_40'])?$data['LM_int4_40']:null,
             'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
-            'updated_at' => Carbon::now(),
+            // 'updated_at' => Carbon::now()
         ];
        \Log::info('updateing database start ....');
 
