@@ -233,28 +233,9 @@ class RetsController extends Controller
             $ob = [
                 'list_id' => $d['id'],
                 'listingID' => $d['listingID'],
-                'listingAddress' => $d['listingAddress']
+                'listingAddress' => isset($d['listingAddress'])?$d['listingAddress']:'something wrong'
             ];
-            if($d['listingAddress']){
-                $d['listingAddress'] = trim($d['listingAddress'],"#");
-                $d['listingAddress'] = trim($d['listingAddress'],"");
-                if(!$d['listingAddress'] || $d['listingAddress']==""){
-                    MapMissingRequest::create($ob);
-                }
-            }
-            else{
-                \Log::info("ami else theke calling...");
-                \Log::info($d['listingAddress'].'hello');
-            }
-        }
-        return $alldata;
-        foreach($alldata as $key => $d){
-            $ob = [
-                'list_id' => $d['id'],
-                'listingID' => $d['listingID'],
-                'listingAddress' => $d['listingAddress']
-            ];
-            \Log::info("alldata");
+            \Log::info("location all data");
             if($mapreq['counter'] >=6000) return 1;
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
