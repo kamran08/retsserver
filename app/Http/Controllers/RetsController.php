@@ -23,6 +23,7 @@ use Image;
 use DateTime;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\TryCatch;
+use Carbon\Carbon;
 
 class RetsController extends Controller
 {
@@ -101,6 +102,7 @@ class RetsController extends Controller
             'soldPrice' => isset($data['L_SoldPrice'])?$data['L_SoldPrice']:null,
             'previousPrice' => isset($data['LM_int4_40'])?$data['LM_int4_40']:null,
             'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
+            'created_at' => Carbon::now(),
         ];
         return $d;
         // return Listing::create($d);
@@ -219,7 +221,7 @@ class RetsController extends Controller
         \Log::info("method is calling...");
         $alldata = Listing::whereNull('lat')->whereNull('lang')->doesnthave('missed')
         ->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
-        return $alldata;
+        // return $alldata;
         $date =   date("Y-m-d");
         $mapreq = MapRequest::where('date', $date)->first();
         if($mapreq) {
