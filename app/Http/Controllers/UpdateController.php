@@ -31,7 +31,7 @@ class UpdateController extends Controller
     public function updateRa2Data(){
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_sub($now, new \DateInterval("PT5M"));
+        $finale =  date_sub($now, new \DateInterval("PT1440M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
     
          $check = NewUpdateCheker::first();
@@ -76,7 +76,7 @@ class UpdateController extends Controller
     
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_sub($now, new \DateInterval("PT5M"));
+        $finale =  date_sub($now, new \DateInterval("PT1440M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
@@ -388,7 +388,7 @@ class UpdateController extends Controller
     public function testMethod(Request $request){
         $data = $request->all();
         $str = 'RA_2';
-        if( $data['str']){
+        if($data['str']){
             $str =$data['str'];
         }
         $now = new \DateTime();
