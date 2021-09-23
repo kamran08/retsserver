@@ -385,25 +385,36 @@ class UpdateController extends Controller
 
     }
 
-    public function testMethod(){
+    public function testMethod(Request $request){
+        $data = $request->all();
+        $str = 'RA_2';
+        if( $data['str']){
+            $str =$data['str'];
+        }
         $now = new \DateTime();
-       $start =  $now->format('Y-m-d\TH:i:s');
-       $finale =  date_sub($now, new \DateInterval("PT1440M"));
-       $end =  $finale->format('Y-m-d\TH:i:s');
-    //    return [$start,$end];
-       set_time_limit(2000000);
-       $config = new \PHRETS\Configuration;
-       $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
-           ->setUsername('RETSARVING')
-           ->setPassword('wjq6PJqUA45EGU8')
-           ->setRetsVersion('1.7.2');
-       \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
-       $rets = new \PHRETS\Session($config);
-       $connect = $rets->Login();
-       $resource = 'Property';
-    //    $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_ListingID=262639579)");
-       $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_UpdateDate=".$end."-".$start.")",['select'=>'L_ListingID,L_UpdateDate']);
-       $alldata  = $results->toArray();
+        $start =  $now->format('Y-m-d\TH:i:s');
+        $finale =  date_sub($now, new \DateInterval("PT1440M"));
+        $end =  $finale->format('Y-m-d\TH:i:s');
+        //    return [$start,$end];
+        set_time_limit(2000000);
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+        ->setUsername('RETSARVING')
+        ->setPassword('wjq6PJqUA45EGU8')
+        ->setRetsVersion('1.7.2');
+        \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
+        $resource = 'Property';
+        $results=[];
+        if($str=='RA_2')
+        $results   = $rets->Search('Property',  $str, "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_ListingID']);//
+        else 
+        $results   = $rets->Search('Property',  $str, "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_ListingID']);//
+        //    $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_ListingID=262639579)");
+        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate']);
+        $alldata  = $results->toArray();
+        // return "je";
     //    return $alldata;
         $dd =[];
        foreach($alldata as $key => $val){
