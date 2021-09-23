@@ -29,14 +29,16 @@ class UpdateController extends Controller
 {
     //
     public function updateRa2Data(){
+        \Log::info("update RA_2 starting...");
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_sub($now, new \DateInterval("PT1440M"));
+        $finale =  date_sub($now, new \DateInterval("PT5M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
     
          $check = NewUpdateCheker::first();
        
          if ($check && $check['radata_status'] == 'Running') {
+            \Log::info("update RA_2 running....");
             return 1;
         }
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
@@ -52,16 +54,20 @@ class UpdateController extends Controller
       
         // try {   
 
-        // $ofset=$check['ra_2count'];  
+        // $ofset=$check['ra_2count']; 
+        \Log::info("update RA_2 featching..."); 
         $results  = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_ListingID']);//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$nowDate."-".$preDate.")",['limit'=>10,'Offset' => $ofset]);//,(L_UpdateDate=".$nowDate."-".$preDate.")
         // return $results->getTotalResultsCount();
+        \Log::info("update RA_2 processing....");
         $alldata= $results->toArray();
         foreach($alldata as $item){
             // return $item;
              $this->formate_data($item,$check['id']);
         }
+        \Log::info("update RA_2 stoping.....");
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
+       
         return 'success';
         // } catch (\Exception $e) {
         //     $do = json_encode($e);
@@ -76,7 +82,7 @@ class UpdateController extends Controller
     
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_sub($now, new \DateInterval("PT1440M"));
+        $finale =  date_sub($now, new \DateInterval("PT5M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
