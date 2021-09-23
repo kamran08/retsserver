@@ -415,4 +415,10 @@ class UpdateController extends Controller
        return $dd ;
     }
 
+    public function createmissingrequest(){
+        $data = Listing::where('listingAddress','')->get();
+        return $data;
+
+    }
+
 }

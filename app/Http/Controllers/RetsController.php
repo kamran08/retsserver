@@ -242,7 +242,7 @@ class RetsController extends Controller
             if($d['listingAddress']){
                 $d['listingAddress'] = trim($d['listingAddress'],"#");
                 $d['listingAddress'] = trim($d['listingAddress'],"");
-                if(!$d['listingAddress'] || $d['listingAddress']==''){
+                if(!$d['listingAddress'] || $d['listingAddress']==""){
                     MapMissingRequest::create($ob);
                 }
                 else{

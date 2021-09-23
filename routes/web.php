@@ -27,6 +27,8 @@ Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 // Route::get('/storeImages', 'RetsController@storeImages');//updateRa2Data
 // Route::get('/testUpdateCheck', 'UpdateController@testMethod');
 Route::get('/testUpdateCheck', 'RetsController@getLocation');
+Route::get('/createmissingrequest', 'UpdateController@createmissingrequest');
+
 
 Route::get('/', function () {
     return view('welcome');
