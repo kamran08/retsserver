@@ -126,7 +126,7 @@ class UpdateController extends Controller
     // method for formating listing data
     public function formate_data($data,$id){
           $ss = json_encode($data);
-       
+       \Log::info('Fromating start ....');
         $d = [
             'listingID' => isset($data['L_ListingID'])?$data['L_ListingID']:null,
             'listingType' => isset($data['L_Type_'])? $data['L_Type_']:null,
@@ -187,8 +187,13 @@ class UpdateController extends Controller
             'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
             'updated_at' => Carbon::now(),
         ];
+       \Log::info('updateing database start ....');
+
         Listing::where('listingID',$data['L_ListingID'])->update($d);
+       \Log::info('updateing database end ....');
+
         try {
+            \Log::info('updateing servrver start ....');
             $l = json_decode(json_encode($d), true);
 
             $client2 = new \GuzzleHttp\Client();
@@ -196,8 +201,9 @@ class UpdateController extends Controller
             
             NewUpdate::create(['listingId'=>$data['L_ListingID']]);
             // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
-
+            \Log::info('updateing servrver end ....');
         } catch (\Exception $e) {
+            \Log::info('updateing servrver error kaisi ....');
             // $d =['listingId'=>$retsData['listingID']];
             $do = json_encode(['listingId'=>$data['L_ListingID']]);
                 
@@ -402,7 +408,7 @@ class UpdateController extends Controller
         }
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_sub($now, new \DateInterval("PT1440M"));
+        $finale =  date_sub($now, new \DateInterval("PT720M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         //    return [$start,$end];
         set_time_limit(2000000);
