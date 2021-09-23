@@ -217,7 +217,7 @@ class RetsController extends Controller
     public function getLocation(){
         // return "check";
         \Log::info("method is calling...");
-        $alldata = Listing::where('lat',null)->where('lang',null)->doesnthave('missed')
+        $alldata = Listing::whereNull('lat')->whereNull('lang')->doesnthave('missed')
         ->select('id', 'listingID', 'lat','lang', 'listingAddress')->limit(100)->get();
         return $alldata;
         $date =   date("Y-m-d");
