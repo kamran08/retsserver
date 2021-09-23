@@ -417,6 +417,14 @@ class UpdateController extends Controller
 
     public function createmissingrequest(){
         $data = Listing::where('listingAddress','')->get();
+        foreach($data as $key => $d){
+            $ob = [
+                'list_id' => $d['id'],
+                'listingID' => $d['listingID'],
+                'listingAddress' => isset($d['listingAddress'])?$d['listingAddress']:''
+            ];
+            MapMissingRequest::create($ob);
+        }
         return $data;
 
     }
