@@ -24,7 +24,7 @@ use Image;
 use DateTime;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\TryCatch;
-
+use Carbon\Carbon;
 class UpdateController extends Controller
 {
     //
@@ -185,6 +185,7 @@ class UpdateController extends Controller
             'soldPrice' => isset($data['L_SoldPrice'])?$data['L_SoldPrice']:null,
             'previousPrice' => isset($data['LM_int4_40'])?$data['LM_int4_40']:null,
             'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
+            'updated_at' => Carbon::now(),
         ];
         Listing::where('listingID',$data['L_ListingID'])->update($d);
         try {
@@ -275,6 +276,7 @@ class UpdateController extends Controller
             ->update([
                 'thumbnail' => $img,
                 'images' => $data,
+                'updated_at' => Carbon::now(),
                 'completed' => 3
             ]);
             $ob = [
@@ -366,6 +368,7 @@ class UpdateController extends Controller
             ->update([
                 'thumbnail' => $img,
                 'images' => $data,
+                'updated_at' => Carbon::now(),
                 'completed' => 3
             ]);
             $ob = [
