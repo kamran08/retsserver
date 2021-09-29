@@ -451,7 +451,7 @@ class UpdateController extends Controller
        return $dd ;
     }
 
-    public function rdupdatefrom2021(){
+    public function rdupdatefrom2021(Request $request){
         $data = $request->all();
         $str = 'RA_2';
         if($data['str']){
