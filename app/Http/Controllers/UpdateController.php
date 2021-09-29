@@ -453,10 +453,12 @@ class UpdateController extends Controller
 
     public function rdupdatefrom2021(Request $request){
         $data = $request->all();
-        $str = 'RA_2';
+        $str = 'RD_1';
         if($data['str']){
             $str =$data['str'];
         }
+       return $data;
+    
         $now = new \DateTime($data['start']);
         $start =  $now->format('Y-m-d\TH:i:s');
         // $finale =  date_sub($now, new \DateInterval("PT720M"));
@@ -469,16 +471,9 @@ class UpdateController extends Controller
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
         
-         if ($str == 'RD_1' && $check && $check['rddata_status'] == 'Running') {
-            return 1;
-        }
-        else if ($str = 'RA_2' && $check && $check['radata_status'] == 'Running') {
-            return 1;
-        }
+       
         if($str == 'RD_1')
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'Running']);
-        else 
-        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
@@ -489,10 +484,7 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        if($str == 'RD_1')
         $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
-        else
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
         foreach($alldata as $item){
@@ -500,10 +492,7 @@ class UpdateController extends Controller
         //    if(!$isExist) continue;
             $this->formate_data($item,$check['id'],$isExist);
         }
-        if($str == 'RD_1')
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
-        else
-        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
         return 'success';
 
     }
