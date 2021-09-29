@@ -457,7 +457,7 @@ class UpdateController extends Controller
         if($data['str']){
             $str =$data['str'];
         }
-       return $data;
+    //    return $data;
     
         $now = new \DateTime($data['start']);
         $start =  $now->format('Y-m-d\TH:i:s');
