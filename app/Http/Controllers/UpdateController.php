@@ -394,8 +394,6 @@ class UpdateController extends Controller
         }
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
         return "success";
-      
-
     }
 
     public function testMethod(Request $request){
@@ -404,11 +402,17 @@ class UpdateController extends Controller
         if($data['str']){
             $str =$data['str'];
         }
-        $now = new \DateTime();
+        $now = new \DateTime($data['start']);
         $start =  $now->format('Y-m-d\TH:i:s');
-        $finale =  date_sub($now, new \DateInterval("PT720M"));
-        $end =  $finale->format('Y-m-d\TH:i:s');
+        // $finale =  date_sub($now, new \DateInterval("PT720M"));
+        // $end =  $finale->format('Y-m-d\TH:i:s');
+        
+        
+        $a = new \DateTime($data['end']);
+        $end = $a->format('Y-m-d\TH:i:s');
         //    return [$start,$end];
+        // return $data;
+
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
@@ -420,37 +424,86 @@ class UpdateController extends Controller
         $connect = $rets->Login();
         $resource = 'Property';
         $results=[];
+        
         if($str=='RA_2')
-        $results   = $rets->Search('Property',  $str, "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_ListingID']);//
+        $results   = $rets->Search('Property',  $str, "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_ListingID'],['limit'=>1]);//
         else 
-        $results   = $rets->Search('Property',  $str, "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_ListingID']);//
+        $results   = $rets->Search('Property',  $str, "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_ListingID'],['limit'=>1]);//
         //    $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_ListingID=262639579)");
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate']);
+        // $results   = $rets->Search('Property', 'RA_2', "(L_ListingID=262580429)");//
+        
+        
         $alldata  = $results->toArray();
         // return "je";
-    //    return $alldata;
+        return $results->getTotalResultsCount();
+       return $alldata;
         $dd =[];
        foreach($alldata as $key => $val){
-        $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
-       if($isExist){
-        array_push($dd, $val);
-       }
+        // $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
+        //     if($isExist){
+        //     }
+         array_push($dd, $val);
     }
        return $dd ;
     }
 
-    public function createmissingrequest(){
-        $data = Listing::where('listingAddress','')->get();
-        foreach($data as $key => $d){
-            $ob = [
-                'list_id' => $d['id'],
-                'listingID' => $d['listingID'],
-                'listingAddress' => isset($d['listingAddress'])?$d['listingAddress']:''
-            ];
-            MapMissingRequest::create($ob);
+    public function rdupdatefrom2021(){
+        $data = $request->all();
+        $str = 'RA_2';
+        if($data['str']){
+            $str =$data['str'];
         }
-        return $data;
+        $now = new \DateTime($data['start']);
+        $start =  $now->format('Y-m-d\TH:i:s');
+        // $finale =  date_sub($now, new \DateInterval("PT720M"));
+        // $end =  $finale->format('Y-m-d\TH:i:s');
+        
+        
+        $a = new \DateTime($data['end']);
+        $end = $a->format('Y-m-d\TH:i:s');
+
+        // update offset getting ra_2count rd_1count rd_1count
+         $check = NewUpdateCheker::first();
+        
+         if ($str == 'RD_1' && $check && $check['rddata_status'] == 'Running') {
+            return 1;
+        }
+        else if ($str = 'RA_2' && $check && $check['radata_status'] == 'Running') {
+            return 1;
+        }
+        if($str == 'RD_1')
+        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'Running']);
+        else 
+        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
+        set_time_limit(2000000);
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+            ->setUsername('RETSARVING')
+            ->setPassword('wjq6PJqUA45EGU8')
+            ->setRetsVersion('1.7.2');
+        \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
+        $results =[];
+        if($str == 'RD_1')
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
+        else
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
+
+        $alldata= $results->toArray();
+        foreach($alldata as $item){
+            $isExist = Listing::where('listingID',$item['L_ListingID'])->select('listingID')->first();
+           if(!$isExist) continue;
+            $this->formate_data($item,$check['id']);
+        }
+        if($str == 'RD_1')
+        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
+        else
+        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
+        return 'success';
 
     }
 
 }
+
