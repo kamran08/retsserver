@@ -124,7 +124,7 @@ class UpdateController extends Controller
 
 
     // method for formating listing data
-    public function formate_data($data,$id){
+    public function formate_data($data,$id,$exist){
           $ss = json_encode($data);
        \Log::info('Fromating start ....');
              $d['completed']=1;
@@ -185,6 +185,9 @@ class UpdateController extends Controller
         // $d = [
         //     // 'updated_at' => Carbon::now()
         // ];
+        if(!$exist){
+           return Listing::create($d);
+        }
        \Log::info('updateing database start ....');
 
         Listing::where('listingID',$data['L_ListingID'])->update($d);
@@ -494,8 +497,8 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         foreach($alldata as $item){
             $isExist = Listing::where('listingID',$item['L_ListingID'])->select('listingID')->first();
-           if(!$isExist) continue;
-            $this->formate_data($item,$check['id']);
+        //    if(!$isExist) continue;
+            $this->formate_data($item,$check['id'],$isExist);
         }
         if($str == 'RD_1')
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
