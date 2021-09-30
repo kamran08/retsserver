@@ -202,12 +202,19 @@ class UpdateController extends Controller
         }
        \Log::info('updateing database start ....');
        try {
+            if($data['L_Status']=='Terminated'){
+                Listing::where('listingID',$data['L_ListingID'])->delete();
+                NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>'deleted']);
+            }
+            else{
 
-           Listing::where('listingID',$data['L_ListingID'])->update($d);
-          NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
+                Listing::where('listingID',$data['L_ListingID'])->update($d);
+                NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
+            }
 
         } catch (\Exception $e) {
-              NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>'error']);
+                 $a = isset(data['L_ListingID'])?data['L_ListingID']:'untrace';
+                NewUpdate::create(['listingId'=>$a,'L_Address'=>'error']);
 
         }
 
@@ -507,7 +514,7 @@ class UpdateController extends Controller
         $results =[];
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
 
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
