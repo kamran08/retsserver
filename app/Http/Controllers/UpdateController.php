@@ -530,7 +530,7 @@ class UpdateController extends Controller
     }
     public function updateType(){
        $alldata = Listing::select('listingID','houseType')->get();
-       return sizeof($alldata);
+    //    return sizeof($alldata);
        $check = NewUpdateCheker::first();
        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
 
