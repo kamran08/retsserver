@@ -528,6 +528,37 @@ class UpdateController extends Controller
         return 'success';
 
     }
+    public function updateType(){
+       $alldata = Listing::select('listingID','houseType')->get();
+       return sizeof($alldata);
+       $check = NewUpdateCheker::first();
+       NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
+
+       foreach($alldata as $data){
+            if ($data['houseType'] == 'House/Single Family') {
+                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'House']);
+                // $data['houseType'] = 'House';
+            } else if ($data['houseType'] == 'Apartment/Condo') {
+                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'Condo']);
+
+                // $data['houseType'] = 'Condo';
+            } else if ($data['houseType'] == 'Townhouse') {
+                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'Townhouse']);
+                
+                // $data['houseType'] = 'Townhouse';
+            } else if ($data['houseType'] == '1/2 Duplex') {
+                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'Duplex']);
+
+
+                // $data['houseType'] = 'Duplex';
+             }
+         }
+
+         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+
+         return "hello";
+
+    }
 
 }
 
