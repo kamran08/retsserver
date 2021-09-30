@@ -130,7 +130,18 @@ class UpdateController extends Controller
              $d['completed']=1;
              $d['json_data']=  $ss;
              $d['listingID']=isset($data['L_ListingID'])?$data['L_ListingID']:null;
-             if(isset($data['L_Type_'])) $d['listingType']=$data['L_Type_'];
+            
+             if ($data['LM_Char10_11'] == 'House/Single Family') {
+                $data['LM_Char10_11'] = 'House';
+            } else if ($data['LM_Char10_11'] == 'Apartment/Condo') {
+                $data['LM_Char10_11'] = 'Condo';
+            } else if ($data['LM_Char10_11'] == 'Townhouse') {
+                $data['LM_Char10_11'] = 'Townhouse';
+            } else if ($data['LM_Char10_11'] == '1/2 Duplex') {
+                $data['LM_Char10_11'] = 'Duplex';
+            }
+
+            if(isset($data['L_Type_'])) $d['listingType']=$data['L_Type_'];
              if(isset($data['L_Area'])) $d['listingArea']=$data['L_Area'];
              if(isset($data['L_Address'])) $d['listingAddress']=$data['L_Address'];
              if(isset($data['L_AddressDirection'])) $d['listingAddressDirection']=$data['L_AddressDirection'];
@@ -190,11 +201,18 @@ class UpdateController extends Controller
         //    return Listing::create($d);
         }
        \Log::info('updateing database start ....');
+       try {
 
-        Listing::where('listingID',$data['L_ListingID'])->update($d);
+           Listing::where('listingID',$data['L_ListingID'])->update($d);
+          NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
+
+        } catch (\Exception $e) {
+              NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>'error']);
+
+        }
 
        \Log::info('updateing database end ....');
-       NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
+    //    NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
 
 
         // try {
@@ -493,6 +511,8 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
+        // return $results->getTotalResultsCount();
+
         foreach($alldata as $item){
             $isExist = Listing::where('listingID',$item['L_ListingID'])->select('listingID')->first();
             $this->formate_data($item,$check['id'],$isExist);
