@@ -8,7 +8,7 @@ class NewUpdate extends Model
 {
     
     protected $fillable = [
-       'listingId'
+       'listingId','L_Address'
     ];
     //
 }

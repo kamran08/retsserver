@@ -186,32 +186,36 @@ class UpdateController extends Controller
         //     // 'updated_at' => Carbon::now()
         // ];
         if(!$exist){
-           return Listing::create($d);
+            return 1;
+        //    return Listing::create($d);
         }
        \Log::info('updateing database start ....');
 
         Listing::where('listingID',$data['L_ListingID'])->update($d);
+
        \Log::info('updateing database end ....');
+       NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
 
-        try {
-            \Log::info('updateing servrver start ....');
-            $l = json_decode(json_encode($d), true);
 
-            $client2 = new \GuzzleHttp\Client();
-            $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
+        // try {
+        //     \Log::info('updateing servrver start ....');
+        //     $l = json_decode(json_encode($d), true);
+
+        //     $client2 = new \GuzzleHttp\Client();
+        //     $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
             
-            NewUpdate::create(['listingId'=>$data['L_ListingID']]);
-            // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
-            \Log::info('updateing servrver end ....');
-        } catch (\Exception $e) {
-            \Log::info('updateing servrver error kaisi ....');
-            // $d =['listingId'=>$retsData['listingID']];
-            $do = json_encode(['listingId'=>$data['L_ListingID']]);
+        //     NewUpdate::create(['listingId'=>$data['L_ListingID']]);
+        //     // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
+        //     \Log::info('updateing servrver end ....');
+        // } catch (\Exception $e) {
+        //     \Log::info('updateing servrver error kaisi ....');
+        //     // $d =['listingId'=>$retsData['listingID']];
+        //     $do = json_encode(['listingId'=>$data['L_ListingID']]);
                 
-            ErrorStore::create(["data" => $do,"type"=>'RA_2 not updated']);
-            // \Log::info($e);
-            return $e;
-        }
+        //     ErrorStore::create(["data" => $do,"type"=>'RA_2 not updated']);
+        //     // \Log::info($e);
+        //     return $e;
+        // }
     
     }
 
@@ -453,27 +457,26 @@ class UpdateController extends Controller
 
     public function rdupdatefrom2021(Request $request){
         $data = $request->all();
-        $str = 'RD_1';
-        if($data['str']){
-            $str =$data['str'];
-        }
-    //    return $data;
+    //     $str = 'RD_1';
+    //     if($data['str']){
+    //         $str =$data['str'];
+    //     }
+    // //    return $data;
     
-        $now = new \DateTime($data['start']);
+        $now = new \DateTime('2021-10-00T00:00:00');
         $start =  $now->format('Y-m-d\TH:i:s');
-        // $finale =  date_sub($now, new \DateInterval("PT720M"));
-        // $end =  $finale->format('Y-m-d\TH:i:s');
+    //     // $finale =  date_sub($now, new \DateInterval("PT720M"));
+    //     // $end =  $finale->format('Y-m-d\TH:i:s');
         
         
-        $a = new \DateTime($data['end']);
+        $a = new \DateTime('2021-01-00T00:00:00');
         $end = $a->format('Y-m-d\TH:i:s');
 
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
         
        
-        if($str == 'RD_1')
-        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'Running']);
+        // NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'Running']);
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
@@ -484,15 +487,18 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
+        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
+
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
+        // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
         foreach($alldata as $item){
             $isExist = Listing::where('listingID',$item['L_ListingID'])->select('listingID')->first();
-        //    if(!$isExist) continue;
             $this->formate_data($item,$check['id'],$isExist);
         }
-        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
+        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+
         return 'success';
 
     }
