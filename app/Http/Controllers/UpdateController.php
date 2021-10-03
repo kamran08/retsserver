@@ -547,7 +547,7 @@ class UpdateController extends Controller
         $check = NewUpdateCheker::first();
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
     
-        $alldata = Listing::select('id', 'listingID')->limit(1)->get();
+        $alldata = Listing::select('id', 'listingID')->get();
         // return sizeof($alldata);
         foreach($alldata as $key => $val){
         $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
@@ -567,7 +567,7 @@ class UpdateController extends Controller
                         Storage::disk('spaces')->setVisibility($name1, 'public');
                         $img = Storage::disk('spaces')->url($name1);
                 }
-                return $img;
+                // return $img;
                 $l=2;
                 $myFile = Storage::disk('spaces')->put($name, $url);
                 Storage::disk('spaces')->setVisibility($name, 'public');
