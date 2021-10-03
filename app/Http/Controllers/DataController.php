@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Http;
 class DataController extends Controller
 {
 
+
+       
+
     public function deletedublicateData(Request $request){
           try {
         $data = DB::select(DB::raw("SELECT listingID FROM listings GROUP BY listingID HAVING COUNT(listingID) > 1"));
@@ -892,5 +895,9 @@ class DataController extends Controller
             
         Listing::where('listingID',$serverData['listingID'])->update($dd);
 
+    }
+
+    public function testdelete(){
+        
     }
 }

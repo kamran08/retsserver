@@ -277,6 +277,8 @@ class UpdateController extends Controller
 
            }
            else{
+
+            $this->removeAllPreviousImages($val['L_ListingID']);
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
@@ -528,37 +530,100 @@ class UpdateController extends Controller
         return 'success';
 
     }
-    public function updateType(){
-       $alldata = Listing::select('listingID','houseType')->get();
-    //    return sizeof($alldata);
-       $check = NewUpdateCheker::first();
-       NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
-
-       foreach($alldata as $data){
-            if ($data['houseType'] == 'House/Single Family') {
-                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'House']);
-                // $data['houseType'] = 'House';
-            } else if ($data['houseType'] == 'Apartment/Condo') {
-                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'Condo']);
-
-                // $data['houseType'] = 'Condo';
-            } else if ($data['houseType'] == 'Townhouse') {
-                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'Townhouse']);
-                
-                // $data['houseType'] = 'Townhouse';
-            } else if ($data['houseType'] == '1/2 Duplex') {
-                Listing::where('listingID', $data['listingID'])->update(['houseType'=>'Duplex']);
 
 
-                // $data['houseType'] = 'Duplex';
-             }
-         }
+    public function storeImages(){
 
-         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
-
-         return "hello";
-
+        set_time_limit(2000000);
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+            ->setUsername('RETSARVING')
+            ->setPassword('wjq6PJqUA45EGU8')
+            ->setPassword('wjq6PJqUA45EGU8')
+            ->setRetsVersion('1.7.2');
+        \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
+    
+        $alldata = Listing::select('id', 'listingID')->get();
+        return sizeof($alldata);
+        foreach($alldata as $key => $val){
+        $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
+        $data = [];
+        $l =0;
+            $img='';
+        
+        try{
+            foreach ($objects as $ke => $photo) {
+                $url = $photo->getContent();
+                $name = time() . uniqid(rand()) . '.png';
+                if($l==0){
+                    $name1 = time() . uniqid(rand()) . '.webp';
+                // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
+                        $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
+                        $myFile = Storage::disk('spaces')->put($name1, $image);
+                        Storage::disk('spaces')->setVisibility($name1, 'public');
+                        $img = Storage::disk('spaces')->url($name1);
+                }
+                return $img;
+                $l=2;
+                $myFile = Storage::disk('spaces')->put($name, $url);
+                Storage::disk('spaces')->setVisibility($name, 'public');
+                $ll = Storage::disk('spaces')->url($name);
+                array_push($data, $ll);
+            }
+        } catch (\Exception $e) {
+                $do = json_encode($val);
+                 ErrorStore::create(["data" => $do]);
+            }
+        $data = json_encode($data);
+    
+        $s = DB::table('listings')
+        ->where('id', $val['id'])
+        ->update([
+            'thumbnail' => $img,
+            'images' => $data,
+        ]);
+    
     }
+    }
+    
+
+
+
+    public function removeAllPreviousImages(){
+        // $data = Listing::where('listingID',$id)->select('listingID','thumbnail','images')->first();
+        // $images = json_decode($data['images']);
+        // $a = $data['thumbnail'];
+        // array_push($images, $a);
+        // foreach($images as $key => $url){
+               $url ='https://youhomespace.nyc3.digitaloceanspaces.com/allfiles/cover.jpg';
+               $parts = explode('/', $url);
+                $path = end($parts);
+                return $path;
+                // if(Storage::disk('spaces')->exists($path)) {
+
+                //     $d= Storage::disk('spaces')->delete($path);
+                //     return 'from space';
+                //     // Storage::disk('spaces')->files('');
+                // }
+                if(Storage::disk('spaces3')->exists($path)) {
+                    $d= Storage::disk('spaces3')->delete($path);
+                    return 'from space3';
+
+                    // Storage::disk('spaces')->files('');
+                }
+                
+                if(Storage::disk('spaces2')->exists($path)) {
+                    $d= Storage::disk('spaces2')->delete($path);
+                    return 'from space2';
+
+                }
+        // }
+    //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
+    }
+
+
 
 }
 

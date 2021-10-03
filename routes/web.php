@@ -26,7 +26,9 @@ Route::get('/getOpenHouseData', 'DataController@getOpenHouseData');
 Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 // Route::get('/storeImages', 'RetsController@storeImages');//updateRa2Data
 // Route::get('/testUpdateCheck', 'UpdateController@testMethod');
-Route::get('/testUpdateCheck', 'UpdateController@updateType');
+Route::get('/removeAllPreviousImages', 'UpdateController@storeImages');
+Route::get('/testdelete', 'DataController@testdelete');
+
 // Route::get('/createmissingrequest', 'UpdateController@testMethod');
 
 
