@@ -544,9 +544,11 @@ class UpdateController extends Controller
         \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
+        $check = NewUpdateCheker::first();
+        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
     
-        $alldata = Listing::select('id', 'listingID')->get();
-        return sizeof($alldata);
+        $alldata = Listing::select('id', 'listingID')->limit(1)->get();
+        // return sizeof($alldata);
         foreach($alldata as $key => $val){
         $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
         $data = [];
@@ -575,17 +577,18 @@ class UpdateController extends Controller
         } catch (\Exception $e) {
                 $do = json_encode($val);
                  ErrorStore::create(["data" => $do]);
-            }
+        }
         $data = json_encode($data);
-    
+        NewUpdate::create(['listingId'=>$val['listingID'],'L_Address'=>'imageupdate']);
         $s = DB::table('listings')
         ->where('id', $val['id'])
         ->update([
             'thumbnail' => $img,
             'images' => $data,
         ]);
-    
     }
+    NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+
     }
     
 
