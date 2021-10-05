@@ -539,7 +539,7 @@ class UpdateController extends Controller
 
 
     public function storeImages(){
-        $alldata = Listing::select('id', 'listingID')->whereDoesntHave('missed_up')->get();
+        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->get();
 
         return sizeof($alldata);
         return 1;
