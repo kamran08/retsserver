@@ -520,6 +520,7 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
 
         $alldata= $results->toArray();
+        return  $alldata;
         // return $results->getTotalResultsCount();
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
