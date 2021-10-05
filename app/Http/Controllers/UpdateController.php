@@ -198,9 +198,12 @@ class UpdateController extends Controller
         //     // 'updated_at' => Carbon::now()
         // ];
         if(!$exist){
+            DisplayUpadate::create(['displayId'=>'not exit','L_Address'=>'not exit']);
+
             return 1;
         //    return Listing::create($d);
         }
+        return 1;
        \Log::info('updateing database start ....');
        try {
             if($data['L_Status']=='Terminated'){
@@ -526,7 +529,7 @@ class UpdateController extends Controller
 
         $alldata= $results->toArray();
         // return  $alldata;
-        // return $results->getTotalResultsCount();
+        return $results->getTotalResultsCount();
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
