@@ -569,6 +569,7 @@ class UpdateController extends Controller
         $connect = $rets->Login();
         $check = NewUpdateCheker::first();
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
+        \Log::info('start');
     
         $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
         if(isset($reqD['id'])){
@@ -617,6 +618,8 @@ class UpdateController extends Controller
             'images' => $data,
         ]);
     }
+    \Log::info('end');
+
     NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
 
     }
