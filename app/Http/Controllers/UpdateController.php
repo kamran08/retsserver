@@ -543,19 +543,19 @@ class UpdateController extends Controller
 
     public function storeImages(Request $request){
         $reqD = $request->all();
-        $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
+    //     $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
 
-        if(isset($reqD['id'])){
-            // return $reqD['id'] ; /
-            $q->where('id','<',$reqD['id']);
-        }
+    //     if(isset($reqD['id'])){
+    //         // return $reqD['id'] ; /
+    //         $q->where('id','<',$reqD['id']);
+    //     }
         
-       $alldata = $q->orderBy('id','desc')->limit(10000)->get();
+    //    $alldata = $q->orderBy('id','desc')->limit(10000)->get();
        
-        \Log::info('noting to commit hi hi');
+    //     \Log::info('noting to commit hi hi');
 
-        return $alldata;
-        return 1;
+    //     return $alldata;
+    //     return 1;
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -570,7 +570,13 @@ class UpdateController extends Controller
         $check = NewUpdateCheker::first();
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
     
-        $alldata = Listing::select('id', 'listingID')->get();
+        $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
+        if(isset($reqD['id'])){
+                $q->where('id','<',$reqD['id']);
+            }
+       $alldata = $q->orderBy('id','desc')->limit(10000)->get();
+
+        // $alldata = Listing::select('id', 'listingID')->get();
         // return sizeof($alldata);
         foreach($alldata as $key => $val){
         $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
