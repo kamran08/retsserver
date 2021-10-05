@@ -206,18 +206,18 @@ class UpdateController extends Controller
             if($data['L_Status']=='Terminated'){
                 Listing::where('displayId',$data['L_DisplayId'])->delete();
                 DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'deleted']);
-                return 2;
+                // return 2;
             }
             else{
                 Listing::where('displayId',$data['L_DisplayId'])->update($d);
                 DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>$data['L_Address']]);
-                return 3;
+                // return 3;
             }
 
         } catch (\Exception $e) {
             $a = isset(data['displayId'])?data['displayId']:'untrace';
             DisplayUpadate::create(['displayId'=>$a,'L_Address'=>'error']);
-            return 4;
+            // return 4;
 
         }
 
@@ -519,7 +519,7 @@ class UpdateController extends Controller
         $results =[];
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
 
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
 
         $alldata= $results->toArray();
@@ -527,7 +527,7 @@ class UpdateController extends Controller
         // return $results->getTotalResultsCount();
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-           return $this->formate_data($item,$check['id'],$isExist);
+            $this->formate_data($item,$check['id'],$isExist);
         }
         // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
 
