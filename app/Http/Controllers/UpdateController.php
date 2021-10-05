@@ -529,7 +529,7 @@ class UpdateController extends Controller
 
         $alldata= $results->toArray();
         // return  $alldata;
-        return $results->getTotalResultsCount();
+        // return $results->getTotalResultsCount();
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
