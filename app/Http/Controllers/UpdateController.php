@@ -542,7 +542,7 @@ class UpdateController extends Controller
 
 
     public function storeImages(){
-        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->get();
+        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->limit(100)->get();
         foreach($alldata as $val){
             if(NewUpdate::where('listingId', $val['listingID'])->first()){
                 \Log::info($val['listingID']);
@@ -553,7 +553,7 @@ class UpdateController extends Controller
         }
         \Log::info('noting to commit hi hi');
 
-        return sizeof($alldata);
+        return $alldata;
         return 1;
 
         set_time_limit(2000000);
