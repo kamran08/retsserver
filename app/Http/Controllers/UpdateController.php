@@ -204,20 +204,20 @@ class UpdateController extends Controller
        \Log::info('updateing database start ....');
        try {
             if($data['L_Status']=='Terminated'){
-                return 2;
                 Listing::where('displayId',$data['L_DisplayId'])->delete();
                 DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'deleted']);
+                return 2;
             }
             else{
-                return 3;
                 Listing::where('displayId',$data['L_DisplayId'])->update($d);
                 DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>$data['L_Address']]);
+                return 3;
             }
 
         } catch (\Exception $e) {
+            $a = isset(data['displayId'])?data['displayId']:'untrace';
+            DisplayUpadate::create(['displayId'=>$a,'L_Address'=>'error']);
             return 4;
-                 $a = isset(data['displayId'])?data['displayId']:'untrace';
-                 DisplayUpadate::create(['displayId'=>$a,'L_Address'=>'error']);
 
         }
 
