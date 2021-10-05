@@ -542,6 +542,9 @@ class UpdateController extends Controller
         $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->get();
         foreach($alldata as $val){
             if(NewUpdate::where('listingId', $val['listingID'])->first()){
+                \Log::info($val['listingID']);
+              \Log::info('noting to commit hi hi');
+
                 return NewUpdate::where('listingId', $val['listingID'])->first();
             }
         }
