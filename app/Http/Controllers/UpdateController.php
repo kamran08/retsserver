@@ -204,17 +204,20 @@ class UpdateController extends Controller
        \Log::info('updateing database start ....');
        try {
             if($data['L_Status']=='Terminated'){
+                return 2;
                 Listing::where('displayId',$data['L_DisplayId'])->delete();
-                NewUpdate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'deleted']);
+                DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'deleted']);
             }
             else{
+                return 3;
                 Listing::where('displayId',$data['L_DisplayId'])->update($d);
-                NewUpdate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>$data['L_Address']]);
+                DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>$data['L_Address']]);
             }
 
         } catch (\Exception $e) {
+            return 4;
                  $a = isset(data['displayId'])?data['displayId']:'untrace';
-                NewUpdate::create(['displayId'=>$a,'L_Address'=>'error']);
+                 DisplayUpadate::create(['displayId'=>$a,'L_Address'=>'error']);
 
         }
 
@@ -520,13 +523,13 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
 
         $alldata= $results->toArray();
-        return  $alldata;
+        // return  $alldata;
         // return $results->getTotalResultsCount();
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-            $this->formate_data($item,$check['id'],$isExist);
+           return $this->formate_data($item,$check['id'],$isExist);
         }
-        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
+        // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
 
         return 'success';
 
