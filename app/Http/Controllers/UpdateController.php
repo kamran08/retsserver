@@ -16,6 +16,7 @@ use App\NewUpdate;
 use App\NewUpdateCheker;
 use App\MapMissingRequest;
 use App\MapRequest;
+use App\DisplayUpadate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use File;
@@ -203,17 +204,17 @@ class UpdateController extends Controller
        \Log::info('updateing database start ....');
        try {
             if($data['L_Status']=='Terminated'){
-                Listing::where('listingID',$data['L_ListingID'])->delete();
-                NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>'deleted']);
+                Listing::where('displayId',$data['L_DisplayId'])->delete();
+                NewUpdate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'deleted']);
             }
             else{
-                Listing::where('listingID',$data['L_ListingID'])->update($d);
-                NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
+                Listing::where('displayId',$data['L_DisplayId'])->update($d);
+                NewUpdate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>$data['L_Address']]);
             }
 
         } catch (\Exception $e) {
-                 $a = isset(data['L_ListingID'])?data['L_ListingID']:'untrace';
-                NewUpdate::create(['listingId'=>$a,'L_Address'=>'error']);
+                 $a = isset(data['displayId'])?data['displayId']:'untrace';
+                NewUpdate::create(['displayId'=>$a,'L_Address'=>'error']);
 
         }
 
@@ -513,19 +514,18 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
+        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
 
-        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
+        // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
 
         $alldata= $results->toArray();
         // return $results->getTotalResultsCount();
-
         foreach($alldata as $item){
-            $isExist = Listing::where('listingID',$item['L_ListingID'])->select('listingID')->first();
+            $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
         }
-        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
 
         return 'success';
 
@@ -580,6 +580,7 @@ class UpdateController extends Controller
         }
         $data = json_encode($data);
         NewUpdate::create(['listingId'=>$val['listingID'],'L_Address'=>'imageupdate']);
+        
         $s = DB::table('listings')
         ->where('id', $val['id'])
         ->update([
