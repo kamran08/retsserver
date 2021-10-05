@@ -194,9 +194,9 @@ class UpdateController extends Controller
              if(isset($data['L_SoldPrice'])) $d['soldPrice']=$data['L_SoldPrice'];
              if(isset($data['LM_int4_40'])) $d['previousPrice']=$data['LM_int4_40'];
              if(isset($data['LM_Dec_24'])) $d['soldPricePerSqrt']=$data['LM_Dec_24'];
-        // $d = [
-        //     // 'updated_at' => Carbon::now()
-        // ];
+            $d = [
+                'updated_at' => Carbon::now()
+            ];
         if(!$exist){
             DisplayUpadate::create(['displayId'=>'not exit','L_Address'=>'not exit']);
 
@@ -498,13 +498,13 @@ class UpdateController extends Controller
     //     }
     // //    return $data;
     
-        $now = new \DateTime('2021-10-00T00:00:00');
+        $now = new \DateTime('2021-10-05T00:00:00');
         $start =  $now->format('Y-m-d\TH:i:s');
     //     // $finale =  date_sub($now, new \DateInterval("PT720M"));
     //     // $end =  $finale->format('Y-m-d\TH:i:s');
         
         
-        $a = new \DateTime('2021-01-00T00:00:00');
+        $a = new \DateTime('2021-01-01T00:00:00');
         $end = $a->format('Y-m-d\TH:i:s');
 
         // update offset getting ra_2count rd_1count rd_1count
@@ -525,11 +525,11 @@ class UpdateController extends Controller
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
 
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_DisplayId,L_ListingDate','limit'=>1]);//
 
         $alldata= $results->toArray();
         // return  $alldata;
-        // return $results->getTotalResultsCount();
+        return $results->getTotalResultsCount();
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
@@ -543,19 +543,7 @@ class UpdateController extends Controller
 
     public function storeImages(Request $request){
         $reqD = $request->all();
-    //     $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
-
-    //     if(isset($reqD['id'])){
-    //         // return $reqD['id'] ; /
-    //         $q->where('id','<',$reqD['id']);
-    //     }
-        
-    //    $alldata = $q->orderBy('id','desc')->limit(10000)->get();
-       
-    //     \Log::info('noting to commit hi hi');
-
-    //     return $alldata;
-    //     return 1;
+  
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -577,8 +565,7 @@ class UpdateController extends Controller
             }
        $alldata = $q->orderBy('id','desc')->limit(10000)->get();
 
-        // $alldata = Listing::select('id', 'listingID')->get();
-        // return sizeof($alldata);
+       
         foreach($alldata as $key => $val){
         $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
         $data = [];
@@ -657,6 +644,9 @@ class UpdateController extends Controller
                 }
         // }
     //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
+    }
+    public function testdelete(){
+        return "hello";
     }
 
 

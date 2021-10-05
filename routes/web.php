@@ -28,7 +28,7 @@ Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 
 Route::get('/testUpdateCheck', 'UpdateController@rdupdatefrom2021');
 Route::get('/removeAllPreviousImages', 'UpdateController@storeImages');
-Route::get('/testdelete', 'DataController@testdelete');
+Route::get('/testdelete', 'UpdateController@testdelete');
 
 // Route::get('/createmissingrequest', 'UpdateController@testMethod');
 
