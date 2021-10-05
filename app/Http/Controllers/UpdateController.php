@@ -541,12 +541,20 @@ class UpdateController extends Controller
     }
 
 
-    public function storeImages(){
-        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
+    public function storeImages(Request $request){
+        $reqD = $request->all();
+        $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
+
+        if(isset($reqD['id'])){
+            // return $reqD['id'] ; /
+            $q->where('id','<',$reqD['id']);
+        }
+        
+       $alldata = $q->orderBy('id','desc')->limit(10000)->get();
        
         \Log::info('noting to commit hi hi');
 
-        return sizeof($alldata);
+        return $alldata;
         return 1;
 
         set_time_limit(2000000);
