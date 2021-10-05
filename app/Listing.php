@@ -76,4 +76,8 @@ class Listing extends Model
   {
     return $this->hasMany('App\MapMissingRequest', 'list_id');
   }
+  public function missed_up()
+  {
+    return $this->hasMany('App\NewUpdate', 'listingId','listingID');
+  }
 }

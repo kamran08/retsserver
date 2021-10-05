@@ -486,6 +486,8 @@ class UpdateController extends Controller
     }
 
     public function rdupdatefrom2021(Request $request){
+     
+
         $data = $request->all();
     //     $str = 'RD_1';
     //     if($data['str']){
@@ -537,6 +539,10 @@ class UpdateController extends Controller
 
 
     public function storeImages(){
+        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->get();
+
+        return sizeof($alldata);
+        return 1;
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
