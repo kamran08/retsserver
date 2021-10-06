@@ -197,7 +197,7 @@ class UpdateController extends Controller
             $d = [
                 'updated_at' => Carbon::now()
             ];
-            $d['class'] ='RD_1';
+            $d['class'] ='RA_2';
              if(!$exist){
             try {
             if($data['L_Status']=='Terminated'){
@@ -531,20 +531,20 @@ class UpdateController extends Controller
         $results =[];
         // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
 
-        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
+        // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'Rd_1 start']);
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 start']);
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
         }
         // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'Rd_1 off']);
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 off']);
 
         return 'success';
 
