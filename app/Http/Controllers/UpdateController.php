@@ -198,12 +198,15 @@ class UpdateController extends Controller
                 'updated_at' => Carbon::now()
             ];
         if(!$exist){
-            DisplayUpadate::create(['displayId'=>'not exit','L_Address'=>'not exit']);
+            if($data['L_Status']=='Terminated'){
+                  return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'Terminated not exit']);
+            }
 
+            
+            Listing::create($d);
+            DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'new data']);
             return 1;
-        //    return Listing::create($d);
         }
-        // return 1;
        \Log::info('updateing database start ....');
        try {
             if($data['L_Status']=='Terminated'){
@@ -492,13 +495,9 @@ class UpdateController extends Controller
      
 
         $data = $request->all();
-    //     $str = 'RD_1';
-    //     if($data['str']){
-    //         $str =$data['str'];
-    //     }
-    // //    return $data;
+ 
     
-        $now = new \DateTime('2021-10-05T00:00:00');
+        $now = new \DateTime('2021-10-06T00:00:00');
         $start =  $now->format('Y-m-d\TH:i:s');
     //     // $finale =  date_sub($now, new \DateInterval("PT720M"));
     //     // $end =  $finale->format('Y-m-d\TH:i:s');
@@ -509,6 +508,7 @@ class UpdateController extends Controller
 
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
+         
         
        
         // NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'Running']);
@@ -522,14 +522,16 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
+        // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
 
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")",['select'=>'L_UpdateDate,L_DisplayId,L_ListingDate','limit'=>1]);//
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
         // return  $alldata;
-        return $results->getTotalResultsCount();
+        $total= $results->getTotalResultsCount();
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'Rd_1']);
+
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
