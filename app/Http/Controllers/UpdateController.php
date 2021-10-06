@@ -31,7 +31,7 @@ class UpdateController extends Controller
 {
     //
     public function updateRa2Data(){
-        \Log::info("ami duksi");
+        \Log::info("ra start");
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
@@ -41,15 +41,11 @@ class UpdateController extends Controller
         $check = NewUpdateCheker::first();
          
          if ($check && $check['radata_status'] == 'Running') {
-             \Log::info('rd start checkr ra');
 
             return 1;
         }
-        \Log::info("ami duksi fa");
-
         
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
-        \Log::info("ami duksi ja");
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -61,18 +57,16 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime()]);
 
         $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
-        \Log::info("ami duksi loginfa");
 
         $alldata= $results->toArray();
         $total= $results->getTotalResultsCount();
-        \Log::info('ra start');
-        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
 
-        \Log::info($total);
-        return $total;
+        // \Log::info($total);
+        $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
+
+        // return $total;
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start']);
 
         foreach($alldata as $item){
@@ -89,7 +83,6 @@ class UpdateController extends Controller
     }
     
     public function updateRD_1Data(){
-        \Log::info('rd start 2');
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
@@ -97,7 +90,6 @@ class UpdateController extends Controller
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
-        \Log::info('rd start checkr rd');
          
          if ($check && $check['rddata_status'] == 'Running') {
             return 1;
@@ -116,7 +108,7 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-       $updateCheck = DisplayUpadateChecker::create(['class'=>'RD_1','startTime'=>new \DateTime()]);
+
 
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
         $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
@@ -125,21 +117,19 @@ class UpdateController extends Controller
         // return  $alldata;
         
         $total= $results->getTotalResultsCount();
-        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
 
-        \Log::info('rd start');
-        \Log::info($total);
-        return $total;
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'rd_start']);
+        // \Log::info($total);
+        $updateCheck = DisplayUpadateChecker::create(['class'=>'RD_1','startTime'=>new \DateTime(),'counter'=>$total]);
+
+        // return $total;
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-            $this->formate_data($item,$check['id'],$isExist);
+            $this->formate_data($item,$updateCheck['id'],$isExist);
         }
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
         \Log::info('rd end');
 
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'rd_stop']);
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
         return 'success';
         
