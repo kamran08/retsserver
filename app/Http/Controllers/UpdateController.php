@@ -37,7 +37,7 @@ class UpdateController extends Controller
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT120M"));
+        $finale =  date_sub($now, new \DateInterval("PT6M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
@@ -88,7 +88,7 @@ class UpdateController extends Controller
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT120M"));
+        $finale =  date_sub($now, new \DateInterval("PT6M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
