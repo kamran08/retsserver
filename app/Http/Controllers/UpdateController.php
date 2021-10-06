@@ -194,9 +194,7 @@ class UpdateController extends Controller
              if(isset($data['L_SoldPrice'])) $d['soldPrice']=$data['L_SoldPrice'];
              if(isset($data['LM_int4_40'])) $d['previousPrice']=$data['LM_int4_40'];
              if(isset($data['LM_Dec_24'])) $d['soldPricePerSqrt']=$data['LM_Dec_24'];
-            $d = [
-                'updated_at' => Carbon::now()
-            ];
+            $d ['updated_at'] = Carbon::now();
             $d['class'] ='RA_2';
              if(!$exist){
             try {
