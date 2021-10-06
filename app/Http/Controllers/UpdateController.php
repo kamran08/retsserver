@@ -564,8 +564,8 @@ class UpdateController extends Controller
         \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
-        $check = NewUpdateCheker::first();
-        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
+        // $check = NewUpdateCheker::first();
+        // NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
         \Log::info('start');
     
         // $q = ;
@@ -577,11 +577,14 @@ class UpdateController extends Controller
     //    return sizeof($alldata);
         foreach($alldata as $key => $val){
             $check = NewUpdate::where('listingId',$val['listingID'])->first();
-            if($check) continue;
+            if($check) {
+                \Log::info("faisi");
+                continue;
+            }
             $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
             $data = [];
             $l =0;
-                $img='';
+            $img='';
             
             try{
                 foreach ($objects as $ke => $photo) {
@@ -618,7 +621,7 @@ class UpdateController extends Controller
         }
         \Log::info('end');
 
-        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+        // NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
 
     }
     
