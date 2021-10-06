@@ -66,11 +66,11 @@ class UpdateController extends Controller
 
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
-        \Log::info($updateCheck);
+        // \Log::info($updateCheck);
         
         // $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
-        return $total;
+        // return $total;
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start']);
 
         foreach($alldata as $item){
@@ -78,9 +78,9 @@ class UpdateController extends Controller
             $this->formate_data($item,$updateCheck['id'],$isExist);
         }
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
+        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
 
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_stop']);
-        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
         \Log::info('ra end');
         
         return 'success';
@@ -124,17 +124,18 @@ class UpdateController extends Controller
 
         // \Log::info($total);
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RD_1','startTime'=>new \DateTime(),'counter'=>$total]);
-        \Log::info( $updateCheck);
-        return $total;
+        // \Log::info( $updateCheck);
+        // return $total;
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$updateCheck['id'],$isExist);
         }
+        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
         \Log::info('rd end');
 
-        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
+      
         return 'success';
         
     }
