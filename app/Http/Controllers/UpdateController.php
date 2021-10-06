@@ -678,7 +678,7 @@ class UpdateController extends Controller
     //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
     }
     public function testdelete(){
-        return "hello;
+        // return "hello;
         // Bugsnag::notifyException(new RuntimeException("Test error"));
     }
 
