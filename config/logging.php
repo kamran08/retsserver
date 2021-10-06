@@ -34,21 +34,21 @@ return [
     */
 
     'channels' => [
-        // 'stack' => [
-        //     'driver' => 'stack',
-        //     // Add bugsnag to the stack:
-        //     'channels' => ['single', 'bugsnag'],
-        // ],
-      
-        // // Create a bugsnag logging channel:
-        // 'bugsnag' => [
-        //     'driver' => 'bugsnag',
-        // ],
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
-            'ignore_exceptions' => false,
+            // Add bugsnag to the stack:
+            'channels' => ['single', 'bugsnag'],
         ],
+      
+        // Create a bugsnag logging channel:
+        'bugsnag' => [
+            'driver' => 'bugsnag',
+        ],
+        // 'stack' => [
+        //     'driver' => 'stack',
+        //     'channels' => ['daily'],
+        //     'ignore_exceptions' => false,
+        // ],
 
         'single' => [
             'driver' => 'single',
