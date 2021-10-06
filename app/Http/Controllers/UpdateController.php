@@ -502,13 +502,13 @@ class UpdateController extends Controller
         $data = $request->all();
  
     
-        $now = new \DateTime('2021-10-06T00:00:00');
+        $now = new \DateTime('2021-10-06T24:00:00');
         $start =  $now->format('Y-m-d\TH:i:s');
     //     // $finale =  date_sub($now, new \DateInterval("PT720M"));
     //     // $end =  $finale->format('Y-m-d\TH:i:s');
         
         
-        $a = new \DateTime('2021-01-01T00:00:00');
+        $a = new \DateTime('2021-10-06T00:00:00');
         $end = $a->format('Y-m-d\TH:i:s');
 
         // update offset getting ra_2count rd_1count rd_1count
@@ -535,14 +535,15 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RD_1 start']);
+        // return $total;
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RD_1 2nd start']);
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
         }
         // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RD_1 off']);
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RD_1 2nd off']);
 
         return 'success';
 
