@@ -29,7 +29,7 @@ Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 Route::get('/testUpdateCheck', 'UpdateController@updateRa2Data');
 Route::get('/testUpdateCheck1', 'UpdateController@updateRD_1Data');
 // Route::get('/removeAllPreviousImages', 'UpdateController@storeImages');
-Route::get('/testdelete', 'UpdateController@testdelete');
+Route::get('/testdeletes', 'UpdateController@testdelete');
 
 // Route::get('/createmissingrequest', 'UpdateController@testMethod');
 

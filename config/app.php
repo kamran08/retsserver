@@ -177,7 +177,8 @@ return [
 
         // new compress
         Intervention\Image\ImageServiceProvider::class,
-        Buglinjo\LaravelWebp\WebpServiceProvider::class
+        Buglinjo\LaravelWebp\WebpServiceProvider::class,
+        Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
 
 
     ],
@@ -232,7 +233,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         // new compress
         'Image' => Intervention\Image\Facades\Image::class,
-        'Webp' => Buglinjo\LaravelWebp\Facades\Webp::class
+        'Webp' => Buglinjo\LaravelWebp\Facades\Webp::class,
+        'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
 
     ],
 

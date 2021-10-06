@@ -27,6 +27,8 @@ use DateTime;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\TryCatch;
 use Carbon\Carbon;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use RuntimeException;
 class UpdateController extends Controller
 {
     //
@@ -66,11 +68,7 @@ class UpdateController extends Controller
 
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
-        // \Log::info($updateCheck);
         
-        // $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
-
-        // return $total;
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start']);
 
         foreach($alldata as $item){
@@ -214,21 +212,21 @@ class UpdateController extends Controller
             $d ['updated_at'] = Carbon::now();
             $d['class'] ='RA_2';
              if(!$exist){
-            try {
-            if($data['L_Status']=='Terminated'){
-                  return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'Terminated not exit','checker_id'=>$id]);
-            }
+                try {
+                    if($data['L_Status']=='Terminated'){
+                        return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'Terminated not exit','checker_id'=>$id]);
+                    }
 
-            
-            Listing::create($d);
-            DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'new data','checker_id'=>$id]);
-            return 1;
-                } catch (\Exception $e) {
-                    return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'not exit error','checker_id'=>$id]);
+
+                    Listing::create($d);
+                        DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'new data','checker_id'=>$id]);
+                    return 1;
+                    } catch (\Exception $e) {
+                        return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'not exit error','checker_id'=>$id]);
 
                 }
 
-        }
+             }
        \Log::info('updateing database start ....');
        try {
             if($data['L_Status']=='Terminated'){
@@ -680,7 +678,8 @@ class UpdateController extends Controller
     //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
     }
     public function testdelete(){
-        return "hello";
+        return "hello;
+        // Bugsnag::notifyException(new RuntimeException("Test error"));
     }
 
 
