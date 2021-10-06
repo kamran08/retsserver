@@ -8,6 +8,6 @@ class DisplayUpadateChecker extends Model
 {
     //
     protected $fillable = [
-        'startName','endName','class','startTime','endTime'
+        'class','startTime','endTime'
      ];
 }

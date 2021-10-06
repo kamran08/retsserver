@@ -8,6 +8,6 @@ class DisplayUpadate extends Model
 {
     //
     protected $fillable = [
-        'displayId','L_Address'
+        'displayId','L_Address','checker_id'
      ];
 }
