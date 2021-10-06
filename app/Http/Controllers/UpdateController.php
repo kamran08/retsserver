@@ -63,10 +63,14 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         $total= $results->getTotalResultsCount();
 
-        // \Log::info($total);
+
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
-        // return $total;
+        \Log::info($updateCheck);
+        
+        // $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
+
+        return $total;
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start']);
 
         foreach($alldata as $item){
@@ -120,8 +124,8 @@ class UpdateController extends Controller
 
         // \Log::info($total);
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RD_1','startTime'=>new \DateTime(),'counter'=>$total]);
-
-        // return $total;
+        \Log::info( $updateCheck);
+        return $total;
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
