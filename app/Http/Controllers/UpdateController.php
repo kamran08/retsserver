@@ -69,7 +69,7 @@ class UpdateController extends Controller
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
         
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start']);
+        // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start']);
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
@@ -78,7 +78,7 @@ class UpdateController extends Controller
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
 
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_stop']);
+        // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_stop']);
         \Log::info('ra end');
         
         return 'success';
