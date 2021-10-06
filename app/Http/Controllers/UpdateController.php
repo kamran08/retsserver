@@ -34,7 +34,7 @@ class UpdateController extends Controller
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT30M"));
+        $finale =  date_sub($now, new \DateInterval("PT40M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
@@ -62,6 +62,7 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
+        \Log::info('ra start');
         \Log::info($total);
         return $total;
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_start_'.$now->format('Y-m-d')]);
@@ -74,6 +75,8 @@ class UpdateController extends Controller
 
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'ra_stop_'.$now->format('Y-m-d')]);
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
+        \Log::info('ra end');
+        
         return 'success';
     }
     
@@ -82,7 +85,7 @@ class UpdateController extends Controller
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT30M"));
+        $finale =  date_sub($now, new \DateInterval("PT40M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
@@ -90,6 +93,7 @@ class UpdateController extends Controller
          if ($check && $check['rddata_status'] == 'Running') {
             return 1;
         }
+        \Log::info('rd start');
         
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'Running']);
 
@@ -110,7 +114,9 @@ class UpdateController extends Controller
 
         $alldata= $results->toArray();
         // return  $alldata;
+        
         $total= $results->getTotalResultsCount();
+        \Log::info('rd start');
         \Log::info($total);
         return $total;
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'rd_start_'.$now->format('Y-m-d')]);
@@ -120,6 +126,7 @@ class UpdateController extends Controller
             $this->formate_data($item,$check['id'],$isExist);
         }
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
+        \Log::info('rd end');
 
         DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'rd_stop_'.$now->format('Y-m-d')]);
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
