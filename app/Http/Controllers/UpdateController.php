@@ -41,7 +41,7 @@ class UpdateController extends Controller
         $check = NewUpdateCheker::first();
          
          if ($check && $check['radata_status'] == 'Running') {
-        \Log::info('rd start checkr ra');
+             \Log::info('rd start checkr ra');
 
             return 1;
         }
@@ -125,6 +125,8 @@ class UpdateController extends Controller
         // return  $alldata;
         
         $total= $results->getTotalResultsCount();
+        NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
+
         \Log::info('rd start');
         \Log::info($total);
         return $total;
