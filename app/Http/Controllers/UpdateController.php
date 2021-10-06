@@ -197,7 +197,9 @@ class UpdateController extends Controller
             $d = [
                 'updated_at' => Carbon::now()
             ];
-        if(!$exist){
+            $d['class'] ='RD_1';
+             if(!$exist){
+            try {
             if($data['L_Status']=='Terminated'){
                   return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'Terminated not exit']);
             }
@@ -206,6 +208,11 @@ class UpdateController extends Controller
             Listing::create($d);
             DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'new data']);
             return 1;
+                } catch (\Exception $e) {
+                    return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'not exit error']);
+
+                }
+
         }
        \Log::info('updateing database start ....');
        try {
@@ -530,13 +537,14 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'Rd_1']);
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'Rd_1 start']);
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
             $this->formate_data($item,$check['id'],$isExist);
         }
         // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
+        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'Rd_1 off']);
 
         return 'success';
 
