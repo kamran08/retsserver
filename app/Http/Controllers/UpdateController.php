@@ -568,55 +568,57 @@ class UpdateController extends Controller
         NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
         \Log::info('start');
     
-        $q = Listing::select('id', 'listingID')->doesnthave('missed_up');
-        if(isset($reqD['id'])){
-                $q->where('id','<',$reqD['id']);
-            }
-       $alldata = $q->orderBy('id','desc')->limit(10000)->get();
+        // $q = ;
+        // if(isset($reqD['id'])){
+        //         $q->where('id','<',$reqD['id']);
+        //     }
+       $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
 
-       
+       return sizeof($alldata);
         foreach($alldata as $key => $val){
-        $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
-        $data = [];
-        $l =0;
-            $img='';
-        
-        try{
-            foreach ($objects as $ke => $photo) {
-                $url = $photo->getContent();
-                $name = time() . uniqid(rand()) . '.png';
-                if($l==0){
-                    $name1 = time() . uniqid(rand()) . '.webp';
-                // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
-                        $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
-                        $myFile = Storage::disk('spaces')->put($name1, $image);
-                        Storage::disk('spaces')->setVisibility($name1, 'public');
-                        $img = Storage::disk('spaces')->url($name1);
+            $check = NewUpdate::where('listingId',$val['listingID'])->first();
+            if($check) continue;
+            $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
+            $data = [];
+            $l =0;
+                $img='';
+            
+            try{
+                foreach ($objects as $ke => $photo) {
+                    $url = $photo->getContent();
+                    $name = time() . uniqid(rand()) . '.png';
+                    if($l==0){
+                        $name1 = time() . uniqid(rand()) . '.webp';
+                    // Image::make('/uploads/' . $request->file('file'))->encode('webp', 50);
+                            $image = Image::make($url)->encode('webp', 90)->encode('webp', 50);
+                            $myFile = Storage::disk('spaces')->put($name1, $image);
+                            Storage::disk('spaces')->setVisibility($name1, 'public');
+                            $img = Storage::disk('spaces')->url($name1);
+                    }
+                    // return $img;
+                    $l=2;
+                    $myFile = Storage::disk('spaces')->put($name, $url);
+                    Storage::disk('spaces')->setVisibility($name, 'public');
+                    $ll = Storage::disk('spaces')->url($name);
+                    array_push($data, $ll);
                 }
-                // return $img;
-                $l=2;
-                $myFile = Storage::disk('spaces')->put($name, $url);
-                Storage::disk('spaces')->setVisibility($name, 'public');
-                $ll = Storage::disk('spaces')->url($name);
-                array_push($data, $ll);
+            } catch (\Exception $e) {
+                    $do = json_encode($val);
+                    ErrorStore::create(["data" => $do]);
             }
-        } catch (\Exception $e) {
-                $do = json_encode($val);
-                 ErrorStore::create(["data" => $do]);
+            $data = json_encode($data);
+            NewUpdate::create(['listingId'=>$val['listingID'],'L_Address'=>'imageupdate']);
+            
+            $s = DB::table('listings')
+            ->where('id', $val['id'])
+            ->update([
+                'thumbnail' => $img,
+                'images' => $data,
+            ]);
         }
-        $data = json_encode($data);
-        NewUpdate::create(['listingId'=>$val['listingID'],'L_Address'=>'imageupdate']);
-        
-        $s = DB::table('listings')
-        ->where('id', $val['id'])
-        ->update([
-            'thumbnail' => $img,
-            'images' => $data,
-        ]);
-    }
-    \Log::info('end');
+        \Log::info('end');
 
-    NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
+        NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
 
     }
     
