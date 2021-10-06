@@ -574,7 +574,7 @@ class UpdateController extends Controller
         //     }
        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
 
-       return sizeof($alldata);
+    //    return sizeof($alldata);
         foreach($alldata as $key => $val){
             $check = NewUpdate::where('listingId',$val['listingID'])->first();
             if($check) continue;
@@ -604,7 +604,7 @@ class UpdateController extends Controller
                 }
             } catch (\Exception $e) {
                     $do = json_encode($val);
-                    ErrorStore::create(["data" => $do]);
+                    ErrorStore::create(["data" => $do,'type'=>$val['listingID']]);
             }
             $data = json_encode($data);
             NewUpdate::create(['listingId'=>$val['listingID'],'L_Address'=>'imageupdate']);
