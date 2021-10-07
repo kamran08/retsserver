@@ -17,6 +17,7 @@ use App\NewUpdateCheker;
 use App\MapMissingRequest;
 use App\DisplayUpadateChecker;
 use App\MapRequest;
+use App\SentData;
 use App\DisplayUpadate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -679,12 +680,24 @@ class UpdateController extends Controller
         // }
     //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
     }
-    public function testdelete(){
-        // return "hello;
-        // Bugsnag::notifyException(new RuntimeException("Test error"));
+    public function sendAlldata(){
+            $lastId = 0;
+            $limt = 700;
+            $size_alldata = Listing::whereNotNull('lat')->whereNotNull('lang')->count();
+            $siz = ceil($size_alldata/$limt);
+            for($i=1; $i<=$siz; $i++){
+                $alldata = Listing::whereNotNull('lat')->whereNotNull('lang')->where('id','>',$lastId)->orderBy('id','asc')->limit($limt)->get();
+                $lastId= $alldata[sizeof($alldata)-1]['id'];
+
+                $l = json_decode(json_encode($alldata), true);
+                $client2 = new \GuzzleHttp\Client();
+                $request2 = (string) $client2->post('https://m.youhome.cc/createNewUpdatedData', ['form_params' => $l])->getBody();
+                if($request2){
+                    SentData::create(['size'=>sizeof($alldata),'status'=>'sent']);
+                }
+            }
+            return 'success';
     }
-
-
 
 }
 
