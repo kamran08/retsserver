@@ -696,6 +696,7 @@ class UpdateController extends Controller
                 if($request2){
                     SentData::create(['size'=>sizeof($alldata),'status'=>'sent']);
                 }
+                return 1;
             }
             return 'success';
     }
