@@ -681,8 +681,9 @@ class UpdateController extends Controller
     //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
     }
     public function sendAlldata(){
+
             $lastId = 0;
-            $limt = 700;
+            $limt = env('limit_of_data');
             $size_alldata = Listing::whereNotNull('lat')->whereNotNull('lang')->count();
             $siz = ceil($size_alldata/$limt);
             for($i=1; $i<=$siz; $i++){
