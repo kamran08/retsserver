@@ -37,7 +37,7 @@ class UpdateController extends Controller
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT6M"));
+        $finale =  date_sub($now, new \DateInterval("PT5M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
@@ -88,7 +88,7 @@ class UpdateController extends Controller
         $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT6M"));
+        $finale =  date_sub($now, new \DateInterval("PT5M"));
         $end =  $finale->format('Y-m-d\TH:i:s');
         
         $check = NewUpdateCheker::first();
@@ -276,7 +276,7 @@ class UpdateController extends Controller
     public function updateImageRA_2(){
         $now = new \DateTime();
        $start =  $now->format('Y-m-d\TH:i:s');
-       $finale =  date_sub($now, new \DateInterval("PT5M"));
+       $finale =  date_sub($now, new \DateInterval("PT6M"));
        $end =  $finale->format('Y-m-d\TH:i:s');
         $check = NewUpdateCheker::first();
          if ($check && $check['rd_status'] == 'Running') {
