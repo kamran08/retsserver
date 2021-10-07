@@ -690,7 +690,7 @@ class UpdateController extends Controller
                 $alldata = Listing::whereNotNull('lat')->whereNotNull('lang')->where('id','>',$lastId)->orderBy('id','asc')->limit($limt)->get();
                 $lastId= $alldata[sizeof($alldata)-1]['id'];
 
-                $l = json_decode(json_encode($alldata), true);
+                $l = json_decode(json_encode($alldata[0]), true);
                 $client2 = new \GuzzleHttp\Client();
                 $request2 = (string) $client2->post('https://m.youhome.cc/createNewUpdatedData', ['form_params' => $l])->getBody();
                 if($request2){
