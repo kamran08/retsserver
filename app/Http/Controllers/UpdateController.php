@@ -517,17 +517,17 @@ class UpdateController extends Controller
         $data = $request->all();
  
     
-        $now = new \DateTime();
-        $start =  $now->format('Y-m-d\TH:i:s');
+        // $now = new \DateTime();
+        // $start =  $now->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT30M"));
-        $end =  $finale->format('Y-m-d\TH:i:s');
+        // $finale =  date_sub($now, new \DateInterval("PT30M"));
+        // $end =  $finale->format('Y-m-d\TH:i:s');
         // return [$start,$end];
         
-        // $now = new \DateTime('2021-10-06T24:00:00');
-        // $start =  $now->format('Y-m-d\TH:i:s');
-        // $a = new \DateTime('2021-10-06T00:00:00');
-        // $end = $a->format('Y-m-d\TH:i:s');
+        $now = new \DateTime('2021-10-07T24:00:00');
+        $start =  $now->format('Y-m-d\TH:i:s');
+        $a = new \DateTime('2021-10-05T00:00:00');
+        $end = $a->format('Y-m-d\TH:i:s');
 
         // update offset getting ra_2count rd_1count rd_1count
          $check = NewUpdateCheker::first();
@@ -545,7 +545,7 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'Running']);
+        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
 
         $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
@@ -553,15 +553,17 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
-        return $total;
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd start']);
+        // return $total;
+        // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd start']);
+        $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
+
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-            $this->formate_data($item,$check['id'],$isExist);
+            $this->formate_data($item, $updateCheck['id'],$isExist);
         }
-        // NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
-        DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd off']);
+        NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
+        // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd off']);
 
         return 'success';
 
