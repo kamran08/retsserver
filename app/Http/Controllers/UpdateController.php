@@ -595,20 +595,25 @@ class UpdateController extends Controller
         //     }
         $id = 0;
        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
+       $size = sizeof($alldata );
+       \Log::info($size);
        foreach($alldata as $key => $val){
         $check = NewUpdate::where('listingId',$val['listingID'])->first();
         if($check) {
             // \Log::info($id);
-            continue;
+            \Log::info("faiseiend End");
+
+            // continue;
         }
         else{
             // \Log::info($id);
 
             $id++;
-            continue;
+            // continue;
         }
     }
     \Log::info($id);
+    \Log::info("end End");
 
     return "hello";
             
