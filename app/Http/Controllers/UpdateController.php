@@ -598,7 +598,7 @@ class UpdateController extends Controller
         
   
       
-        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->limit(1)->orderBy('id','desc')->get();
+        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
        
        
      
