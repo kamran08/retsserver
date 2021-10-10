@@ -594,7 +594,7 @@ class UpdateController extends Controller
         //         $q->where('id','<',$reqD['id']);
         //     }
        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
-
+            $id = 0;
     //    return sizeof($alldata);
         foreach($alldata as $key => $val){
             $check = NewUpdate::where('listingId',$val['listingID'])->first();
@@ -602,6 +602,12 @@ class UpdateController extends Controller
                 \Log::info("faisi");
                 continue;
             }
+            else{
+                $id++;
+                continue;
+            }
+            return 1;
+            continue;
             $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
             $data = [];
             $l =0;
@@ -640,6 +646,7 @@ class UpdateController extends Controller
                 'images' => $data,
             ]);
         }
+        return $id;
         \Log::info('end');
 
         // NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
@@ -650,26 +657,15 @@ class UpdateController extends Controller
 
 
     public function removeAllPreviousImages(){
-        // $data = Listing::where('listingID',$id)->select('listingID','thumbnail','images')->first();
-        // $images = json_decode($data['images']);
-        // $a = $data['thumbnail'];
-        // array_push($images, $a);
-        // foreach($images as $key => $url){
+     
                $url ='https://youhomespace.nyc3.digitaloceanspaces.com/allfiles/cover.jpg';
                $parts = explode('/', $url);
                 $path = end($parts);
                 return $path;
-                // if(Storage::disk('spaces')->exists($path)) {
-
-                //     $d= Storage::disk('spaces')->delete($path);
-                //     return 'from space';
-                //     // Storage::disk('spaces')->files('');
-                // }
+         
                 if(Storage::disk('spaces3')->exists($path)) {
                     $d= Storage::disk('spaces3')->delete($path);
                     return 'from space3';
-
-                    // Storage::disk('spaces')->files('');
                 }
                 
                 if(Storage::disk('spaces2')->exists($path)) {
@@ -678,27 +674,53 @@ class UpdateController extends Controller
 
                 }
         // }
-    //    return Listing::where('listingID',$id)->update(['thumbnail'=>null, 'images'=>null]);
     }
     public function sendAlldata(){
+        $now = new \DateTime('2021-10-10T24:00:00');
+        $start =  $now->format('Y-m-d\TH:i:s');
+        $a = new \DateTime('2021-10-05T00:00:00');
+        $end = $a->format('Y-m-d\TH:i:s');
 
-            $lastId = 0;
-            $limt = env('limit_of_data');
-            $size_alldata = Listing::whereNotNull('lat')->whereNotNull('lang')->count();
-            $siz = ceil($size_alldata/$limt);
-            for($i=1; $i<=$siz; $i++){
-                $alldata = Listing::whereNotNull('lat')->whereNotNull('lang')->where('id','>',$lastId)->orderBy('id','asc')->limit($limt)->get();
-                $lastId= $alldata[sizeof($alldata)-1]['id'];
+        set_time_limit(2000000);
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+            ->setUsername('RETSARVING')
+            ->setPassword('wjq6PJqUA45EGU8')
+            ->setRetsVersion('1.7.2');
+        \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
+        $results =[];
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID,L_Last_Photo_updt']);//
 
-                $l = json_decode(json_encode($alldata[0]), true);
-                $client2 = new \GuzzleHttp\Client();
-                $request2 = (string) $client2->post('https://m.youhome.cc/createNewUpdatedData', ['form_params' => $l])->getBody();
-                if($request2){
-                    SentData::create(['size'=>sizeof($alldata),'status'=>'sent']);
-                }
-                return 1;
-            }
-            return 'success';
+
+        $alldata= $results->toArray();
+        // return  $alldata;
+        $total= $results->getTotalResultsCount();
+        return $total;
+
+
+        
+            //   // set_time_limit(2000000);
+
+            //     $d = Listing::whereNotNull('lat')->whereNotNull('lang')->orderBy('id','asc')->first();
+
+            //     if($d){
+            //         try {
+            //             //code...
+                    
+            //         $l = json_decode(json_encode($d), true);
+            //         $client2 = new \GuzzleHttp\Client();
+            //         $request2 = (string) $client2->post('https://m.youhome.cc/checkData', ['form_params' => $l])->getBody();
+
+            //         return $request2;
+            //         } catch (\Exception $e) {
+            //             //throw $th;
+            //             return $e;
+            //         }
+            //     }
+                
+            
     }
 
 }

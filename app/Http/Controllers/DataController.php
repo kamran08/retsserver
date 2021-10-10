@@ -52,7 +52,7 @@ class DataController extends Controller
                 }
             }
     
-      public function getLocationTest()
+    public function getLocationTest()
     {
         // $alldata = Listing::where('lat', null)->orWhere('lang', null)->select('id', 'lat', 'lang', 'listingAddress')->limit(100)->get();
         // $date =   date("Y-m-d");
