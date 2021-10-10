@@ -511,6 +511,9 @@ class UpdateController extends Controller
     }
        return $dd ;
     }
+    
+
+
 
     public function rdupdatefrom2021(Request $request){
      
@@ -575,7 +578,7 @@ class UpdateController extends Controller
         // $reqD = $request->all();
   
 
-        set_time_limit(2000000);
+        set_time_limit(20000000000);
         $config = new \PHRETS\Configuration;
         $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
             ->setUsername('RETSARVING')
@@ -591,61 +594,20 @@ class UpdateController extends Controller
         // $check = NewUpdateCheker::first();
         // NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
         \Log::info('start');
-    // return "nothing";
-        // $q = ;
-        // if(isset($reqD['id'])){
-        //         $q->where('id','<',$reqD['id']);
-        //     }
+    
         
-        set_time_limit(2000000);
   
-       $alldata1 = Listing::select('id', 'listingID')->orderBy('id','desc')->count();
-       $alldata2 = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->count();
-       $alldata3 =  NewUpdate::select('listingId')->count();
-       return ['without missed up'=>$alldata1,'with missed'=>$alldata2,'updated'=>$alldata3];
+      
+        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->limit(1)->orderBy('id','desc')->get();
        
-       foreach($alldata as $key => $val){
-        $check = NewUpdate::where('listingId',$val['listingID'])->select('listingId')->first();
-
-
-       // $check = NewUpdate::where('listingId',$val['listingID'])->first();
-       if($check) {
-           \Log::info("faisi");
-           continue;
-       }
-       else{
-           $id++;
-           continue;
-       }
-    }
-    \Log::info($id);
-    \Log::info("finished");
-       return 1;
-
-
-
-
-
-
-
-
        
-            
-    //    return sizeof($alldata);
+     
         foreach($alldata as $key => $val){
-             $check = NewUpdate::where('listingId',$val['listingID'])->select('listingId')->first();
-
-            // $check = NewUpdate::where('listingId',$val['listingID'])->first();
-            if($check) {
+             $check = NewUpdate::where('listingId',$val['listingID'])->count();
+            if($check>0) {
                 \Log::info("faisi");
                 continue;
             }
-            else{
-                $id++;
-                continue;
-            }
-            return 1;
-            continue;
             $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
             $data = [];
             $l =0;
@@ -684,9 +646,8 @@ class UpdateController extends Controller
                 'images' => $data,
             ]);
         }
-        return $id;
         \Log::info('end');
-
+        return "success";
         // NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'stop']);
 
     }
@@ -759,6 +720,14 @@ class UpdateController extends Controller
             //     }
                 
             
+    }
+
+
+    public function updateDoplicateData(){
+        // $check = NewUpdate::select('id','listingId')->groupBy('listingId')->get();
+        $check = DB::select(DB::raw("SELECT listingId FROM new_updates GROUP BY listingId HAVING COUNT(listingId) > 1"));
+        return sizeof($check);
+
     }
 
 }

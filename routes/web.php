@@ -28,11 +28,11 @@ Route::get('/deletedublicateData', 'DataController@deletedublicateData');
 
 Route::get('/testUpdateCheck', 'UpdateController@updateRa2Data');
 Route::get('/testUpdateCheck1', 'UpdateController@updateRD_1Data');
-// Route::get('/removeAllPreviousImages', 'UpdateController@storeImages');
+Route::get('/removeAllPreviousImages', 'UpdateController@storeImages');
 Route::get('/testdeletes', 'UpdateController@testdelete');
 Route::get('/rdupdatefrom2021', 'UpdateController@rdupdatefrom2021');
 Route::get('/sendAlldata', 'UpdateController@sendAlldata');
-Route::get('/checkRestofImages', 'UpdateController@storeImages');
+Route::get('/checkRestofImages', 'UpdateController@updateDoplicateData');
 
 
 
