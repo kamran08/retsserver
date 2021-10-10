@@ -603,13 +603,13 @@ class UpdateController extends Controller
        $size = sizeof($alldata);
        \Log::info($size);
        foreach($alldata as $key => $val){
-        $check = NewUpdate::where('listingId',$val['listingID'])->first();
+        $check = NewUpdate::where('listingId',$val['listingID'])->select('id','listingId')->first();
         if($check) {
-            $id++;
+           
             \Log::info($id);
         }
         else{
-            
+            $id++;
         }
     }
     \Log::info($id);
