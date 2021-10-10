@@ -588,7 +588,7 @@ class UpdateController extends Controller
         // $check = NewUpdateCheker::first();
         // NewUpdateCheker::where('id', $check['id'])->update(['rd_status' => 'Running']);
         \Log::info('start');
-    return "nothing";
+    // return "nothing";
         // $q = ;
         // if(isset($reqD['id'])){
         //         $q->where('id','<',$reqD['id']);
