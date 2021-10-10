@@ -599,11 +599,14 @@ class UpdateController extends Controller
         
         set_time_limit(2000000);
   
-       $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
-       return sizeof($alldata);
+       $alldata1 = Listing::select('id', 'listingID')->orderBy('id','desc')->count();
+       $alldata2 = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->count();
+       $alldata3 =  NewUpdate::select('listingId')->count();
+       return ['without missed up'=>$alldata1,'with missed'=>$alldata2,'updated'=>$alldata3];
        
        foreach($alldata as $key => $val){
         $check = NewUpdate::where('listingId',$val['listingID'])->select('listingId')->first();
+
 
        // $check = NewUpdate::where('listingId',$val['listingID'])->first();
        if($check) {
