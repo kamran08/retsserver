@@ -575,16 +575,16 @@ class UpdateController extends Controller
         // $reqD = $request->all();
   
 
-        // set_time_limit(2000000);
-        // $config = new \PHRETS\Configuration;
-        // $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
-        //     ->setUsername('RETSARVING')
-        //     ->setPassword('wjq6PJqUA45EGU8')
-        //     ->setPassword('wjq6PJqUA45EGU8')
-        //     ->setRetsVersion('1.7.2');
-        // \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
-        // $rets = new \PHRETS\Session($config);
-        // $connect = $rets->Login();
+        set_time_limit(2000000);
+        $config = new \PHRETS\Configuration;
+        $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
+            ->setUsername('RETSARVING')
+            ->setPassword('wjq6PJqUA45EGU8')
+            ->setPassword('wjq6PJqUA45EGU8')
+            ->setRetsVersion('1.7.2');
+        \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
+        $rets = new \PHRETS\Session($config);
+        $connect = $rets->Login();
 
 
 
@@ -598,28 +598,41 @@ class UpdateController extends Controller
         //     }
         
         set_time_limit(2000000);
-        $id = 0;
+  
        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
-       $size = sizeof($alldata);
-       \Log::info($size);
+       return sizeof($alldata);
+       
        foreach($alldata as $key => $val){
-        $check = NewUpdate::where('listingId',$val['listingID'])->select('id','listingId')->first();
-        if($check) {
-           
-            \Log::info($id);
-        }
-        else{
-            $id++;
-        }
+        $check = NewUpdate::where('listingId',$val['listingID'])->select('listingId')->first();
+
+       // $check = NewUpdate::where('listingId',$val['listingID'])->first();
+       if($check) {
+           \Log::info("faisi");
+           continue;
+       }
+       else{
+           $id++;
+           continue;
+       }
     }
     \Log::info($id);
-    \Log::info("end End");
+    \Log::info("finished");
+       return 1;
 
-    return "hello";
+
+
+
+
+
+
+
+       
             
     //    return sizeof($alldata);
         foreach($alldata as $key => $val){
-            $check = NewUpdate::where('listingId',$val['listingID'])->first();
+             $check = NewUpdate::where('listingId',$val['listingID'])->select('listingId')->first();
+
+            // $check = NewUpdate::where('listingId',$val['listingID'])->first();
             if($check) {
                 \Log::info("faisi");
                 continue;
