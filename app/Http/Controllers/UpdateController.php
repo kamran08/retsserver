@@ -598,11 +598,11 @@ class UpdateController extends Controller
        foreach($alldata as $key => $val){
         $check = NewUpdate::where('listingId',$val['listingID'])->first();
         if($check) {
-            \Log::info($id);
+            // \Log::info($id);
             continue;
         }
         else{
-            \Log::info($id);
+            // \Log::info($id);
 
             $id++;
             continue;
