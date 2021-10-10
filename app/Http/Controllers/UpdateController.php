@@ -593,8 +593,25 @@ class UpdateController extends Controller
         // if(isset($reqD['id'])){
         //         $q->where('id','<',$reqD['id']);
         //     }
+        $id = 0;
        $alldata = Listing::select('id', 'listingID')->doesnthave('missed_up')->orderBy('id','desc')->get();
-            $id = 0;
+       foreach($alldata as $key => $val){
+        $check = NewUpdate::where('listingId',$val['listingID'])->first();
+        if($check) {
+            \Log::info($id);
+            continue;
+        }
+        else{
+            \Log::info($id);
+
+            $id++;
+            continue;
+        }
+    }
+    \Log::info($id);
+
+    return "hello";
+            
     //    return sizeof($alldata);
         foreach($alldata as $key => $val){
             $check = NewUpdate::where('listingId',$val['listingID'])->first();
