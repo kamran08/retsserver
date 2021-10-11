@@ -528,7 +528,7 @@ class UpdateController extends Controller
         
         $now = new \DateTime('2021-10-11T24:00:00');
         $start =  $now->format('Y-m-d\TH:i:s');
-        $a = new \DateTime('2021-09-28T00:00:00');
+        $a = new \DateTime('2021-10-01T00:00:00');
         $end = $a->format('Y-m-d\TH:i:s');
 
         // update offset getting ra_2count rd_1count rd_1count
@@ -556,7 +556,7 @@ class UpdateController extends Controller
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
-        return $total;
+        // return $total;
         // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd start']);
         $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
