@@ -39,8 +39,8 @@ class Kernel extends ConsoleKernel
     {
         
         // featching services
-        // $schedule->command('command:latLangFetach')
-        //          ->everyMinute();
+        $schedule->command('command:latLangFetach')
+                 ->everyMinute();
         
 
 

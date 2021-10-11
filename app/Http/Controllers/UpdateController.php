@@ -74,7 +74,7 @@ class UpdateController extends Controller
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-            $this->formate_data($item,$updateCheck['id'],$isExist);
+            $this->formate_data($item,$updateCheck['id'],$isExist,'RA_2');
         }
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
@@ -128,7 +128,7 @@ class UpdateController extends Controller
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-            $this->formate_data($item,$updateCheck['id'],$isExist);
+            $this->formate_data($item,$updateCheck['id'],$isExist,'RD_1');
         }
         NewUpdateCheker::where('id', $check['id'])->update(['rddata_status' => 'stop']);
         DisplayUpadateChecker::where('id', $updateCheck['id'])->update(['endTime'=>new \DateTime()]);
@@ -141,7 +141,7 @@ class UpdateController extends Controller
 
 
     // method for formating listing data
-    public function formate_data($data,$id,$exist){
+    public function formate_data($data,$id,$exist,$type){
           $ss = json_encode($data);
        \Log::info('Fromating start ....');
              $d['json_data']=  $ss;
@@ -210,7 +210,7 @@ class UpdateController extends Controller
              if(isset($data['LM_int4_40'])) $d['previousPrice']=$data['LM_int4_40'];
              if(isset($data['LM_Dec_24'])) $d['soldPricePerSqrt']=$data['LM_Dec_24'];
             $d ['updated_at'] = Carbon::now();
-            $d['class'] ='RA_2';
+            $d['class'] =$type;
              if(!$exist){
                 try {
                     if($data['L_Status']=='Terminated'){
@@ -426,7 +426,7 @@ class UpdateController extends Controller
             } catch (\Exception $e) {
                     $do = json_encode($val);
                 
-                     ErrorStore::create(["data" => $do,'type'=>'rd_image']);
+                     ErrorStore::create(["data" => $val['L_ListingID'],'type'=>'rd_image']);
                 }
             $data = json_encode($data);
 
@@ -633,7 +633,7 @@ class UpdateController extends Controller
                 }
             } catch (\Exception $e) {
                     $do = json_encode($val);
-                    ErrorStore::create(["data" => $do,'type'=>$val['listingID']]);
+                    ErrorStore::create(["data" => $val['listingID'],'type'=>'storeimage']);
             }
             $data = json_encode($data);
             NewUpdate::create(['listingId'=>$val['listingID'],'L_Address'=>'imageupdate']);
