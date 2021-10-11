@@ -113,8 +113,8 @@ class RetsController extends Controller
     // Featch RD_1 Data
 
     public function featchRdData(){
-        \Log::info("calling from rd2");
-        return "hello";
+        \Log::info("calling from rd1");
+        // return "hello";
         $idd = Checker::first();
         try {
             if ($idd && $idd['status1'] == 'Running') return 1;
@@ -171,7 +171,7 @@ class RetsController extends Controller
 
     public function featchRA2Data(){
         \Log::info("calling from ra2");
-        return "hello";
+        // return "hello";
         $idd = Checker::first();
         try {
             if ($idd && $idd['status2'] == 'Running') return 1;

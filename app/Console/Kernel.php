@@ -52,7 +52,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:FeatchRdDataByOffset')
                  ->everyMinute();  
 
-
         //  update 
         $schedule->command('command:updateRaData')->everyFiveMinutes();
         $schedule->command('command:updateRdData')->everyFiveMinutes();
