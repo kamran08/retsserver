@@ -16,8 +16,8 @@ class Kernel extends ConsoleKernel
     //     //
     // ];
     protected $commands = [
-        Commands\FetchAndStore::class,
-        Commands\FeatchAndSrore2::class,
+        
+        
         Commands\latLangFetach::class,
         Commands\imageResizeAndStore::class,
         // Commands\CheckUpdatedData::class,
@@ -35,15 +35,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('command:FetchAndStore')
-        //          ->everyFiveMinutes();
-        // $schedule->command('command:FeatchAndSrore2')
-        //          ->everyFiveMinutes();
+       
+        
         // $schedule->command('command:latLangFetach')
         //          ->everyMinute();
         // $schedule->command('command:imageResizeAndStore')
         //          ->everyFiveMinutes();
-                //  update 
+
+        $schedule->command('command:imageResizeAndStore')
+                 ->everyMinute();
+        
+        //  update 
         $schedule->command('command:updateRaData')->everyFiveMinutes();
         $schedule->command('command:updateRdData')->everyFiveMinutes();
 

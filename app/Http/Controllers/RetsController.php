@@ -298,15 +298,12 @@ class RetsController extends Controller
                             ]);
                         
                         // $s = Listing::where('id', $d['id'])->where('lat', '!=', null)->first();
-                        $s = Listing::where('id', $d['id'])->whereNotNull('lat')->first();
+                        $s = Listing::where('id', $d['id'])->whereNotNull('lat')->whereNotNull('lang')->first();
                         if($s){
                             try{
                                 $l = json_decode(json_encode($s), true);
-                            // $request2 = Http::post('https://youhome.cc/storeDataFromDataServer', $s);
-                            // return 1;
-
-                            $client2 = new \GuzzleHttp\Client();
-                            $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+                                $client2 = new \GuzzleHttp\Client();
+                                $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
                             // $json2 = json_decode($request2);
 
                         } catch (\Exception $e) {

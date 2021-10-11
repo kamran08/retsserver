@@ -38,7 +38,7 @@ class imageResizeAndStore extends Command
      */
     public function handle()
     {
-        \Log::info("three");
+        \Log::info("image resize and store");
         $ob = new RetsController();
         return  $ob->storeImages();
         //
