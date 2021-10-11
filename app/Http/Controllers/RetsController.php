@@ -136,6 +136,7 @@ class RetsController extends Controller
             // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|HOUSE)", ['Limit'  =>  50, 'Offset' => $ofset]);
             $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
+            
             $temp = [];
             foreach ($alldata as $key => $val) {
                 $jsonV = '';
@@ -150,9 +151,12 @@ class RetsController extends Controller
                 $ofset++;
                
             }
-            $l = Listing::insert($temp);
-            if($l)
-            Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
+
+            return sizeof($temp);
+            return 1;
+            // $l = Listing::insert($temp);
+            // if($l)
+            // Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
             return "successfully inserted data";
         } catch (\Exception $e) {
             Checker::where('id', $idd['id'])->update(['status1' => 'Fail']);
