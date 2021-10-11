@@ -211,17 +211,23 @@ class UpdateController extends Controller
              if(isset($data['LM_Dec_24'])) $d['soldPricePerSqrt']=$data['LM_Dec_24'];
             $d ['updated_at'] = Carbon::now();
             $d['class'] =$type;
+            
              if(!$exist){
                 try {
+       \Log::info('inside database start ....');
+
                     if($data['L_Status']=='Terminated'){
                         return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'Terminated not exit','checker_id'=>$id]);
                     }
+                    
 
-
-                    Listing::create($d);
-                        DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'new data','checker_id'=>$id]);
+                        Listing::create($d);
+                   
+                    DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'new data','checker_id'=>$id]);
                     return 1;
                     } catch (\Exception $e) {
+                         \Log::info('inside database errror ....');
+
                         return  DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'not exit error','checker_id'=>$id]);
 
                 }
@@ -232,7 +238,7 @@ class UpdateController extends Controller
             if($data['L_Status']=='Terminated'){
                 Listing::where('displayId',$data['L_DisplayId'])->delete();
                 DisplayUpadate::create(['displayId'=>$data['L_DisplayId'],'L_Address'=>'deleted','checker_id'=>$id]);
-                // return 2;
+             
             }
             else{
                 Listing::where('displayId',$data['L_DisplayId'])->update($d);
@@ -243,33 +249,24 @@ class UpdateController extends Controller
         } catch (\Exception $e) {
             $a = isset(data['displayId'])?data['displayId']:'untrace';
             DisplayUpadate::create(['displayId'=>$a,'L_Address'=>'error','checker_id'=>$id]);
-            // return 4;
+            return "fail";
+       
 
         }
 
-       \Log::info('updateing database end ....');
-    //    NewUpdate::create(['listingId'=>$data['L_ListingID'],'L_Address'=>$data['L_Address']]);
 
+       \Log::info('updateing servrver start ....');
+        try {
+            $l = json_decode(json_encode($d), true);
 
-        // try {
-        //     \Log::info('updateing servrver start ....');
-        //     $l = json_decode(json_encode($d), true);
-
-        //     $client2 = new \GuzzleHttp\Client();
-        //     $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
+            $client2 = new \GuzzleHttp\Client();
+            $request2 = (string) $client2->post('https://m.youhome.cc/updateDataFromDataServer', ['form_params' => $l])->getBody();
             
-        //     NewUpdate::create(['listingId'=>$data['L_ListingID']]);
-        //     // NewUpdateCheker::where('id', $id)->update(['ra_2count'=>$ofset]);
-        //     \Log::info('updateing servrver end ....');
-        // } catch (\Exception $e) {
-        //     \Log::info('updateing servrver error kaisi ....');
-        //     // $d =['listingId'=>$retsData['listingID']];
-        //     $do = json_encode(['listingId'=>$data['L_ListingID']]);
-                
-        //     ErrorStore::create(["data" => $do,"type"=>'RA_2 not updated']);
-        //     // \Log::info($e);
-        //     return $e;
-        // }
+        } catch (\Exception $e) {
+            $do = json_encode(['listingId'=>$data['L_ListingID']]);
+            ErrorStore::create(["data" => $data['L_ListingID'],"type"=>$type.'not updated']);
+            return $e;
+        }
     
     }
 
@@ -456,6 +453,7 @@ class UpdateController extends Controller
             }
         }
         NewUpdateCheker::where('id', $check['id'])->update(['ra_status' => 'stop']);
+
         return "success";
     }
 
@@ -527,9 +525,9 @@ class UpdateController extends Controller
         // $end =  $finale->format('Y-m-d\TH:i:s');
         // return [$start,$end];
         
-        $now = new \DateTime('2021-10-07T24:00:00');
+        $now = new \DateTime('2021-10-11T24:00:00');
         $start =  $now->format('Y-m-d\TH:i:s');
-        $a = new \DateTime('2021-10-05T00:00:00');
+        $a = new \DateTime('2021-09-28T00:00:00');
         $end = $a->format('Y-m-d\TH:i:s');
 
         // update offset getting ra_2count rd_1count rd_1count
@@ -550,24 +548,25 @@ class UpdateController extends Controller
         $results =[];
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
 
-        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_DisplayId=)",['limit'=>1]);//
+        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
+        // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
         // return  $alldata;
         $total= $results->getTotalResultsCount();
-        // return $total;
+        return $total;
         // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd start']);
-        $updateCheck = DisplayUpadateChecker::create(['class'=>'RD_1','startTime'=>new \DateTime(),'counter'=>$total]);
+        $updateCheck = DisplayUpadateChecker::create(['class'=>'RA_2','startTime'=>new \DateTime(),'counter'=>$total]);
 
 
         foreach($alldata as $item){
             $isExist = Listing::where('displayId',$item['L_DisplayId'])->select('displayId')->first();
-            $this->formate_data($item, $updateCheck['id'],$isExist);
+             $this->formate_data($item, $updateCheck['id'],$isExist,'RA_2');
         }
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
         // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd off']);
-
+        return $alldata;
         return 'success';
 
     }

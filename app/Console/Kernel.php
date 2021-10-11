@@ -47,14 +47,14 @@ class Kernel extends ConsoleKernel
         // $schedule->command('command:imageResizeAndStore')
         //          ->everyFiveMinutes();
         
-        $schedule->command('command:FeatchRaDataByOffset')
-                 ->everyMinute();
-        $schedule->command('command:FeatchRdDataByOffset')
-                 ->everyMinute();  
+        // $schedule->command('command:FeatchRaDataByOffset')
+        //          ->everyMinute();
+        // $schedule->command('command:FeatchRdDataByOffset')
+        //          ->everyMinute();  
 
         //  update 
-        $schedule->command('command:updateRaData')->everyFiveMinutes();
-        $schedule->command('command:updateRdData')->everyFiveMinutes();
+        // $schedule->command('command:updateRaData')->everyFiveMinutes();
+        // $schedule->command('command:updateRdData')->everyFiveMinutes();
 
 
         // $schedule->command('command:updateRaImageData')->everyFiveMinutes();
