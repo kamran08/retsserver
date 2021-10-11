@@ -567,7 +567,7 @@ class UpdateController extends Controller
         }
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'stop']);
         // DisplayUpadate::create(['displayId'=>$total,'L_Address'=>'RA_2 2nd off']);
-        return $alldata;
+        // return $alldata;
         return 'success';
 
     }
