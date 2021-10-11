@@ -42,8 +42,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('command:imageResizeAndStore')
         //          ->everyFiveMinutes();
 
-        $schedule->command('command:imageResizeAndStore')
-                 ->everyFiveMinutes();
+        // $schedule->command('command:imageResizeAndStore')
+        //          ->everyFiveMinutes();
         
         //  update 
         $schedule->command('command:updateRaData')->everyFiveMinutes();
