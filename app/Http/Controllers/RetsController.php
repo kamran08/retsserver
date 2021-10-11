@@ -349,7 +349,8 @@ class RetsController extends Controller
             \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
             $rets = new \PHRETS\Session($config);
             $connect = $rets->Login();
-        
+        \Log::info("hello image");
+        return 1;
 
         $alldata = Listing::whereNull('thumbnail')->whereNotNull('lat')->whereNotNull('lang')->select('id', 'listingID')
         ->limit(1)
