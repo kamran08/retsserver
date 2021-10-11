@@ -354,7 +354,7 @@ class RetsController extends Controller
             $connect = $rets->Login();
         
 
-        $alldata = Listing::whereNull('thumbnail')->whereNotNull('lat')->whereNotNull('lang')->select('id', 'listingID')
+        $alldata = Listing::whereNull('thumbnail')->select('id', 'listingID')
         // ->limit(100)/
         ->get();
         return sizeof($alldata);
