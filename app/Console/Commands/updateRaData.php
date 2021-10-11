@@ -38,7 +38,7 @@ class updateRaData extends Command
     public function handle()
     {
         //
-        \Log::info("Calling update Ra2 data");
+        \Log::info("Calling update Ra2 data service");
         $ob = new UpdateController();
         return  $ob->updateRa2Data();
     }

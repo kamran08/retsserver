@@ -20,11 +20,13 @@ class Kernel extends ConsoleKernel
         
         Commands\latLangFetach::class,
         Commands\imageResizeAndStore::class,
-        // Commands\CheckUpdatedData::class,
         Commands\updateRaData::class,
         Commands\updateRaImageData::class,
         Commands\updateRdData::class,
-        Commands\updateRdImageData::class
+        Commands\updateRdImageData::class,
+        Commands\FeatchRaDataByOffset::class,
+        Commands\FeatchRdDataByOffset::class,
+        
     ];
 
     /**
@@ -35,16 +37,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-       
         
+        // featching services
         // $schedule->command('command:latLangFetach')
         //          ->everyMinute();
-        // $schedule->command('command:imageResizeAndStore')
-        //          ->everyFiveMinutes();
+        
+
 
         // $schedule->command('command:imageResizeAndStore')
         //          ->everyFiveMinutes();
         
+        $schedule->command('command:FeatchRaDataByOffset')
+                 ->everyMinute();
+        $schedule->command('command:FeatchRdDataByOffset')
+                 ->everyMinute();  
+
+
         //  update 
         $schedule->command('command:updateRaData')->everyFiveMinutes();
         $schedule->command('command:updateRdData')->everyFiveMinutes();

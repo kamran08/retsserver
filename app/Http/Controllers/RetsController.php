@@ -103,6 +103,7 @@ class RetsController extends Controller
             'previousPrice' => isset($data['LM_int4_40'])?$data['LM_int4_40']:null,
             'soldPricePerSqrt' => isset($data['LM_Dec_24'])?$data['LM_Dec_24']:null,
             'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ];
         return $d;
         // return Listing::create($d);
@@ -112,6 +113,8 @@ class RetsController extends Controller
     // Featch RD_1 Data
 
     public function featchRdData(){
+        \Log::info("calling from rd2");
+        return "hello";
         $idd = Checker::first();
         try {
             if ($idd && $idd['status1'] == 'Running') return 1;
@@ -133,33 +136,29 @@ class RetsController extends Controller
             if ($idd) {
                 $ofset = $idd['lastId'];
             }
-            $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   100, 'Offset' => $ofset]);
+            // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS)", ['Limit'  =>   100, 'Offset' => $ofset]);
 
             // $results   = $rets->Search('Property',  'RD_1', "(L_Area=|1,2,3,4,5,7,8,9,10,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30),(L_Status=1_0,2_0,4_0,5_1,5_2),(LM_Char10_11=|HOUSE)", ['Limit'  =>  50, 'Offset' => $ofset]);
-            // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
+            $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  2, 'Offset' => $ofset]);
             $alldata  = $results->toArray();
-            return $results->getTotalResultsCount();
+            // return $results->getTotalResultsCount();
             
             $temp = [];
             foreach ($alldata as $key => $val) {
                 $jsonV = '';
-
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
 
                     $jsonV  = $this->createNewListing($val, 'RD_1');
-                     $hascurrentlisting = Listing::where('listingID',$jsonV['listingID'])->first();
+                     $hascurrentlisting = Listing::where('listingID',$jsonV['listingID'])->select('listingID')->first();
                     if(!$hascurrentlisting)
                      array_push($temp, $jsonV);
                 }
                 $ofset++;
                
             }
-            
-            return sizeof($temp);
-            return 1;
-            // $l = Listing::insert($temp);
-            // if($l)
-            // Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
+            $l = Listing::insert($temp);
+            if($l)
+            Checker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
             return "successfully inserted data";
         } catch (\Exception $e) {
             Checker::where('id', $idd['id'])->update(['status1' => 'Fail']);
@@ -170,7 +169,9 @@ class RetsController extends Controller
     //End Featch RD_1 Data
     // Featch RA_2 Data
 
-    public function featchRAData(){
+    public function featchRA2Data(){
+        \Log::info("calling from ra2");
+        return "hello";
         $idd = Checker::first();
         try {
             if ($idd && $idd['status2'] == 'Running') return 1;
@@ -204,7 +205,7 @@ class RetsController extends Controller
                 if (!$jsonV || (isset($jsonV['listingID']) && $jsonV['listingID'] != $val['L_ListingID'])) {
 
                     $jsonV  = $this->createNewListing($val, 'RA_2');
-                    $hascurrentlisting = Listing::where('listingID',$jsonV['listingID'])->first();
+                    $hascurrentlisting = Listing::where('listingID',$jsonV['listingID'])->select('listingID')->first();
                     if(!$hascurrentlisting)
                     array_push($temp, $jsonV);
                 }

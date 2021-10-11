@@ -39,7 +39,7 @@ class latLangFetach extends Command
     public function handle()
     {
         //
-        \Log::info("four");
+        \Log::info("location service start..");
         $ob = new RetsController();
         return  $ob->getLocation();
         

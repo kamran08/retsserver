@@ -38,7 +38,7 @@ class updateRdImageData extends Command
     public function handle()
     {
          
-        \Log::info("Calling update RD1 image data");
+        \Log::info("Calling update RD1 image processing..");
         $ob = new UpdateController();
         return  $ob->updateImageRD_1();
     }

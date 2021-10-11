@@ -38,7 +38,7 @@ class updateRaImageData extends Command
     public function handle()
     {
         //
-        \Log::info("Calling update Ra2 image data");
+        \Log::info("Calling update Ra2 image processing..");
         $ob = new UpdateController();
         return  $ob->updateImageRA_2();
 
