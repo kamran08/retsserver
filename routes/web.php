@@ -17,6 +17,8 @@ Route::post('/storeImageDataFromDataServer', 'DataController@storeImageDataFromD
 Route::get('/getData', 'DataController@getData');
 Route::get('/getLocation', 'RetsController@getLocation');
 Route::get('/featchRdData', 'RetsController@featchRdData');
+Route::get('/storeImages', 'RetsController@storeImages');
+
 Route::get('/getDatadirectoryCheck', 'DataController@directoryCheck');
 Route::get('/getOpenHouseData', 'DataController@getOpenHouseData');
 Route::get('/resorce', 'DataController@resorce');

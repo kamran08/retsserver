@@ -354,7 +354,11 @@ class RetsController extends Controller
             $connect = $rets->Login();
         
 
-        $alldata = Listing::where('completed','!=', 3)->where('isSent', 'sent')->select('id', 'listingID')->limit(100)->get();
+        $alldata = Listing::whereNull('thumbnail')->whereNotNull('lat')->whereNotNull('lang')->select('id', 'listingID')
+        // ->limit(100)/
+        ->get();
+        return sizeof($alldata);
+
         foreach($alldata as $key => $val){
             $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
             $data = [];
@@ -391,7 +395,6 @@ class RetsController extends Controller
             ->update([
                 'thumbnail' => $img,
                 'images' => $data,
-                'completed' => 3
             ]);
             $ob = [
                 'listingID' =>  $val['listingID'],
@@ -415,250 +418,11 @@ class RetsController extends Controller
         }
         return "success";
     } 
-    //End storeImages data
-    public function checkForUpdatedData(){
-        $start = microtime(true);
-
-        $idd = UpdateChecker::first();
-        $checklisting = Listing::where('class', 'RD_1')->count();
-        if ($idd['lastId'] >= $checklisting) {
-            UpdateChecker::where('id', $idd['id'])->update(['lastId'=>0]);
-           \Log::info("stop lstid 0");
-            return 1;
-        }
-        if ($idd && $idd['status1'] == 'Running') {
-            \Log::info("stop running 0");
-            return 1;
-        }
-        UpdateChecker::where('id', $idd['id'])->update(['status1' => 'Running']);
-        try{
-            set_time_limit(2000000);
-            $config = new \PHRETS\Configuration;
-            // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
-            $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
-                ->setUsername('RETSARVING')
-                ->setPassword('wjq6PJqUA45EGU8')
-                ->setPassword('wjq6PJqUA45EGU8')
-                ->setRetsVersion('1.7.2');
-            \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
-            $rets = new \PHRETS\Session($config);
-            $connect = $rets->Login();
-            $resource = 'Property';
-            $photo_resource_type = 'Property';
-            $ofset = 0;
-            if($idd){
-                $ofset = $idd['lastId'];
-            }
-            $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  1000, 'Offset' => $ofset]);
-            $alldata  = $results->toArray();
-            $listingIds = [];
-            foreach ($alldata as $value ) {
-                array_push($listingIds,$value['L_ListingID']);
-                $ofset++;
-            }
-            $listingData  = Listing::whereIn('listingID',$listingIds)->select('id','listingID','updateDate','lastPhotoUpdate')->get(); ;
-            
-            $updateArray=[];
-            foreach ($listingData as $value ) {
-                $index = -1;
-                $serverValueLength = sizeof($alldata);
-                if($serverValueLength > 0){
-                    for($i=0;$i<$serverValueLength;$i++){
-                        if($value->listingID == $alldata[$i]['L_ListingID']){
-                            $db_date = strtotime($value->updateDate);
-                            $rets_date = strtotime($alldata[$i]['L_UpdateDate']);
-                            if($db_date < $rets_date){
-                                $index = $i;
-                                $ob = [
-                                    'L_ListingID'=>$value->listingID,
-                                    'db_value'=>$value->updateDate,
-                                    'rets_value'=>$alldata[$i]['L_UpdateDate'],
-                                ];
-                                $this->updateListingChanges($alldata[$i],$value);
-                                array_push($updateArray,$ob);
-                            }
-                        }
-                    }
-                }
-                $ofset++;
-
-            }
-            $check = UpdateChecker::where('id', $idd['id'])->update(['lastId' => $ofset, 'status1' => 'Stop']);
-            
-            \Log::info("end");
-            $time_elapsed_secs = microtime(true) - $start;
-            \Log::info($time_elapsed_secs);
-
-            return response()->json([
-                'success' => $check,
-                'listingData' => $listingData,
-                'updateArray' => $updateArray,
-            ], 200);
-        }
-        catch(\Exception $e){
-            \Log::info("end in catch");
-            $time_elapsed_secs = microtime(true) - $start;
-            // $interval = strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            // $interval =   strtotime($datetime1->getTimestamp()) - strtotime($datetime2->getTimestamp());
-            \Log::info($time_elapsed_secs);
-            return $e;
-        }
-    }
+   
+   
     
-    public function checkForUpdatedData2(){
-        $idd = UpdateChecker::first();
-        $checklisting = Listing::where('class', 'RA_2')->count();
-        if ($idd['lastId2']>=$checklisting) {
-            UpdateChecker::where('id', $idd['id'])->update(['lastId2' => 0]);
-            return 1;
-        }
-        if ($idd && $idd['status2'] == 'Running') return 1;
-        UpdateChecker::where('id', $idd['id'])->update(['status2' => 'Running']);
-        try{
-            set_time_limit(2000000);
-            $config = new \PHRETS\Configuration;
-            // $config = \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
-            $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
-                ->setUsername('RETSARVING')
-                ->setPassword('wjq6PJqUA45EGU8')
-                ->setPassword('wjq6PJqUA45EGU8')
-                ->setRetsVersion('1.7.2');
-            \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
-            $rets = new \PHRETS\Session($config);
-            $connect = $rets->Login();
-            $resource = 'Property';
-            $photo_resource_type = 'Property';
-            $ofset = 0;
-            if($idd){
-                $ofset = $idd['lastId2'];
-            }
-            $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE)", ['Limit'  =>  100, 'Offset' => $ofset]);
-            $alldata  = $results->toArray();
-            $listingIds = [];
-            foreach ($alldata as $value ) {
-                array_push($listingIds,$value['L_ListingID']);
-                $ofset++;
-            }
-            $listingData  = Listing::whereIn('listingID',$listingIds)->select('id','listingID','updateDate','lastPhotoUpdate')->get(); ;
-            
-            $updateArray=[];
-            foreach ($listingData as $value ) {
-                $index = -1;
-                $serverValueLength = sizeof($alldata);
-                if($serverValueLength > 0){
-                    for($i=0;$i<$serverValueLength;$i++){
-                        if($value->listingID == $alldata[$i]['L_ListingID']){
-                            $db_date = strtotime($value->updateDate);
-                            $rets_date = strtotime($alldata[$i]['L_UpdateDate']);
-                            if($db_date < $rets_date){
-                                $index = $i;
-                                $ob = [
-                                    'L_ListingID'=>$value->listingID,
-                                    'db_value'=>$value->updateDate,
-                                    'rets_value'=>$alldata[$i]['L_UpdateDate'],
-                                ];
-                                $this->updateListingChanges($alldata[$i],$value);
-                                array_push($updateArray,$ob);
-                            }
-                        }
-                    }
-                }
-                $ofset++;
+  
 
-            }
-            $check = UpdateChecker::where('id', $idd['id'])->update(['lastId2' => $ofset, 'status2' => 'Stop']);
-            return response()->json([
-                'success' => $check,
-                'listingData' => $listingData,
-                'updateArray' => $updateArray,
-            ], 200);
-        }
-        catch(\Exception $e){
-            return $e;
-        }
-    }
-
-    public function updateListingChanges($retsData,$serverData){
-        $status = 3;
-        $db_date = strtotime($serverData->lastPhotoUpdate);
-        $rets_date = strtotime($retsData['L_Last_Photo_updt']);
-        if($db_date < $rets_date){
-            $status = 2;
-        }
-        $ss = json_encode($retsData);
-        $dd = [
-            'isSent'=>'not sent',
-            'completed'=>$status,
-            'json_data' => $ss,
-        ];
-        if($retsData['L_Type_']) $dd['listingType'] = $retsData['L_Type_'];
-        if($retsData['L_Area']) $dd['listingArea'] = $retsData['L_Area'];
-        if($retsData['L_Address']) $dd['listingAddress'] = $retsData['L_Address'];
-        if($retsData['L_AddressDirection']) $dd['listingAddressDirection'] = $retsData['L_AddressDirection'];
-        if($retsData['L_AddressStreet']) $dd['listingAddressStreet'] = $retsData['L_AddressStreet'];
-        if($retsData['L_AddressUnit']) $dd['listingAddressUnit'] = $retsData['L_AddressUnit'];
-        if($retsData['LFD_Amenities_25']) $dd['amenities'] = $retsData['LFD_Amenities_25'];
-        if($retsData['LFD_BasementArea_6']) $dd['basementArea'] = $retsData['LFD_BasementArea_6'];
-        if($retsData['LM_char30_28']) $dd['lotSizeLenth'] = $retsData['LM_char30_28'];
-        if($retsData['LV_vow_address']) $dd['onInternet'] = $retsData['LV_vow_address'];
-        if($retsData['LFD_FeaturesIncluded_24']) $dd['features'] = $retsData['LFD_FeaturesIncluded_24'];
-        if($retsData['LM_Int1_2']) $dd['fireplaces'] = $retsData['LM_Int1_2'];
-        if($retsData['LM_Dec_7']) $dd['floorAreaTotal'] = $retsData['LM_Dec_7'];
-        if($retsData['LM_Dec_8']) $dd['lotSizeWidthFeet'] = $retsData['LM_Dec_8'];
-        if($retsData['LM_Dec_9']) $dd['lotSizeMeter'] = $retsData['LM_Dec_9'];
-        if($retsData['LR_remarks33']) $dd['internetRemarks'] = $retsData['LR_remarks33'];
-        if($retsData['L_ListingDate']) $dd['listingDate'] = $retsData['L_ListingDate'];
-        if($retsData['L_UpdateDate']) $dd['updateDate'] = $retsData['L_UpdateDate'];
-        if($retsData['L_AddressNumber']) $dd['addressNumber'] = $retsData['L_AddressNumber'];
-        if($retsData['L_City']) $dd['city'] = $retsData['L_City'];
-        if($retsData['LM_Char10_5']) $dd['subArea'] = $retsData['LM_Char10_5'];
-        if($retsData['L_State']) $dd['state'] = $retsData['L_State'];
-        if($retsData['L_Zip']) $dd['zip'] = $retsData['L_Zip'];
-        if($retsData['L_AskingPrice']) $dd['askingPrice'] = $retsData['L_AskingPrice'];
-        if($retsData['LM_Dec_16']) $dd['grossTaxes'] = $retsData['LM_Dec_16'];
-        if($retsData['LM_Dec_12']) $dd['lotSizeArea'] = $retsData['LM_Dec_12'];
-        if($retsData['LM_Dec_13']) $dd['lotSizeAreaSqMt'] = $retsData['LM_Dec_13'];
-        if($retsData['LM_Dec_11']) $dd['lotSizeAreaSqFt'] = $retsData['LM_Dec_11'];
-        if($retsData['L_DisplayId']) $dd['displayId'] = $retsData['L_DisplayId'];
-        if($retsData['LM_Int1_1']) $dd['floorLevel'] = $retsData['LM_Int1_1'];
-        if($retsData['L_PictureCount']) $dd['pictureCount'] = $retsData['L_PictureCount'];
-        if($retsData['L_Last_Photo_updt']) $dd['lastPhotoUpdate'] = $retsData['L_Last_Photo_updt'];
-        if($retsData['LM_Char10_11']) $dd['houseType'] = $retsData['LM_Char10_11'];
-        if($retsData['L_Status']) $dd['status'] = $retsData['L_Status'];
-        if($retsData['LM_Int1_4']) $dd['totalBedrooms'] = $retsData['LM_Int1_4'];
-        if($retsData['LM_Int1_7']) $dd['totalRooms'] = $retsData['LM_Int1_7'];
-        if($retsData['LM_Int1_17']) $dd['halfBaths'] = $retsData['LM_Int1_17'];
-        if($retsData['LM_Int1_18']) $dd['fullBaths'] = $retsData['LM_Int1_18'];
-        if($retsData['LM_Int1_19']) $dd['totalBaths'] = $retsData['LM_Int1_19'];
-        if($retsData['LM_Int2_3']) $dd['age'] = $retsData['LM_Int2_3'];
-        if($retsData['LM_Int2_2']) $dd['yearBuilt'] = $retsData['LM_Int2_2'];
-        if($retsData['LM_Int2_5']) $dd['texPerYear'] = $retsData['LM_Int2_5'];
-        if($retsData['LM_Int4_1']) $dd['unitsInDevelopment'] = $retsData['LM_Int4_1'];
-        if($retsData['LM_Int1_8']) $dd['kitchens'] = $retsData['LM_Int1_8'];
-        if($retsData['L_PricePerSQFT']) $dd['perSqrtPrice'] = $retsData['L_PricePerSQFT'];
-        if($retsData['LO1_OrganizationName']) $dd['organizationName1'] = $retsData['LO1_OrganizationName'];
-        if($retsData['LO2_OrganizationName']) $dd['organizationName2'] = $retsData['LO2_OrganizationName'];
-        if($retsData['LM_Dec_22']) $dd['startaFee'] = $retsData['LM_Dec_22'];
-        if($retsData['L_OriginalPrice']) $dd['originalListPrice'] = $retsData['L_OriginalPrice'];
-        if($retsData['L_SoldPrice']) $dd['soldPrice'] = $retsData['L_SoldPrice'];
-        if($retsData['LM_int4_40']) $dd['previousPrice'] = $retsData['LM_int4_40'];
-        if($retsData['LM_Dec_24']) $dd['soldPricePerSqrt'] = $retsData['LM_Dec_24'];
-        
-
-        Listing::where('listingID',$serverData['listingID'])->update($dd);
-        try {
-            $l = json_decode(json_encode($dd), true);
-
-            $client2 = new \GuzzleHttp\Client();
-            $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
-
-        } catch (\Exception $e) {
-            \Log::info($e);
-            return "error";
-        }
-
-
-    }
 
     public function checkDifferent(){
          $start = microtime(true);
@@ -669,4 +433,4 @@ class RetsController extends Controller
         // return $interval;
   
     }
-    }
+}

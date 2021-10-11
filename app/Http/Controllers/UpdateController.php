@@ -144,7 +144,6 @@ class UpdateController extends Controller
     public function formate_data($data,$id,$exist){
           $ss = json_encode($data);
        \Log::info('Fromating start ....');
-             $d['completed']=1;
              $d['json_data']=  $ss;
              $d['listingID']=isset($data['L_ListingID'])?$data['L_ListingID']:null;
             
