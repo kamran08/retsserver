@@ -550,7 +550,7 @@ class UpdateController extends Controller
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
 
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_DisplayId=)",['limit'=>1]);//
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")");//
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
