@@ -257,6 +257,7 @@ class UpdateController extends Controller
 
        \Log::info('updateing servrver start ....');
         try {
+            \Log::info("working...");
             $l = json_decode(json_encode($d), true);
 
             $client2 = new \GuzzleHttp\Client();
@@ -548,8 +549,8 @@ class UpdateController extends Controller
         $results =[];
         NewUpdateCheker::where('id', $check['id'])->update(['radata_status' => 'Running']);
 
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_DisplayId=)",['limit'=>1]);//
-        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
+        // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_DisplayId=)",['limit'=>1]);//
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS),(L_UpdateDate=".$end."-".$start.")",['limit'=>1]);//
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
         $alldata= $results->toArray();
