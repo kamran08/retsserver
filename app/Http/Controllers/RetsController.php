@@ -354,10 +354,10 @@ class RetsController extends Controller
             $connect = $rets->Login();
         
 
-        $alldata = Listing::whereNull('thumbnail')->select('id', 'listingID')
-        // ->limit(100)/
+        $alldata = Listing::whereNull('thumbnail')->whereNotNull('lat')->whereNotNull('lang')->select('id', 'listingID')
+        ->limit(1)
         ->get();
-        return sizeof($alldata);
+        // return sizeof($alldata);
 
         foreach($alldata as $key => $val){
             $objects = $rets->GetObject('Property', 'Photo', $val['listingID'], '*', 0);
