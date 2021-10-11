@@ -18,12 +18,12 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         
         
-        Commands\latLangFetach::class,
-        Commands\imageResizeAndStore::class,
-        Commands\updateRaData::class,
-        Commands\updateRaImageData::class,
-        Commands\updateRdData::class,
-        Commands\updateRdImageData::class,
+        // Commands\latLangFetach::class,
+        // Commands\imageResizeAndStore::class,
+        // Commands\updateRaData::class,
+        // Commands\updateRaImageData::class,
+        // Commands\updateRdData::class,
+        // Commands\updateRdImageData::class,
         Commands\FeatchRaDataByOffset::class,
         Commands\FeatchRdDataByOffset::class,
         
@@ -47,10 +47,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('command:imageResizeAndStore')
         //          ->everyFiveMinutes();
         
-        // $schedule->command('command:FeatchRaDataByOffset')
-        //          ->everyMinute();
-        // $schedule->command('command:FeatchRdDataByOffset')
-        //          ->everyMinute();  
+        $schedule->command('command:FeatchRaDataByOffset')
+                 ->everyMinute();
+        $schedule->command('command:FeatchRdDataByOffset')
+                 ->everyMinute();  
 
 
         //  update 

@@ -11,7 +11,7 @@ class FeatchRaDataByOffset extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'command:FeatchRaDataByOffset';
 
     /**
      * The console command description.
