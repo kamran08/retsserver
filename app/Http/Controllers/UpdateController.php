@@ -306,6 +306,8 @@ class UpdateController extends Controller
            }
            else{
 
+            
+
             $this->removeAllPreviousImages($val['L_ListingID']);
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
@@ -399,6 +401,8 @@ class UpdateController extends Controller
 
            }
            else{
+            $this->removeAllPreviousImages($val['L_ListingID']);
+
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
@@ -654,9 +658,14 @@ class UpdateController extends Controller
 
 
 
-    public function removeAllPreviousImages(){
-     
-               $url ='https://youhomespace.nyc3.digitaloceanspaces.com/allfiles/cover.jpg';
+    public function removeAllPreviousImages($id){
+
+                $data = Listing::where('listingID',$id)->select('thumbnail','images')->first();
+
+         foreach($data as $url){
+
+                
+            //    $url ='https://youhomespace.nyc3.digitaloceanspaces.com/allfiles/cover.jpg';
                $parts = explode('/', $url);
                 $path = end($parts);
                 return $path;
@@ -671,6 +680,8 @@ class UpdateController extends Controller
                     return 'from space2';
 
                 }
+            }
+     
         // }
     }
     public function sendAlldata(){
@@ -722,11 +733,39 @@ class UpdateController extends Controller
     }
 
 
-    public function updateDoplicateData(){
-        // $check = NewUpdate::select('id','listingId')->groupBy('listingId')->get();
-        $check = DB::select(DB::raw("SELECT listingId FROM new_updates GROUP BY listingId HAVING COUNT(listingId) > 1"));
-        return sizeof($check);
+    public function SendImagesToMainServer(){
 
+        $alldata = NewUpdate::where('isSent',0)->limit(1)->get();
+        // return $alldata ;
+
+
+        foreach($alldata as $key => $val){
+              $data = Listing::where('listingID',$val['listingId'])->select('id','listingID','images','thumbnail')->first();
+                $data['isSent'] ='90';
+              $l = json_decode(json_encode($data), true);
+              if($l){
+             
+              try{
+                  $client2 = new \GuzzleHttp\Client();
+                  $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $l])->getBody();
+                  $json2 = json_decode($request2);
+                //   return  $request2;
+
+            } catch (\Exception $e) {
+                \Log::info($e);
+                return false;
+            }
+        }
+
+
+              
+         NewUpdate::where('listingId',$val['listingId'])->update(['isSent'=>1]);
+
+           
+        }
+        \Log::info("updated fineshd");
+
+        return $alldata;
     }
 
 }
