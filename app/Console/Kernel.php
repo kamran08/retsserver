@@ -20,9 +20,9 @@ class Kernel extends ConsoleKernel
         
         // Commands\latLangFetach::class,
         // Commands\imageResizeAndStore::class,
-        // Commands\updateRaData::class,
+        Commands\updateRaData::class,
         Commands\updateRaImageData::class,
-        // Commands\updateRdData::class,
+        Commands\updateRdData::class,
         // Commands\updateRdImageData::class,
         Commands\FeatchRaDataByOffset::class,
         Commands\FeatchRdDataByOffset::class,
