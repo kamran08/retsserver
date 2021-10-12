@@ -735,7 +735,7 @@ class UpdateController extends Controller
 
     public function SendImagesToMainServer(){
 
-        $alldata = NewUpdate::where('isSent',0)->limit(1)->get();
+        $alldata = NewUpdate::where('isSent',0)->limit(50000)->get();
         // return $alldata ;
 
 
@@ -765,7 +765,7 @@ class UpdateController extends Controller
         }
         \Log::info("updated fineshd");
 
-        return $alldata;
+        return sizeof($alldata);
     }
 
 }
