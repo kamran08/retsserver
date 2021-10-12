@@ -294,21 +294,18 @@ class UpdateController extends Controller
         // $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$nowDate."-".$preDate.")",['limit'=>1]);
         
         // $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE), (L_Last_Photo_updt=2021-04-06T00:00:00-2021-09-13T00:00:00)",['select'=>'L_ListingID']);
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),  (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID']);
+        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0),(LM_Char10_11=|HOUSE),  (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID,L_Last_Photo_updt']);
         
        
         $alldata  = $results->toArray();
         // return $results->getTotalResultsCount();
         foreach($alldata as $key => $val){
-            $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
+            $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID','thumbnail','images')->first();
            if(!$isExist){
 
            }
            else{
-
-            
-
-            $this->removeAllPreviousImages($val['L_ListingID']);
+            $isError =0;
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
@@ -332,25 +329,31 @@ class UpdateController extends Controller
                     array_push($data, $ll);
                 }
             } catch (\Exception $e) {
+                $isError =1;
                     $do = json_encode($val);
                 
                      ErrorStore::create(["data" => $do,'type'=>'rd_image']);
                 }
+            if($isError==1) continue;
             $data = json_encode($data);
 
             $s = DB::table('listings')
             ->where('listingID', $val['L_ListingID'])
             ->update([
+                'lastPhotoUpdate' => $val['L_Last_Photo_updt'],
                 'thumbnail' => $img,
                 'images' => $data,
                 'updated_at' => Carbon::now(),
                 'completed' => 3
             ]);
             $ob = [
+                
                 'listingID' =>  $val['L_ListingID'],
+                'lastPhotoUpdate' =>  $val['L_Last_Photo_updt'],
                 'thumbnail' => $img,
                 'images' => $data
             ];
+            $this->removeAllPreviousImages($isExist);
                 try{
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
@@ -393,20 +396,21 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $resource = 'Property';
-        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID']);
+        $results   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID,L_Last_Photo_updt']);
         $alldata  = $results->toArray();
         foreach($alldata as $key => $val){
-            $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID')->first();
+            $isExist = Listing::where('listingID',$val['L_ListingID'])->select('listingID','thumbnail','images')->first();
            if(!$isExist){
 
            }
            else{
-            $this->removeAllPreviousImages($val['L_ListingID']);
+            
 
             $objects = $rets->GetObject('Property', 'Photo', $val['L_ListingID'], '*', 0);
             $data = [];
             $l =0;
             $img='';
+            $isError =0;
             try{
                 foreach ($objects as $ke => $photo) {
                     $url = $photo->getContent();
@@ -426,25 +430,34 @@ class UpdateController extends Controller
                     array_push($data, $ll);
                 }
             } catch (\Exception $e) {
+                    $isError =1;
                     $do = json_encode($val);
                 
                      ErrorStore::create(["data" => $val['L_ListingID'],'type'=>'rd_image']);
                 }
+
+            if($isError==1) continue;
+            
+            
             $data = json_encode($data);
 
             $s = DB::table('listings')
             ->where('listingID', $val['L_ListingID'])
             ->update([
+                'lastPhotoUpdate' => $val['L_Last_Photo_updt'],
                 'thumbnail' => $img,
                 'images' => $data,
                 'updated_at' => Carbon::now(),
                 'completed' => 3
             ]);
             $ob = [
+                'lastPhotoUpdate' => $val['L_Last_Photo_updt'],
                 'listingID' =>  $val['L_ListingID'],
                 'thumbnail' => $img,
                 'images' => $data
             ];
+            $this->removeAllPreviousImages($isExist);
+
                 try{
                     $client2 = new \GuzzleHttp\Client();
                     $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $ob])->getBody();
@@ -658,27 +671,21 @@ class UpdateController extends Controller
 
 
 
-    public function removeAllPreviousImages($id){
+    public function removeAllPreviousImages($data){
+        // $data = Listing::where('listingID',$id)->select('thumbnail','images')->first();
+        $images = json_decode( $data['images']);
+              $url1 =  $data['thumbnail'];
+                $parts = explode('/', $url1);
+                $path = end($parts);
+                if(Storage::disk('spaces')->exists($path)) {
+                    $d= Storage::disk('spaces')->delete($path);
+                }
 
-                $data = Listing::where('listingID',$id)->select('thumbnail','images')->first();
-
-         foreach($data as $url){
-
-                
-            //    $url ='https://youhomespace.nyc3.digitaloceanspaces.com/allfiles/cover.jpg';
+         foreach($images as $url){
                $parts = explode('/', $url);
                 $path = end($parts);
-                return $path;
-         
-                if(Storage::disk('spaces3')->exists($path)) {
-                    $d= Storage::disk('spaces3')->delete($path);
-                    return 'from space3';
-                }
-                
-                if(Storage::disk('spaces2')->exists($path)) {
-                    $d= Storage::disk('spaces2')->delete($path);
-                    return 'from space2';
-
+                if(Storage::disk('spaces')->exists($path)) {
+                    $d= Storage::disk('spaces')->delete($path);
                 }
             }
      

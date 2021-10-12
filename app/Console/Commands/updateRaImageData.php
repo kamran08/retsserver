@@ -40,8 +40,8 @@ class updateRaImageData extends Command
         //
         \Log::info("Calling update Ra2 image processing..");
         $ob = new UpdateController();
-        // return  $ob->updateImageRA_2();
-        return $ob->SendImagesToMainServer();
+        return  $ob->updateImageRA_2();
+        // return $ob->SendImagesToMainServer();
 
 
     }
