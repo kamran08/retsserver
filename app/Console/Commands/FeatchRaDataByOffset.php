@@ -41,5 +41,6 @@ class FeatchRaDataByOffset extends Command
         \Log::info("Featch Ra2 data by offset services");
         $ob = new RetsController();
         return  $ob->featchRA2Data();
+
     }
 }

@@ -41,6 +41,5 @@ class updateRdData extends Command
           \Log::info("Calling update Rd1 data");
           $ob = new UpdateController();
           return  $ob->updateRD_1Data();
-          return  $ob->SendImagesToMainServer();
     }
 }
