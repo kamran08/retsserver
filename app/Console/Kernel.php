@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         
         
-        // Commands\latLangFetach::class,
+        Commands\latLangFetach::class,
         // Commands\imageResizeAndStore::class,
         Commands\updateRaData::class,
         Commands\updateRaImageData::class,
