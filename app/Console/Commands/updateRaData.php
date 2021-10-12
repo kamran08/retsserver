@@ -40,7 +40,6 @@ class updateRaData extends Command
         //
         \Log::info("Calling update Ra2 data service");
         $ob = new UpdateController();
-          $ob->SendImagesToMainServer();
         return  $ob->updateRa2Data();
 
     }

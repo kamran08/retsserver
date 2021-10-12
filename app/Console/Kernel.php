@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
         // Commands\latLangFetach::class,
         // Commands\imageResizeAndStore::class,
         // Commands\updateRaData::class,
-        // Commands\updateRaImageData::class,
+        Commands\updateRaImageData::class,
         // Commands\updateRdData::class,
         // Commands\updateRdImageData::class,
         Commands\FeatchRaDataByOffset::class,
@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:updateRdData')->everyFiveMinutes();
 
 
-        // $schedule->command('command:updateRaImageData')->everyFiveMinutes();
+        $schedule->command('command:updateRaImageData')->everyFiveMinutes();
         // $schedule->command('command:updateRdImageData')->everyFiveMinutes();
                  
     }
