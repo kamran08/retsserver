@@ -735,7 +735,7 @@ class UpdateController extends Controller
 
     public function SendImagesToMainServer(){
 
-        $alldata = NewUpdate::where('isSent',0)->limit(50000)->get();
+        $alldata = NewUpdate::where('isSent',0)->limit(5000)->get();
         // return $alldata ;
 
 
