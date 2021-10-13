@@ -31,9 +31,11 @@ Route::get('/testUpdateCheck1', 'UpdateController@updateRD_1Data');
 Route::get('/removeAllPreviousImages', 'UpdateController@removeAllPreviousImages');
 Route::get('/testdeletes', 'UpdateController@testdelete');
 Route::get('/rdupdatefrom2021', 'UpdateController@rdupdatefrom2021');
-Route::get('/sendAlldata', 'UpdateController@sendAlldata');
+// Route::get('/sendAlldata', 'UpdateController@sendAlldata');
 Route::get('/checkRestofImages', 'UpdateController@updateDoplicateData');
 Route::get('/SendImagesToMainServer', 'UpdateController@SendImagesToMainServer');
+Route::get('/sendAlldata', 'UpdateController@sendAlldata');
+
 
 
 

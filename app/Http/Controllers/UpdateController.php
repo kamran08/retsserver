@@ -692,10 +692,17 @@ class UpdateController extends Controller
         // }
     }
     public function sendAlldata(){
-        $now = new \DateTime('2021-10-10T24:00:00');
+        // $now = new \DateTime('2021-10-13T24:00:00');
+        // $start =  $now->format('Y-m-d\TH:i:s');
+        // $a = new \DateTime('2021-10-13T00:00:00');
+        // $end = $a->format('Y-m-d\TH:i:s');
+
+
+        $now = new \DateTime();
         $start =  $now->format('Y-m-d\TH:i:s');
-        $a = new \DateTime('2021-10-05T00:00:00');
-        $end = $a->format('Y-m-d\TH:i:s');
+
+        $finale =  date_sub($now, new \DateInterval("PT10M"));
+        $end =  $finale->format('Y-m-d\TH:i:s');
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -707,13 +714,16 @@ class UpdateController extends Controller
         $rets = new \PHRETS\Session($config);
         $connect = $rets->Login();
         $results =[];
-        $results   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_Last_Photo_updt=".$end."-".$start.")",['select'=>'L_ListingID,L_Last_Photo_updt']);//
+        $results1   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_UpdateDate=".$end."-".$start.")");
+
+        $results2   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
 
-        $alldata= $results->toArray();
+        // $alldata= $results->toArray();
         // return  $alldata;
-        $total= $results->getTotalResultsCount();
-        return $total;
+        $total1= $results1->getTotalResultsCount();
+        $total2= $results2->getTotalResultsCount();
+        return $total1+$total2;
 
 
         
