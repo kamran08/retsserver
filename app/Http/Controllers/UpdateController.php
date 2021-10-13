@@ -757,6 +757,8 @@ class UpdateController extends Controller
         // return $alldata ;
         foreach($alldata as $key => $val){
               $data = Listing::where('listingID',$val['listingId'])->first();
+              if(!$data['lang'] || $data['lat']==NULL || $data['lang']==NULL || $data['lang']=='')
+              continue;
                 $data['isSent'] ='sent';
               $l = json_decode(json_encode($data), true);
               if($l){
