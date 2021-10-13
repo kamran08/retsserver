@@ -753,7 +753,7 @@ class UpdateController extends Controller
 
     public function SendImagesToMainServer(){
 
-        $alldata = NewUpdate::where('isSent',0)->limit(5000)->orderBy('id','desc')->get();
+        $alldata = NewUpdate::where('isSent',0)->where('listingId',262629593)->limit(5000)->orderBy('id','desc')->get();
         // return $alldata ;
         foreach($alldata as $key => $val){
               $data = Listing::where('listingID',$val['listingId'])->first();
