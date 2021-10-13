@@ -40,8 +40,8 @@ class SendExistanceImages extends Command
     {
         //
         $ob = new UpdateController();
-        \Log::info("hell");
-        return 1;
+        // \Log::info("hell");
+        // return 1;
         return  $ob->SendImagesToMainServer();
     }
 }

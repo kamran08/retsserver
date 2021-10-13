@@ -692,17 +692,17 @@ class UpdateController extends Controller
         // }
     }
     public function sendAlldata(){
-        // $now = new \DateTime('2021-10-13T24:00:00');
-        // $start =  $now->format('Y-m-d\TH:i:s');
-        // $a = new \DateTime('2021-10-13T00:00:00');
-        // $end = $a->format('Y-m-d\TH:i:s');
-
-
-        $now = new \DateTime();
+        $now = new \DateTime('2021-10-13 05:10:30');
         $start =  $now->format('Y-m-d\TH:i:s');
+        $a = new \DateTime('2021-10-13 04:55:29');
+        $end = $a->format('Y-m-d\TH:i:s');
 
-        $finale =  date_sub($now, new \DateInterval("PT10M"));
-        $end =  $finale->format('Y-m-d\TH:i:s');
+        // `listingID` =262629593
+        // $now = new \DateTime();
+        // $start =  $now->format('Y-m-d\TH:i:s');
+
+        // $finale =  date_sub($now, new \DateInterval("PT10M"));
+        // $end =  $finale->format('Y-m-d\TH:i:s');
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -719,11 +719,12 @@ class UpdateController extends Controller
         $results2   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_UpdateDate=".$end."-".$start.")");//
 
 
-        // $alldata= $results->toArray();
+        $alldata1= $results1->toArray();
+        $alldata2= $results2->toArray();
         // return  $alldata;
         $total1= $results1->getTotalResultsCount();
         $total2= $results2->getTotalResultsCount();
-        return [$total1+$total2, $start,$end];
+        return [$total1+$total2, $start,$end,$alldata1,$alldata2];
 
 
         
@@ -752,11 +753,11 @@ class UpdateController extends Controller
 
     public function SendImagesToMainServer(){
 
-        $alldata = NewUpdate::where('isSent',0)->limit(5000)->get();
+        $alldata = NewUpdate::where('isSent',0)->limit(5000)->orderBy('id','desc')->get();
         // return $alldata ;
         foreach($alldata as $key => $val){
-              $data = Listing::where('listingID',$val['listingId'])->select('id','listingID','images','thumbnail')->first();
-                $data['isSent'] =1;
+              $data = Listing::where('listingID',$val['listingId'])->first();
+                $data['isSent'] ='sent';
               $l = json_decode(json_encode($data), true);
               if($l){
              
