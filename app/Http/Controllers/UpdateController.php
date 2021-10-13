@@ -756,9 +756,9 @@ class UpdateController extends Controller
         $alldata = NewUpdate::where('isSent',0)->limit(5000)->orderBy('id','desc')->get();
         // return $alldata ;
         foreach($alldata as $key => $val){
-              $data = Listing::where('listingID',$val['listingId'])->first();
-              if(!$data['lang'] || $data['lat']==NULL || $data['lang']==NULL || $data['lang']=='')
-              continue;
+              $data = Listing::where('listingID',$val['listingId'])->whereNotNll('lat')->whereNotNll('lang')->first();
+              if(!$data) continue;
+              
                 $data['isSent'] ='sent';
               $l = json_decode(json_encode($data), true);
               if($l){
