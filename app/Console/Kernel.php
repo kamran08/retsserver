@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:SendExistanceImages')
-                 ->everyTenMinutes();
+                 ->everyFiveMinutes();
         // featching services
         $schedule->command('command:latLangFetach')
                  ->everyMinute();
