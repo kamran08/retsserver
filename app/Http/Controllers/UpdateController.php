@@ -765,7 +765,7 @@ class UpdateController extends Controller
              
               try{
                   $client2 = new \GuzzleHttp\Client();
-                  $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer', ['form_params' => $l])->getBody();
+                  $request2 = (string) $client2->post('https://m.youhome.cc/storeImageDataFromDataServer2', ['form_params' => $l])->getBody();
                   $json2 = json_decode($request2);
                 //   return  $request2;
 
