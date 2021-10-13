@@ -756,7 +756,7 @@ class UpdateController extends Controller
         $alldata = NewUpdate::where('isSent',0)->limit(5000)->orderBy('id','desc')->get();
         // return $alldata ;
         foreach($alldata as $key => $val){
-              $data = Listing::where('listingID',$val['listingId'])->whereNotNll('lat')->whereNotNll('lang')->first();
+              $data = Listing::where('listingID',$val['listingId'])->whereNotNull('lat')->whereNotNull('lang')->first();
               if(!$data) continue;
               
                 $data['isSent'] ='sent';
