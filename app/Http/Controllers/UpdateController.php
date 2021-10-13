@@ -744,11 +744,9 @@ class UpdateController extends Controller
 
         $alldata = NewUpdate::where('isSent',0)->limit(5000)->get();
         // return $alldata ;
-
-
         foreach($alldata as $key => $val){
               $data = Listing::where('listingID',$val['listingId'])->select('id','listingID','images','thumbnail')->first();
-                $data['isSent'] ='90';
+                $data['isSent'] =1;
               $l = json_decode(json_encode($data), true);
               if($l){
              
