@@ -723,7 +723,7 @@ class UpdateController extends Controller
         // return  $alldata;
         $total1= $results1->getTotalResultsCount();
         $total2= $results2->getTotalResultsCount();
-        return $total1+$total2;
+        return [$total1+$total2, $start,$end];
 
 
         
