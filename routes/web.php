@@ -37,6 +37,10 @@ Route::get('/SendImagesToMainServer', 'UpdateController@SendImagesToMainServer')
 Route::get('/sendAlldata', 'UpdateController@sendAlldata');
 
 
+Route::get('/checkNullClass', 'LocalDatabaseController@checkNullClass');
+
+
+
 
 
 
