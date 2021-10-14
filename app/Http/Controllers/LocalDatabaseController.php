@@ -11,7 +11,7 @@ class LocalDatabaseController extends Controller
 
     public function checkNullClass(Request $request){
         
-        $alldata = Listing::select('listingID', 'id','displayId')->whereNull('class')->limit(1)->get();
+        $alldata = Listing::select('listingID','displayId')->whereNull('class')->limit(100)->get();
 
         return  $alldata ;
         set_time_limit(2000000);
@@ -24,10 +24,17 @@ class LocalDatabaseController extends Controller
             \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
             $rets = new \PHRETS\Session($config);
             $connect = $rets->Login();
+             $result   = $rets->Search('Property',  'RD_1', "(L_ListingID=260454963)", ['Limit'  =>  1]);
+             $data2= $result->toArray();
+             return $data2;
             foreach($alldata as $item){
-                $results1   = $rets->Search('Property',  'RA_2', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|APTU,DUPXH,TWNHS), (L_DisplayId=".$item['displayId'].")",['select'=>'L_DisplayId,L_Status']);
+                // $results1   = $rets->Search('Property',   "(L_ListingID=260454963)",['select'=>'L_DisplayId,L_Status,L_ListingID']);
+                $results2   = $rets->Search('Property', 'RA_2' , "(L_ListingID=260454963)");
+                $results1   = $rets->Search('Property', 'RD_1' , "(L_ListingID=260454963)");
+                // $results1   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1), (L_DisplayId=".$item['displayId'].")",['select'=>'L_DisplayId,L_Status']);
+                $data2= $results2->toArray();
                 $data1= $results1->toArray();
-                // return $data1[0]['L_Status'];
+                return [$data2,$data1];
 
 
                 if(sizeof($data1)>0){
