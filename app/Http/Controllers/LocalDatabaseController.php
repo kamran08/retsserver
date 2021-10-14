@@ -31,6 +31,7 @@ class LocalDatabaseController extends Controller
 
 
                 if(sizeof($data1)>0){
+                    return $data1;
                     $ob = [
                         'class' =>'RA_2',
                         'displayId'=>$item['displayId'],
@@ -43,7 +44,7 @@ class LocalDatabaseController extends Controller
                 $results2   = $rets->Search('Property',  'RD_1', "(L_Status=1_0,2_0,5_1),(LM_Char10_11=|HOUSE),(L_DisplayId=".$item['displayId'].")",['select'=>'L_DisplayId,L_Status']);
                 $data2= $results2->toArray();
                 if(sizeof($data2)>0){
-                // return $data2[0]['L_Status'];
+                return $data2;
 
                     $ob = [
                         'class' =>'RD_1',
