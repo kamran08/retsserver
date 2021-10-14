@@ -13,7 +13,7 @@ class LocalDatabaseController extends Controller
         
         $alldata = Listing::select('listingID', 'id','displayId')->whereNull('class')->limit(1)->get();
 
-
+        return  $alldata ;
         set_time_limit(2000000);
             $config = new \PHRETS\Configuration;
             $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
