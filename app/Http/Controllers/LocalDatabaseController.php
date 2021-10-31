@@ -11,9 +11,9 @@ class LocalDatabaseController extends Controller
 
     public function checkNullClass(Request $request){
         
-        $alldata = Listing::select('listingID','displayId')->whereNull('class')->limit(100)->get();
+        $alldata = Listing::select('listingID', 'id','displayId')->whereNull('class')->limit(1)->get();
 
-        return  $alldata ;
+        // return  $alldata ;
         set_time_limit(2000000);
             $config = new \PHRETS\Configuration;
             $config->setLoginUrl('http://reb.retsiq.com/contactres/rets/login')
@@ -24,9 +24,11 @@ class LocalDatabaseController extends Controller
             \PHRETS\Http\Client::set(new \GuzzleHttp\Client);
             $rets = new \PHRETS\Session($config);
             $connect = $rets->Login();
-             $result   = $rets->Search('Property',  'RD_1', "(L_ListingID=260454963)", ['Limit'  =>  1]);
+             $result1   = $rets->Search('Property',  'RA_2', "(L_ListingID=262606907)", ['Limit'  =>  1]);
+             $result   = $rets->Search('Property',  'RD_1', "(L_ListingID=262606907)", ['Limit'  =>  1]);
+             $data1= $result1->toArray();
              $data2= $result->toArray();
-             return $data2;
+             return [$data2,$data1];
             foreach($alldata as $item){
                 // $results1   = $rets->Search('Property',   "(L_ListingID=260454963)",['select'=>'L_DisplayId,L_Status,L_ListingID']);
                 $results2   = $rets->Search('Property', 'RA_2' , "(L_ListingID=260454963)");

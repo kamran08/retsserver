@@ -38,6 +38,10 @@ Route::get('/sendAlldata', 'UpdateController@sendAlldata');
 
 
 Route::get('/checkNullClass', 'LocalDatabaseController@checkNullClass');
+Route::get('/sendSingleDataByDislplayId', 'RetsController@sendSingleDataByDislplayId');
+
+
+
 
 
 

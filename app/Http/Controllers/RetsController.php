@@ -421,13 +421,18 @@ class RetsController extends Controller
   
 
 
-    public function checkDifferent(){
-         $start = microtime(true);
-        sleep(2);
+    public function sendSingleDataByDislplayId(){
+
+        $alldata = Listing::where('displayId','R2607966')->first();
+
+      
+        return  $alldata;
+
+
+        $l = json_decode(json_encode($alldata), true);
+        $client2 = new \GuzzleHttp\Client();
+        $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
         
-       
-        return $time_elapsed_secs = microtime(true) - $start;
-        // return $interval;
   
     }
 }
