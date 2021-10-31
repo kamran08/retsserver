@@ -428,11 +428,12 @@ class RetsController extends Controller
         // return  $alldata;
 
         $alldata = Listing::where('displayId','R2607966')->first();
+        // return $alldata;
         if($alldata){
             try{   
                 $l = json_decode(json_encode($alldata), true);
                 $client2 = new \GuzzleHttp\Client();
-                return $l;
+                return "test";
                 $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
             } catch (\Exception $e) {
                 return $e;
