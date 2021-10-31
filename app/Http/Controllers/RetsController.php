@@ -423,18 +423,22 @@ class RetsController extends Controller
 
     public function sendSingleDataByDislplayId(){
 
-        $alldata = Listing::where('displayId','R2607966')->first();
-
-      
+        
+        
         // return  $alldata;
 
-     try{   
-        $l = json_decode(json_encode($alldata), true);
-        $client2 = new \GuzzleHttp\Client();
-        $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
-    } catch (\Exception $e) {
-        return $e;
-    }
+        $alldata = Listing::where('displayId','R2607966')->first();
+        if($alldata){
+            try{   
+                $l = json_decode(json_encode($alldata), true);
+                $client2 = new \GuzzleHttp\Client();
+                $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
+            } catch (\Exception $e) {
+                return $e;
+            }
+        }
+        
+      
 
         return "success";
   
