@@ -432,6 +432,7 @@ class RetsController extends Controller
             try{   
                 $l = json_decode(json_encode($alldata), true);
                 $client2 = new \GuzzleHttp\Client();
+                return $l;
                 $request2 = (string) $client2->post('https://m.youhome.cc/storeDataFromDataServer', ['form_params' => $l])->getBody();
             } catch (\Exception $e) {
                 return $e;
