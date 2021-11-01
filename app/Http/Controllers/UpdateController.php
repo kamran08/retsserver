@@ -692,17 +692,17 @@ class UpdateController extends Controller
         // }
     }
     public function sendAlldata(){
-        $now = new \DateTime('2021-10-13 05:10:30');
-        $start =  $now->format('Y-m-d\TH:i:s');
-        $a = new \DateTime('2021-10-13 04:55:29');
-        $end = $a->format('Y-m-d\TH:i:s');
+        // $now = new \DateTime('2021-10-13 05:10:30');
+        // $start =  $now->format('Y-m-d\TH:i:s');
+        // $a = new \DateTime('2021-10-13 04:55:29');
+        // $end = $a->format('Y-m-d\TH:i:s');
 
         // `listingID` =262629593
-        // $now = new \DateTime();
-        // $start =  $now->format('Y-m-d\TH:i:s');
+        $now = new \DateTime();
+        $start =  $now->format('Y-m-d\TH:i:s');
 
-        // $finale =  date_sub($now, new \DateInterval("PT10M"));
-        // $end =  $finale->format('Y-m-d\TH:i:s');
+        $finale =  date_sub($now, new \DateInterval("PT10M"));
+        $end =  $finale->format('Y-m-d\TH:i:s');
 
         set_time_limit(2000000);
         $config = new \PHRETS\Configuration;
@@ -724,7 +724,9 @@ class UpdateController extends Controller
         // return  $alldata;
         $total1= $results1->getTotalResultsCount();
         $total2= $results2->getTotalResultsCount();
-        return [$total1+$total2, $start,$end,$alldata1,$alldata2];
+        return [$total1,$total2, $start,$end];
+
+        return 1;
 
 
         
